@@ -21,7 +21,7 @@ TList* TList_Create(void);
 void TList_Destroy(TList** PList);
 void TList_Add(TList* List, int Value);
 void TList_Clear(TList* List);
-void TList_Delete(TList* List, int Position);
 void TList_Insert(TList* List, int Value, int Position);
+void TList_Remove(TList* List, int Position);
 
 #endif

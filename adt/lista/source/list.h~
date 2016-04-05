@@ -8,7 +8,9 @@
 #define LIST_H
 
 typedef struct _TListNode {
-
+	int Value;
+	TListNode* Previous;
+	TListNode* Next;
 } TListNode;
 
 typedef struct _TList {
