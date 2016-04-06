@@ -8,13 +8,14 @@
 #define LIST_H
 
 typedef struct _TListNode {
-	int Value;
+	TListItem Item;
 	TListNode* Previous;
 	TListNode* Next;
 } TListNode;
 
 typedef struct _TList {
-	TListNode Header;
+	TListNode* First;
+	TListNode* Last;
 } TList;
 
 TList* TList_Create(void);
