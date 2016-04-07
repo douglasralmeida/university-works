@@ -8,35 +8,58 @@
 
 TList* TList_Create(void)
 {
-  TList* TempList = (TList*)malloc(sizeof(TList));
-  TempList->Count = 0;
-  TempList->First = NULL;
-  TempList->Last = NULL;
+	TList* TempList;
+	
+	TempList = (TList*)malloc(sizeof(TList));
+ 	TempList->Count = 0;
+  	TempList->First = NULL;
+	TempList->Last = NULL;
   
-  return TempList;
+	return TempList;
 }
 
 void TList_Destroy(TList** PList)
 {
-  free(*PList);
-  PList = NULL;
+	free(*PList);
+	PList = NULL;
 }
 
 void TList_Add(TList* List, TListItem Item)
 {
-	if (TList_IsEmpty(List))
-	{
-		TList_Insert(List, Item, NULL);
-	}
-	else
-	{
-		TList_Insert(List, Item, List->Last);
-	}
+	TList_Insert(List, Item, List->Last);
 }
 
 void TList_Clear(TList* List)
 {
-  
+	TListNode* PreviousNode, TempNode;
+	
+	TempNode = List->Last;
+	while (TempNode != NULL)
+	{
+		PreviousNode = TempNode->Previous;
+		TList_Remove(List, TempNode);
+		TempNode := PreviousNode;
+	}
+}
+
+void TList_Exchange(TListNode* NodeA, TListNode* NodeB)
+{
+	TListNode* TempNode;
+	
+	if (NodeA->Next != NULL)
+		NodeA->Next->Previous = NodeB;
+	if (NodeA->Previous != NULL)		
+		NodeA->Previous->Next = NodeB;
+	if (NodeB->Next != NULL)
+		NodeB->Next->Previous = NodeA;
+	if (NodeB->Previous != NULL)	
+		NodeB->Previous->Next = NodaA;
+	TempNode = NodeA->Next;
+	NodeA->Next = NodeB->Next;
+	NodeB->Next = TempNode;
+	TempNode = NodeA->Previous;
+	NodeA->Previous = NodeB->Previous;
+	NodeB->Previous = TempNode;
 }
 
 void TList_Insert(TList* List, TListItem Item, TListNode* Node)
@@ -53,16 +76,31 @@ void TList_Insert(TList* List, TListItem Item, TListNode* Node)
 		NewNode->Previous = NULL;
 	}
 	else
-	{
-		List->Last = NewNode;
+	{		
 		NewNode->Next = Node->Next;
 		NewNode->Previous = Node;
 		Node->Next = NewNode;
+		if (NewNode->Next != NULL)
+			NewNode->Next->Previous = NewNode
+		else
+			List->Last = NewNode;
 	}
 	List->Count++;
 }
 
-void TList_Remove(TList* List, int Position)
+void TList_Remove(TList* List, TListNode* Node)
 {
-  
+	TListNode* TempNode;
+	
+	TempNode = Node;
+	if (Node->Next != NULL)
+		Node->Next->Previous = Node->Previous;
+	else
+		List->Last = Node->Previous;
+	if (Node->Previous != NULL)
+		Node->Previous->Next = Node->Next;
+	else
+		List->First = Node->Next;
+	free(TempNode);
+	List->Count--;
 }

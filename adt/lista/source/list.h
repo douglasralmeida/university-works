@@ -18,11 +18,25 @@ typedef struct _TList {
 	TListNode* Last;
 } TList;
 
+//Create an empty list
 TList* TList_Create(void);
+
+//Destroy the list
 void TList_Destroy(TList** PList);
-void TList_Add(TList* List, int Value);
+
+//Add an item to the list at end
+void TList_Add(TList* List, TListItem Item);
+
+//Remove all list items
 void TList_Clear(TList* List);
-void TList_Insert(TList* List, int Value, int Position);
-void TList_Remove(TList* List, int Position);
+
+//Swap position of two list itens
+void TList_Exchange(TListNode* NodeA, TListNode* NodeB);
+
+//Add an item after the list node
+void TList_Insert(TList* List, TListItem Item, TListNode* Node);
+
+//Remove the item of the list
+void TList_Remove(TList* List, TListNode* Node);
 
 #endif
