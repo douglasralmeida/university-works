@@ -4,6 +4,7 @@
 //
 //LinkedList ADT Implementation
 
+#include "item.h"
 #include "list.h"
 
 TList* TList_Create(void)
