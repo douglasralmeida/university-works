@@ -1,0 +1,5 @@
+# Arquivos executaveis
+main
+
+# Objetos
+*.o
