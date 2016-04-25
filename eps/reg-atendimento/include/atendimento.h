@@ -10,7 +10,13 @@ typedef struct TAtendimento_ {
 	unsigned int Quantidade;
 } TAtendimento;
 
+void AnalisarBuffer();
+void AnalisarDados(int Descritor);
+void CabecalhoLer();
+void LinhaDoisStringsLer();
+void LinhaTresStringsLer();
+
 TAtendimento* AtendimentoCriar(int NovaCapacidade);
 void AtendimentoDestruir(TAtendimento** PAtendimento);
-
+void AtendimentoProcessarDados(char* Arquivo);
 #endif
