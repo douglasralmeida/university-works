@@ -10,7 +10,7 @@ int HoraParaMinutos(THora Hora)
 
 void ImprimirHora(THora Hora)
 {
-	printf("%d:%d", Hora / 60, Hora % 60);
+	printf("%02d:%02d", Hora / 60, Hora % 60);
 }
 
 THora MinutosParaHora(int Minutos)
@@ -22,7 +22,7 @@ THora StringParaHora(char* Valor)
 {
 	char* s;
 	THora Hora;
-	
+
 	s = strtok(Valor, ":");
 	Hora = atoi(s) * 60;
 	s = strtok(NULL, ":");

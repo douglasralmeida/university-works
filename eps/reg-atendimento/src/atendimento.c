@@ -1,47 +1,55 @@
-#include <sys/stat.h>
-#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "arquivo.h"
 #include "atendimento.h"
+#include "relatorio.h"
 
-int BufferAnalisar(TAtendimento* Atendimento, char* Buffer, int Tamanho)
+int BufferAnalisar(TAtendimento* Atendimento, char* Buffer)
 {
 	int Comando = 0;
-	char* linha_inicio;
-	char* p;
-	char* temp;
+	int SairSistema = 0;
+	
+	char texto[6];
+	int inteiro;
+	float moeda;
+	THora hora;
 
-	p = Buffer;
-	while (*p != '\0')
+	/* primeiro item da linha: comando */
+	Comando = Buffer[0] - '0';
+	switch (Comando)
 	{
-		/* primeiro item da linha: comando */
-		Comando = strtol(p, &temp, 10);
-		linha_inicio = p;
-		switch (Comando)
-		{
-			case	CMD_NOVOCLIENTE:
-				/* sscanf(p, "%s %s %s");*/
-			break;
-			case	CMD_ATENDINICIO:
-			case	CMD_ATENDCONCLU:
-			case	CMD_DESISTENCIA:
-				/* sscanf(p, "%s %s");*/
-			break;
-			case	CMD_EXRELATORIO:
-				/* print */
-			break;
-			case	CMD_SISTEMASAIR:
-				
-			break;
-		}
-		/* caminha ate o final da linha */
-		p = (char*) memchr(p, '\n', (Buffer + Tamanho) - p);
-		p++;
+		case	CMD_NOVOCLIENTE:
+			sscanf(Buffer, "%*d %5s %d %f", texto, &inteiro, &moeda);
+			hora = StringParaHora(texto);
+			AtendimentoClienteAdicionar(Atendimento, inteiro, hora, moeda);
+		break;
+		case	CMD_ATENDINICIO:
+			sscanf(Buffer, "%*d %5s %d", texto, &inteiro);
+			hora = StringParaHora(texto);
+			AtendimentoClienteAtender(Atendimento, inteiro, hora);
+		break;
+		case	CMD_ATENDCONCLU:
+			sscanf(Buffer, "%*d %5s %d", texto, &inteiro);
+			hora = StringParaHora(texto);
+			AtendimentoClienteConcluir(Atendimento, inteiro, hora);
+		break;
+		case	CMD_DESISTENCIA:
+			sscanf(Buffer, "%*d %5s %d", texto, &inteiro);
+			hora = StringParaHora(texto);
+			AtendimentoClienteDesistencia(Atendimento, inteiro, hora);
+		break;
+		case	CMD_EXRELATORIO:
+			ExibirRelatorio(Atendimento);
+		break;
+		case	CMD_SISTEMASAIR:
+			SairSistema = 1;
+		break;
 	}
+	return SairSistema;
 }
 
-int EntradaLerCabecalho(char* Buffer)
+int BufferLerCabecalho(char* Buffer)
 {
 	int Resultado;
 	
@@ -50,53 +58,9 @@ int EntradaLerCabecalho(char* Buffer)
 	return Resultado;
 }
 
-void EntradaAnalisar(int Descritor)
-{
-	size_t BytesLidos;
-	char Buffer[BUFFER_TAMANHO + 1];
-	int LeuCabecalho = 0;
-	int ArquivoChegouAoFim = 0;
-	int QuantidadeClientes;
-	TAtendimento* Atendimento;
-
-	/* Avisa o kernel do nosso padrao de acesso.  */
-	posix_fadvise(DescritorArquivo, 0, 0, 1); /*FDADVICE_SEQUENTIAL*/
-	while (!ArquivoChegouAoFim)
-	{
-		/* gera buffers de 16kbytes do arquivo de entrada */
-		BytesLidos = read(DescritorArquivo, Buffer, BUFFER_TAMANHO);
-		Buffer[BUFFER_TAMANHO] = '\0';
-		if (BytesLidos == (size_t) - 1)
-		{
-			printf("Erro ao acessar o arquivo de entrada.\n");
-			ArquivoChegouAoFim = 1;
-		}
-		else if (!BytesLidos)
-		{
-			ArquivoChegouAoFim = 1;
-		}
-		else
-		{
-			/* ler cabecalho com quantidade de clientes */
-			if (!LeuCabecalho)
-			{
-				QuantidadeClientes = LerCabecalho(Buffer);
-				Buffer += 2;
-				LeuCabecalho = 1;
-				if (QuantidadeClientes > 0)
-					Atendimento = AtendimentoCriar(QuantidadeClientes);
-				else	
-					break;
-			}
-			
-			/* analisar o buffer */
-			BufferAnalisar(Atendimento, Buffer, BUFFER_TAMANHO);
-		}
-	}
-}
-
 TAtendimento* AtendimentoCriar(int NovaCapacidade)
 {
+	int i;
 	TAtendimento* NovoAtendimento;
 	
 	NovoAtendimento = malloc(sizeof(TAtendimento));
@@ -104,6 +68,9 @@ TAtendimento* AtendimentoCriar(int NovaCapacidade)
 	NovoAtendimento->Capacidade = NovaCapacidade;
 	NovoAtendimento->ListaClientes = malloc(sizeof(TCliente) * NovaCapacidade);
 	NovoAtendimento->Quantidade = 0;
+	NovoAtendimento->Relatorios = 0;
+	for (i = 0; i < NovaCapacidade; i++)
+		ClienteLimpar(NovoAtendimento->ListaClientes + i);
 	
 	return NovoAtendimento;
 }
@@ -117,38 +84,59 @@ void AtendimentoDestruir(TAtendimento** PAtendimento)
 
 void AtendimentoClienteAdicionar(TAtendimento* Atendimento, unsigned int ID, THora Chegada, float Valor)
 {
-	Atendimento->ListaClientes[ID]->Chegada = Chegada;
-	Atendimento->ListaClientes[ID]->Vazio = 0;
-	Atendimento->ListaClientes[ID]->Gasto = Valor;
+	Atendimento->ListaClientes[ID-1].Chegada = Chegada;
+	Atendimento->ListaClientes[ID-1].Vazio = 0;
+	Atendimento->ListaClientes[ID-1].Gasto = Valor;
 	Atendimento->Quantidade++;
 }
 
 void AtendimentoClienteAtender(TAtendimento* Atendimento, unsigned int ID, THora Hora)
 {
-	Atendimento->ListaClientes[ID]->AtendimentoInicio = Hora;
+	Atendimento->ListaClientes[ID-1].AtendimentoInicio = Hora;
 }
 
 void AtendimentoClienteConcluir(TAtendimento* Atendimento, unsigned int ID, THora Hora)
 {
-	Atendimento->ListaClientes[ID]->Saida = Hora;
+	Atendimento->ListaClientes[ID-1].Saida = Hora;
 	Atendimento->Atendidos++;
 }
 
 void AtendimentoClienteDesistencia(TAtendimento* Atendimento, unsigned int ID, THora Hora)
 {
-	Atendimento->ListaClientes[ID]->Saida = Hora;
-	Atendimento->ListaClientes[ID]->Desistencia = 1;
+	Atendimento->ListaClientes[ID-1].Saida = Hora;
+	Atendimento->ListaClientes[ID-1].Desistencia = 1;
 }
 
-void AtendimentoProcessarDados(char* Arquivo)
+void AtendimentoProcessarEntrada(const char* NomeArquivo)
 {
-	int DescritorArquivo;
+	FILE* Arquivo;
+	char Buffer[BUFFER_TAMANHO + 1];
+	int Sair = 0;
 
-	DescritorArquivo = ArquivoAbrir(Arquivo);
-	if (DescritorArquivo != -1)
-	{
-		AnalisarDados(DescritorArquivo);
-		ArquivoFechar(DescritorArquivo);
+	TAtendimento* Atendimento;
+	int QuantidadeClientes;
+
+	Arquivo = ArquivoAbrir(NomeArquivo);
+	if (Arquivo != NULL)
+	{		
+		/* Ler cabecalho */
+		if (fgets(Buffer, BUFFER_TAMANHO, Arquivo) != NULL)
+		{
+			QuantidadeClientes = BufferLerCabecalho(Buffer);			
+		}
+		if (QuantidadeClientes > 0)
+		{
+			Atendimento = AtendimentoCriar(QuantidadeClientes);
+			if (Atendimento != NULL)
+			{
+				while ((Sair = 0) || (fgets(Buffer, BUFFER_TAMANHO, Arquivo) != NULL))
+				{
+					Sair = BufferAnalisar(Atendimento, Buffer);
+				}
+			}
+		}
+		AtendimentoDestruir(&Atendimento);
+		ArquivoFechar(Arquivo);
 	}
 	else
 	{

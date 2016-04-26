@@ -1,13 +1,12 @@
-#include <sys/stat.h>
-#include <unistd.h>
+#include <stdio.h>
 #include "arquivo.h"
 
-int ArquivoAbrir(const char* Nome)
+FILE* ArquivoAbrir(const char* Nome)
 {
-	return open(Nome, O_RDONLY);
+	return fopen(Nome , "rt");
 }
 
-void ArquivoFechar(int Descritor)
+void ArquivoFechar(FILE* Arquivo)
 {
-	close(Descritor);
+	fclose(Arquivo);
 }

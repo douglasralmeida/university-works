@@ -13,3 +13,8 @@ typedef struct TCliente_ {
 } TCliente;
 
 #endif
+
+void ClienteLimpar(TCliente* Cliente);
+int ClienteMinutosAtendimento(TCliente* Cliente);
+int ClienteMinutosEspera(TCliente* Cliente);
+int ClienteMinutosTotal(TCliente* Cliente);

@@ -3,8 +3,8 @@
 
 #include <stdlib.h>
 
-int ArquivoAbrir(const char* Nome);
+FILE* ArquivoAbrir(const char* Nome);
 
-void ArquivoFechar(int Descritor);
+void ArquivoFechar(FILE* Arquivo);
 
 #endif

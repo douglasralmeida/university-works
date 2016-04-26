@@ -1,7 +1,7 @@
 #ifndef ATENDIMENTO_H
 #define ATENDIMENTO_H
 
-#define BUFFER_TAMANHO 16 * 1024
+#define BUFFER_TAMANHO 128
 #define CMD_NOVOCLIENTE 1
 #define CMD_ATENDINICIO 2
 #define CMD_ATENDCONCLU 3
@@ -15,13 +15,11 @@ typedef struct TAtendimento_ {
 	unsigned int Capacidade;
 	TCliente* ListaClientes;
 	unsigned int Quantidade;
+	unsigned int Relatorios;
 } TAtendimento;
 
-void BufferAnalisar(TAtendimento* Atendimento, char* Buffer, int Tamanho);
-void AnalisarDados(int Descritor);
-int EntradaLerCabecalho(char* Buffer);
-void LinhaDoisStringsLer();
-void LinhaTresStringsLer();
+int BufferAnalisar(TAtendimento* Atendimento, char* Buffer);
+int BufferLerCabecalho(char* Buffer);
 
 TAtendimento* AtendimentoCriar(int NovaCapacidade);
 void AtendimentoDestruir(TAtendimento** PAtendimento);
@@ -29,5 +27,5 @@ void AtendimentoClienteAdicionar(TAtendimento* Atendimento, unsigned int ID, THo
 void AtendimentoClienteAtender(TAtendimento* Atendimento, unsigned int ID, THora Hora);
 void AtendimentoClienteConcluir(TAtendimento* Atendimento, unsigned int ID, THora Hora);
 void AtendimentoClienteDesistencia(TAtendimento* Atendimento, unsigned int ID, THora Hora);
-void AtendimentoProcessarDados(char* Arquivo);
+void AtendimentoProcessarEntrada(const char* NomeArquivo);
 #endif
