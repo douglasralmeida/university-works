@@ -22,11 +22,24 @@ $(PROJECTNAME): $(OBJECTS)
 all:
 	$(PROJECTNAME)
 
+build:
+	@echo 
+	@echo Gerando arquivo compactado...
+	tar zcvf ../1234.tar.gz * --exclude='main' --exclude='*.o' --exclude='*.txt' --exclude='*.pdf' --exclude='*.gz' --exclude-vcs
+
+clean:
+	@echo 
+	@echo Excluindo executavel...
+	rm -f $(BINDIR)/$(PROJECTNAME)
+	@echo Excluindo objetos...
+	rm -f $(OBJECTS)
+	
 debug:
 	gdb --args ./$(BINDIR)/$(PROJECTNAME) bin/entrada.txt bin/saida.txt
 
 memcheck:
 	valgrind -v --leak-check=yes --track-origins=yes $(BINDIR)/$(PROJECTNAME) bin/entrada.txt bin/saida.txt
+	valgrind -v --leak-check=yes --track-origins=yes $(BINDIR)/$(PROJECTNAME) bin/entradavazia.txt bin/saidavazia.txt
 
 run:
-	./bin/$(PROJECTNAME) bin/entrada.txt bin/saida.txt
+	./$(BINDIR)/$(PROJECTNAME) bin/entrada.txt bin/saida.txt
