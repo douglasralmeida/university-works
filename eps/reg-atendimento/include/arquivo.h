@@ -3,7 +3,9 @@
 
 #include <stdlib.h>
 
-FILE* ArquivoAbrir(const char* Nome);
+FILE* ArquivoAbrirLeitura(const char* Nome);
+
+FILE* ArquivoAbrirEscrita(const char* Nome);
 
 void ArquivoFechar(FILE* Arquivo);
 

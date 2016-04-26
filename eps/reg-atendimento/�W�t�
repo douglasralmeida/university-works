@@ -1,0 +1,18 @@
+Consulta numero: 1
+Quantidade de clientes que entraram: 0
+Quantidade de clientes atendidos: 0
+Quantidade de clientes desistentes: 0
+Tempo medio em fila geral: 00:00
+Tempo medio em fila antes de desistir: 00:00
+Tempo medio de atendimento: 00:00
+Valor vendido estimado: 0.00
+Valor perdido estimado: 0.00
+Consulta numero: 2
+Quantidade de clientes que entraram: 2
+Quantidade de clientes atendidos: 1
+Quantidade de clientes desistentes: 1
+Tempo medio em fila geral: 00:02
+Tempo medio em fila antes de desistir: 00:04
+Tempo medio de atendimento: 00:06
+Valor vendido estimado: 10.00
+Valor perdido estimado: 25.00

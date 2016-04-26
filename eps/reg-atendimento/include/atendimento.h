@@ -16,16 +16,17 @@ typedef struct TAtendimento_ {
 	TCliente* ListaClientes;
 	unsigned int Quantidade;
 	unsigned int Relatorios;
+	FILE* ArquivoRelatorio;
 } TAtendimento;
 
 int BufferAnalisar(TAtendimento* Atendimento, char* Buffer);
 int BufferLerCabecalho(char* Buffer);
 
-TAtendimento* AtendimentoCriar(int NovaCapacidade);
+TAtendimento* AtendimentoCriar(int NovaCapacidade, const char* ArquivoRelatorio);
 void AtendimentoDestruir(TAtendimento** PAtendimento);
 void AtendimentoClienteAdicionar(TAtendimento* Atendimento, unsigned int ID, THora Chegada, float Valor);
 void AtendimentoClienteAtender(TAtendimento* Atendimento, unsigned int ID, THora Hora);
 void AtendimentoClienteConcluir(TAtendimento* Atendimento, unsigned int ID, THora Hora);
 void AtendimentoClienteDesistencia(TAtendimento* Atendimento, unsigned int ID, THora Hora);
-void AtendimentoProcessarEntrada(const char* NomeArquivo);
+void AtendimentoProcessarEntrada(const char* NomeArquivoEntrada, const char* NomeArquivoSaida);
 #endif

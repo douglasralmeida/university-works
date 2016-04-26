@@ -58,26 +58,50 @@ int BufferLerCabecalho(char* Buffer)
 	return Resultado;
 }
 
-TAtendimento* AtendimentoCriar(int NovaCapacidade)
+TAtendimento* AtendimentoCriar(int NovaCapacidade, const char* ArquivoRelatorio)
 {
 	int i;
 	TAtendimento* NovoAtendimento;
 	
 	NovoAtendimento = malloc(sizeof(TAtendimento));
+	if (!NovoAtendimento)
+	{
+		printf("Erro ao alocar memoria.\n");
+		return NULL;	
+	}
 	NovoAtendimento->Atendidos = 0;
 	NovoAtendimento->Capacidade = NovaCapacidade;
 	NovoAtendimento->ListaClientes = malloc(sizeof(TCliente) * NovaCapacidade);
+	if (!NovoAtendimento->ListaClientes)
+	{
+		printf("Erro ao alocar memoria.\n");
+		free(NovoAtendimento);
+		return NULL;
+	}
 	NovoAtendimento->Quantidade = 0;
 	NovoAtendimento->Relatorios = 0;
-	for (i = 0; i < NovaCapacidade; i++)
-		ClienteLimpar(NovoAtendimento->ListaClientes + i);
-	
-	return NovoAtendimento;
+	NovoAtendimento->ArquivoRelatorio = ArquivoAbrirEscrita(ArquivoRelatorio);
+	if (NovoAtendimento->ArquivoRelatorio != NULL)
+	{
+		for (i = 0; i < NovaCapacidade; i++)
+			ClienteLimpar(NovoAtendimento->ListaClientes + i);	
+		return NovoAtendimento;
+	}
+	else
+	{
+		printf("Erro ao abrir arquivo de saida de dados.\n");
+		free(NovoAtendimento->ListaClientes);
+		free(NovoAtendimento);
+		return NULL;
+	}
 }
 
 void AtendimentoDestruir(TAtendimento** PAtendimento)
 {
-	free((*PAtendimento)->ListaClientes);
+	if ((*PAtendimento)->ListaClientes != NULL)
+		free((*PAtendimento)->ListaClientes);
+	if ((*PAtendimento)->ArquivoRelatorio != NULL)
+		ArquivoFechar((*PAtendimento)->ArquivoRelatorio);		
 	free(*PAtendimento);
 	*PAtendimento = NULL;
 }
@@ -107,36 +131,36 @@ void AtendimentoClienteDesistencia(TAtendimento* Atendimento, unsigned int ID, T
 	Atendimento->ListaClientes[ID-1].Desistencia = 1;
 }
 
-void AtendimentoProcessarEntrada(const char* NomeArquivo)
+void AtendimentoProcessarEntrada(const char* NomeArquivoEntrada, const char* NomeArquivoSaida)
 {
-	FILE* Arquivo;
+	FILE* ArquivoEntrada;
 	char Buffer[BUFFER_TAMANHO + 1];
 	int Sair = 0;
 
 	TAtendimento* Atendimento;
 	int QuantidadeClientes;
 
-	Arquivo = ArquivoAbrir(NomeArquivo);
-	if (Arquivo != NULL)
+	ArquivoEntrada = ArquivoAbrirLeitura(NomeArquivoEntrada);
+	if (ArquivoEntrada != NULL)
 	{		
 		/* Ler cabecalho */
-		if (fgets(Buffer, BUFFER_TAMANHO, Arquivo) != NULL)
+		if (fgets(Buffer, BUFFER_TAMANHO, ArquivoEntrada) != NULL)
 		{
 			QuantidadeClientes = BufferLerCabecalho(Buffer);			
 		}
 		if (QuantidadeClientes > 0)
 		{
-			Atendimento = AtendimentoCriar(QuantidadeClientes);
+			Atendimento = AtendimentoCriar(QuantidadeClientes, NomeArquivoSaida);
 			if (Atendimento != NULL)
 			{
-				while ((Sair = 0) || (fgets(Buffer, BUFFER_TAMANHO, Arquivo) != NULL))
+				while ((Sair = 0) || (fgets(Buffer, BUFFER_TAMANHO, ArquivoEntrada) != NULL))
 				{
 					Sair = BufferAnalisar(Atendimento, Buffer);
 				}
 			}
 		}
 		AtendimentoDestruir(&Atendimento);
-		ArquivoFechar(Arquivo);
+		ArquivoFechar(ArquivoEntrada);
 	}
 	else
 	{

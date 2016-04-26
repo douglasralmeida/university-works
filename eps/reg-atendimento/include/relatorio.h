@@ -4,6 +4,7 @@
 #include "cliente.h"
 #include "atendimento.h"
 
-void ExibirMedias(TCliente* ListaClientes, int Quantidade);
+void ExibirMedias(FILE* Arquivo, TCliente* ListaClientes, int Quantidade);
 void ExibirRelatorio(TAtendimento* Atendimento);
+void GravarHora(FILE*Arquivo, THora Hora);
 #endif

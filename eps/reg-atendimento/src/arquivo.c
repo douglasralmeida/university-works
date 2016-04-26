@@ -1,7 +1,12 @@
 #include <stdio.h>
 #include "arquivo.h"
 
-FILE* ArquivoAbrir(const char* Nome)
+FILE* ArquivoAbrirEscrita(const char* Nome)
+{
+	return fopen(Nome , "wt");
+}
+
+FILE* ArquivoAbrirLeitura(const char* Nome)
 {
 	return fopen(Nome , "rt");
 }

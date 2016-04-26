@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "relatorio.h"
 
-void ExibirMedias(TCliente* ListaClientes, int Quantidade)
+void ExibirMedias(FILE* Arquivo, TCliente* ListaClientes, int Quantidade)
 {
 	int i;
 	int total_atendidos = 0;
@@ -30,31 +30,36 @@ void ExibirMedias(TCliente* ListaClientes, int Quantidade)
 	}
 	total_filageral += total_filadesis;
 	
-	printf("Tempo medio em fila geral: ");
+	fprintf(Arquivo, "Tempo medio em fila geral: ");
 	if (Quantidade > 0)
-		ImprimirHora(MinutosParaHora(total_filageral / Quantidade));
+		GravarHora(Arquivo, MinutosParaHora(total_filageral / Quantidade));
 	else
-		printf("00:00");
-	printf("\nTempo medio em fila antes de desistir: ");
+		fprintf(Arquivo, "00:00");
+	fprintf(Arquivo, "\nTempo medio em fila antes de desistir: ");
 	if (total_desistent > 0)
-		ImprimirHora(MinutosParaHora(total_filadesis / total_desistent));
+		GravarHora(Arquivo, MinutosParaHora(total_filadesis / total_desistent));
 	else
-		printf("00:00");			
-	printf("\nTempo medio de atendimento: ");
+		fprintf(Arquivo, "00:00");			
+	fprintf(Arquivo, "\nTempo medio de atendimento: ");
 	if (total_atendidos > 0)
-		ImprimirHora(MinutosParaHora(total_tempoaten / total_atendidos));
+		GravarHora(Arquivo, MinutosParaHora(total_tempoaten / total_atendidos));
 	else
-		printf("00:00");
-	printf("\nValor vendido estimado: %.2f\n", valor_vendido);
-	printf("Valor perdido estimado: %.2f\n", valor_perdido);
+		fprintf(Arquivo, "00:00");
+	fprintf(Arquivo, "\nValor vendido estimado: %.2f\n", valor_vendido);
+	fprintf(Arquivo, "Valor perdido estimado: %.2f\n", valor_perdido);
 }
 
 void ExibirRelatorio(TAtendimento* Atendimento)
 {
-	printf("Consulta numero: %d\n", Atendimento->Relatorios + 1);
+	fprintf(Atendimento->ArquivoRelatorio, "Consulta numero: %d\n", Atendimento->Relatorios + 1);
 	Atendimento->Relatorios++;
-	printf("Quantidade de clientes que entraram: %d\n", Atendimento->Quantidade);
-	printf("Quantidade de clientes atendidos: %d\n", Atendimento->Atendidos);
-	printf("Quantidade de clientes desistentes: %d\n", Atendimento->Quantidade - Atendimento->Atendidos);
-	ExibirMedias(Atendimento->ListaClientes, Atendimento->Quantidade);
+	fprintf(Atendimento->ArquivoRelatorio, "Quantidade de clientes que entraram: %d\n", Atendimento->Quantidade);
+	fprintf(Atendimento->ArquivoRelatorio, "Quantidade de clientes atendidos: %d\n", Atendimento->Atendidos);
+	fprintf(Atendimento->ArquivoRelatorio, "Quantidade de clientes desistentes: %d\n", Atendimento->Quantidade - Atendimento->Atendidos);
+	ExibirMedias(Atendimento->ArquivoRelatorio, Atendimento->ListaClientes, Atendimento->Quantidade);
+}
+
+void GravarHora(FILE*Arquivo, THora Hora)
+{
+	fprintf(Arquivo, "%02d:%02d", Hora / 60, Hora % 60);
 }

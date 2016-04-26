@@ -6,7 +6,7 @@ int main(int argc, char *argv[])
 {
 	if (argc > 2)
 	{
-		AtendimentoProcessarEntrada(argv[1]);
+		AtendimentoProcessarEntrada(argv[1], argv[2]);
 	}
 	else
 	{
