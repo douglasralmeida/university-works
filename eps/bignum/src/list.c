@@ -1,49 +1,49 @@
-//AEDS 2
-//LIST ABSTRACT DATA TYPE
-//DOUGLAS RODRIGUES DE ALMEIDA
-//
-//LinkedList ADT Implementation
+/*
+**	TIPO ABSTRATO DE DADOS LISTA
+**	DOUGLAS RODRIGUES DE ALMEIDA
+**
+**	Implementacao de lista duplamente encadeada por ponteiros
+*/
 
-#include "item.h"
 #include "list.h"
 
-TList* TList_Create(void)
+TLista* TLista_Criar(void)
 {
-	TList* TempList;
+	TLista* NovaLista;
 	
-	TempList = (TList*)malloc(sizeof(TList));
- 	TempList->Count = 0;
-  	TempList->First = NULL;
-	TempList->Last = NULL;
+	NovaLista = (TLista*)malloc(sizeof(TLista));
+ 	NovaLista->Tamanho = 0;
+  	NovaLista->Primeiro = NULL;
+	NovaLaista->Ultimo = NULL;
   
-	return TempList;
+	return NovaLista;
 }
 
-void TList_Destroy(TList** PList)
+void TLista_Destruir(TLista** PLista)
 {
-	free(*PList);
-	PList = NULL;
+	free(*PLista);
+	PLista = NULL;
 }
 
-void TList_Add(TList* List, TListItem Item)
+void TLista_Adicionar(TLista* Lista, TListaItem Item)
 {
-	TList_Insert(List, Item, List->Last);
+	TLista_Inserir(Lista, Item, Lista->Ultimo);
 }
 
-void TList_Clear(TList* List)
+void TLista_Limpar(TLista* Lista)
 {
-	TListNode* PreviousNode, TempNode;
+	TListaNo* NoAnterior, NoTemp;
 	
-	TempNode = List->Last;
-	while (TempNode != NULL)
+	NoTemp = Lista->Ultimo;
+	while (NoTemp != NULL)
 	{
-		PreviousNode = TempNode->Previous;
+		NoAnterior = NoTemp->Previous;
 		TList_Remove(List, TempNode);
 		TempNode := PreviousNode;
 	}
 }
 
-void TList_Exchange(TListNode* NodeA, TListNode* NodeB)
+void TLista_Exchange(TListNode* NodeA, TListNode* NodeB)
 {
 	TListNode* TempNode;
 	
@@ -63,7 +63,7 @@ void TList_Exchange(TListNode* NodeA, TListNode* NodeB)
 	NodeB->Previous = TempNode;
 }
 
-void TList_Insert(TList* List, TListItem Item, TListNode* Node)
+void TLista_Insert(TList* List, TListItem Item, TListNode* Node)
 {
 	TListNode* NewNode;
 	
@@ -89,7 +89,7 @@ void TList_Insert(TList* List, TListItem Item, TListNode* Node)
 	List->Count++;
 }
 
-void TList_Remove(TList* List, TListNode* Node)
+void TLista_Remove(TList* List, TListNode* Node)
 {
 	TListNode* TempNode;
 	

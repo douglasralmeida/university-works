@@ -25,7 +25,7 @@ all:
 build:
 	@echo 
 	@echo Gerando arquivo compactado...
-	tar zcvf ../1234.tar.gz * --exclude='main' --exclude='*.o' --exclude='*.txt' --exclude='*.pdf' --exclude='*.gz' --exclude-vcs
+	tar zcvf ../2015112728.tar.gz * --exclude='main' --exclude='*.o' --exclude='*.txt' --exclude='*.pdf' --exclude='*.gz' --exclude-vcs
 
 clean:
 	@echo 
