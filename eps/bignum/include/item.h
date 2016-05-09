@@ -1,20 +1,22 @@
-//AEDS 2
-//LIST ABSTRACT DATA TYPE
-//DOUGLAS RODRIGUES DE ALMEIDA
-//
-//List ADT ListItem Implementation
+/*
+**	ITEM DE UM TAD LISTA
+**	DOUGLAS RODRIGUES DE ALMEIDA
+**
+**	Cabecalho do item do TAD Lista para lista de inteiros
+**	
+**/
 
 #ifndef ITEM_H
 #define ITEM_H
 
-typedef struct _TListItem {
-	int Value;
-} TListItem;
+#include <stdio.h>
+#include "boolutils.h"
 
-//Create an item
-TListItem* TListItem_Create(int Value);
+typedef struct _TListaItem {
+	unsigned short Valor;
+} TListaItem;
 
-//Destroy the item
-void TList_Destroy(TListItem** PListItem);
+//Grava o item em um arquivo
+bool TListaItem_SalvarNoArquivo(TListaItem* Item, FILE* Arquivo);
 
 #endif

@@ -12,6 +12,11 @@ TLista* TLista_Criar(void)
 	TLista* NovaLista;
 	
 	NovaLista = (TLista*)malloc(sizeof(TLista));
+	if (NovaLista == NULL)
+	{
+		printf("Erro: Erro ao alocar memoria.");
+		return NULL;
+	}
  	NovaLista->Tamanho = 0;
   	NovaLista->Primeiro = NULL;
 	NovaLaista->Ultimo = NULL;
@@ -21,13 +26,58 @@ TLista* TLista_Criar(void)
 
 void TLista_Destruir(TLista** PLista)
 {
-	free(*PLista);
-	PLista = NULL;
+	if (PLista != NULL)
+	{
+		free(*PLista);
+		PLista = NULL;
+	}
 }
 
-void TLista_Adicionar(TLista* Lista, TListaItem Item)
+void TLista_Adicionar(TLista* Lista, const TListaItem Item)
 {
 	TLista_Inserir(Lista, Item, Lista->Ultimo);
+}
+
+bool TLista_EstaVazia(TLista* Lista)
+{
+	return (Lista->Primeiro == NULL);
+}
+
+void TLista_Inserir(TLista* Lista, const TListaItem Item, TListaNo* No)
+{
+	TListaNo* NoNovo;
+	
+	NovoNo = (TListaNo*)malloc(sizeof(TListaNo));
+	if (No == NULL)
+	{
+		printf("Erro: Erro ao alocar memoria.");
+		return;
+	}
+	NovoNo->Item = Item;
+	if (No == NULL)
+	{
+		if (!Lista_EstaVazia(Lista))
+		{
+			printf("Erro: Eh necessario informar qual no antecedera o novo no quando a lista nao esta vazia.");
+			free(NovoNo);
+			return;
+	}
+		Lista->Primeiro = NoNovo;
+		Lista->Ultimo = NoNovo;
+		NoNovo->Proximo = NULL;
+		NoNovo->Anterior = NULL;
+	}
+	else
+	{		
+		NoNovo->Proximo = No->Proximo;
+		NoNovo->Anterior = No;
+		No->Proximo = NoNovo;
+		if (NoNovo->Proximo != NULL)
+			NoNovo->Proximo->Anterior = NoNovo
+		else
+			Lista->Ultimo = NoNovo;
+	}
+	Lista->Tamanho++;
 }
 
 void TLista_Limpar(TLista* Lista)
@@ -37,71 +87,88 @@ void TLista_Limpar(TLista* Lista)
 	NoTemp = Lista->Ultimo;
 	while (NoTemp != NULL)
 	{
-		NoAnterior = NoTemp->Previous;
-		TList_Remove(List, TempNode);
-		TempNode := PreviousNode;
+		NoAnterior = NoTemp->Anterior;
+		TLista_Remover(Lista, NoTemp);
+		NoTemp = NoAnterior;
 	}
 }
 
-void TLista_Exchange(TListNode* NodeA, TListNode* NodeB)
+void TLista_Remover(TLista* Lista, TListaNo* No)
 {
-	TListNode* TempNode;
+	TListaNo* NoTemp;
 	
-	if (NodeA->Next != NULL)
-		NodeA->Next->Previous = NodeB;
-	if (NodeA->Previous != NULL)		
-		NodeA->Previous->Next = NodeB;
-	if (NodeB->Next != NULL)
-		NodeB->Next->Previous = NodeA;
-	if (NodeB->Previous != NULL)	
-		NodeB->Previous->Next = NodaA;
-	TempNode = NodeA->Next;
-	NodeA->Next = NodeB->Next;
-	NodeB->Next = TempNode;
-	TempNode = NodeA->Previous;
-	NodeA->Previous = NodeB->Previous;
-	NodeB->Previous = TempNode;
+	NoTemp = No;
+	if (No->Proximo != NULL)
+		Node->Proximo->Anterior = No->Anterior;
+	else
+		Lista->Ultimo = No->Anterior;
+	if (No->Anterior != NULL)
+		Node->Anterior->Proximo = No->Proximo;
+	else
+		Lista->Primeiro = No->Proximo;
+	free(NoTemp);
+	Lista->Tamanho--;
 }
 
-void TLista_Insert(TList* List, TListItem Item, TListNode* Node)
+void TLista_Item(TLista* Lista, TListaNo* No, TListaItem* Item, const short Direcao)
 {
-	TListNode* NewNode;
-	
-	NewNode = (TListNode*)malloc(sizeof(TListNode));
-	NewNode->Item = Item;
-	if (Node == NULL)
+	if (No == NULL)
 	{
-		List->First = NewNode;
-		List->Last = NewNode;
-		NewNode->Next = NULL;
-		NewNode->Previous = NULL;
+		if (Direcao == 1)
+			No = Lista->Primeiro;
+		else if (Direcao == -1)
+			No = Lista->Ultimo;
 	}
-	else
-	{		
-		NewNode->Next = Node->Next;
-		NewNode->Previous = Node;
-		Node->Next = NewNode;
-		if (NewNode->Next != NULL)
-			NewNode->Next->Previous = NewNode
-		else
-			List->Last = NewNode;
-	}
-	List->Count++;
+	Item = &(No->Item);
+	if (Direcao == 1)
+		No = No->Proximo;
+	else if (Direcao == -1)
+		No = No->Anterior;
 }
 
-void TLista_Remove(TList* List, TListNode* Node)
+bool TLista_SalvarNoArquivo(TLista* Lista, FILE* Arquivo)
 {
-	TListNode* TempNode;
+	bool resultado;
+	TListaNo* NoTemp;
+
+	resultado = true;
+	NoTemp = Lista-Primeiro;
+	while (NoTemp != NULL)
+	{
+		resultado = resultado && TListaItem_SalvarNoArquivo(&NoTemp->Valor, Arquivo);
+		NoTemp = NoTemp->Proximo;
+	}
+}
+
+unsigned int TLista_Tamanho(TLista* Lista)
+{
+	return Lista->Tamanho;
+}
+
+void TLista_Trocar(TLista* Lista, TListaNo* NoA, TListaNo* NoB)
+{
+	TListaNo* NoTemp;
 	
-	TempNode = Node;
-	if (Node->Next != NULL)
-		Node->Next->Previous = Node->Previous;
+	if (NoA->Proximo != NULL)
+		NoA->Proximo->Anterior = NoB;
 	else
-		List->Last = Node->Previous;
-	if (Node->Previous != NULL)
-		Node->Previous->Next = Node->Next;
+		Lista->Ultimo = NoB;
+	if (NoA->Anterior != NULL)		
+		NoA->Anterior->Proximo = NoB;
 	else
-		List->First = Node->Next;
-	free(TempNode);
-	List->Count--;
+		Lista->Primeiro = NoB;
+	if (NoB->Proximo != NULL)
+		NoB->Proximo->Anterior = NoA;
+	else
+		Lista->Ultimo = NoA;
+	if (NoB->Anterior != NULL)	
+		NoB->Anterior->Proximo = NoA;
+	else
+		Lista->Primeiro = NoA;
+	NoTemp = NoA->Proximo;
+	NoA->Proximo = NoB->Proximo;
+	NoB->Proximo = NoTemp;
+	NoTemp = NoA->Anterior;
+	NoA->Anterior = NoB->Anterior;
+	NoB->Anterior = NoTemp;
 }

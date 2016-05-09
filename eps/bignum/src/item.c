@@ -1,17 +1,14 @@
-//AEDS 2
-//LIST ABSTRACT DATA TYPE
-//DOUGLAS RODRIGUES DE ALMEIDA
-//
-//LinkedList ADT ListItem Implementation
+/*
+**	ITEM DE UM TAD LISTA
+**	DOUGLAS RODRIGUES DE ALMEIDA
+**
+**	Implementacao do item do TAD Lista para lista de inteiros
+**	
+**/
 
 #include "item.h"
 
-TListItem TListItem_Create(int Value)
+bool TListaItem_Salvar(TListaItem* Item, FILE* Arquivo)
 {
-	TListItem* TempItem;
-	
-	TempItem = (TListItem*)malloc(sizeof(TListItem));
- 	TempItem->Value = Value;
-  
-	return TempItem;
+	return (fprintf("%d", Item->Valor) >= 0);
 }
