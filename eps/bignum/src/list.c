@@ -19,7 +19,7 @@ TLista* TLista_Criar(void)
 	}
  	NovaLista->Tamanho = 0;
   	NovaLista->Primeiro = NULL;
-	NovaLaista->Ultimo = NULL;
+	NovaLista->Ultimo = NULL;
   
 	return NovaLista;
 }
@@ -47,21 +47,21 @@ void TLista_Inserir(TLista* Lista, const TListaItem Item, TListaNo* No)
 {
 	TListaNo* NoNovo;
 	
-	NovoNo = (TListaNo*)malloc(sizeof(TListaNo));
+	NoNovo = (TListaNo*)malloc(sizeof(TListaNo));
 	if (No == NULL)
 	{
 		printf("Erro: Erro ao alocar memoria.");
 		return;
 	}
-	NovoNo->Item = Item;
+	NoNovo->Item = Item;
 	if (No == NULL)
 	{
-		if (!Lista_EstaVazia(Lista))
+		if (!TLista_EstaVazia(Lista))
 		{
 			printf("Erro: Eh necessario informar qual no antecedera o novo no quando a lista nao esta vazia.");
-			free(NovoNo);
+			free(NoNovo);
 			return;
-	}
+		}
 		Lista->Primeiro = NoNovo;
 		Lista->Ultimo = NoNovo;
 		NoNovo->Proximo = NULL;
@@ -73,7 +73,7 @@ void TLista_Inserir(TLista* Lista, const TListaItem Item, TListaNo* No)
 		NoNovo->Anterior = No;
 		No->Proximo = NoNovo;
 		if (NoNovo->Proximo != NULL)
-			NoNovo->Proximo->Anterior = NoNovo
+			NoNovo->Proximo->Anterior = NoNovo;
 		else
 			Lista->Ultimo = NoNovo;
 	}
@@ -82,7 +82,8 @@ void TLista_Inserir(TLista* Lista, const TListaItem Item, TListaNo* No)
 
 void TLista_Limpar(TLista* Lista)
 {
-	TListaNo* NoAnterior, NoTemp;
+	TListaNo* NoAnterior; 
+	TListaNo* NoTemp;
 	
 	NoTemp = Lista->Ultimo;
 	while (NoTemp != NULL)
@@ -99,11 +100,11 @@ void TLista_Remover(TLista* Lista, TListaNo* No)
 	
 	NoTemp = No;
 	if (No->Proximo != NULL)
-		Node->Proximo->Anterior = No->Anterior;
+		No->Proximo->Anterior = No->Anterior;
 	else
 		Lista->Ultimo = No->Anterior;
 	if (No->Anterior != NULL)
-		Node->Anterior->Proximo = No->Proximo;
+		No->Anterior->Proximo = No->Proximo;
 	else
 		Lista->Primeiro = No->Proximo;
 	free(NoTemp);
@@ -132,12 +133,14 @@ bool TLista_SalvarNoArquivo(TLista* Lista, FILE* Arquivo)
 	TListaNo* NoTemp;
 
 	resultado = true;
-	NoTemp = Lista-Primeiro;
+	NoTemp = Lista->Primeiro;
 	while (NoTemp != NULL)
 	{
-		resultado = resultado && TListaItem_SalvarNoArquivo(&NoTemp->Valor, Arquivo);
+		resultado = resultado && TListaItem_SalvarNoArquivo(&(NoTemp->Item), Arquivo);
 		NoTemp = NoTemp->Proximo;
 	}
+
+	return resultado;
 }
 
 unsigned int TLista_Tamanho(TLista* Lista)

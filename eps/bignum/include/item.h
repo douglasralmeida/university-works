@@ -16,7 +16,7 @@ typedef struct _TListaItem {
 	unsigned short Valor;
 } TListaItem;
 
-//Grava o item em um arquivo
+/* Grava o item em um arquivo */
 bool TListaItem_SalvarNoArquivo(TListaItem* Item, FILE* Arquivo);
 
 #endif

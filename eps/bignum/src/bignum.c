@@ -71,28 +71,45 @@ TBigNum* TBigNum_Soma(TBigNum* NumeroX, TBigNum* NumeroY)
 		NovoAlgarismo.Valor += Algarismo->Valor;
 		mais_um = NovoAlgarismo.Valor / 10;
 		NovoAlgarismo.Valor = NovoAlgarismo.Valor % 10;
-		TLista_Inserir(NovoNumero->Algarismos, NovoAlgarismo, NovoNumero->Algarismos->Ultimo);
+		TLista_Inserir(NovoNumero->Algarismos, NovoAlgarismo, NULL);
 	}
 	if (n < tam_x)
 	{
-		
+		for (i = 0; i < tam_max - n; i++)
+		{
+			TLista_Item(NumeroX->Algarismo, NoXTemp, Algarismo, -1);
+			NovoAlgarismo.Valor = Algarismo->Valorr + mais_um;
+			mais_um = NovoAlgarismo.Valor / 10;
+			NovoAlgarismo.Valor = NovoAlgarismo.Valor % 10;
+			TLista_Inserir(NovoNumero->Algarismos, NovoAlgarismo, NULL);
+		}
 	}
 	else if (n < tam_y)
 	{
-		
+		for (i = 0; i < tam_y - n; i++)
+		{
+			TLista_Item(NumeroY->Algarismo, NoYTemp, Algarismo, -1);
+			NovoAlgarismo.Valor = Algarismo->Valorr + mais_um;
+			mais_um = NovoAlgarismo.Valor / 10;
+			NovoAlgarismo.Valor = NovoAlgarismo.Valor % 10;
+			TLista_Inserir(NovoNumero->Algarismos, NovoAlgarismo, NULL);
+	
+		}
 	}
 	else if (mais_um > 0)
 	{
-		
+		NovoAlgarismo->Valor = 1;
+		mais_um = 0;
+		TLista_Inserir(NovoNumero->Algarismos, NovoAlgarismo, NULL);
 	}
 	
 	return NovoNumero;
 }
-
+/*
 TBigNum* TBigNum_Subtrai(TBigNum* NumeroX, TBigNum* NumeroY)
 {
 
-}
+}*/
 
 void TBigNum_SalvarNoArquivo(TBigNum* Numero, FILE* Arquivo)
 {
