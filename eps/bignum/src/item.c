@@ -10,5 +10,5 @@
 
 bool TListaItem_SalvarNoArquivo(TListaItem* Item, FILE* Arquivo)
 {
-	return (fprintf(Arquivo, "%ud", Item->Valor) >= 0);
+	return (fprintf(Arquivo, "%d", Item->Valor) >= 0);
 }

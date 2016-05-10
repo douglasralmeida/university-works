@@ -49,8 +49,8 @@ void TLista_Limpar(TLista* Lista);
 /* Remove o no da lista */
 void TLista_Remover(TLista* Lista, TListaNo* No);
 
-/* Retorna o item dentro do no e aponta para o proximo no conforme direcao escolhida */
-void TLista_Item(TLista* Lista, TListaNo* No, TListaItem* Item, const short Direcao);
+/* Retorna o item na posicao informada */
+TListaItem TLista_Item(TLista* Lista, const unsigned int Posicao);
 
 /* Retorna o tamanho da lista */
 unsigned int TLista_Tamanho(TLista* Lista);

@@ -14,7 +14,7 @@ TLista* TLista_Criar(void)
 	NovaLista = (TLista*)malloc(sizeof(TLista));
 	if (NovaLista == NULL)
 	{
-		printf("Erro: Erro ao alocar memoria.");
+		printf("Erro (0x11): Erro durante alocacao de memoria.\n");
 		return NULL;
 	}
  	NovaLista->Tamanho = 0;
@@ -48,23 +48,25 @@ void TLista_Inserir(TLista* Lista, const TListaItem Item, TListaNo* No)
 	TListaNo* NoNovo;
 	
 	NoNovo = (TListaNo*)malloc(sizeof(TListaNo));
-	if (No == NULL)
+	if (NoNovo == NULL)
 	{
-		printf("Erro: Erro ao alocar memoria.");
+		printf("Erro (0x12): Erro durante alocacao de memoria.\n");
 		return;
 	}
 	NoNovo->Item = Item;
 	if (No == NULL)
 	{
-		if (!TLista_EstaVazia(Lista))
+		if (TLista_EstaVazia(Lista))
 		{
-			printf("Erro: Eh necessario informar qual no antecedera o novo no quando a lista nao esta vazia.");
-			free(NoNovo);
-			return;
+			Lista->Ultimo = NoNovo;
+			NoNovo->Proximo = NULL;			
+		}
+		else
+		{
+			NoNovo->Proximo = Lista->Primeiro;
+			Lista->Primeiro->Anterior = NoNovo;			
 		}
 		Lista->Primeiro = NoNovo;
-		Lista->Ultimo = NoNovo;
-		NoNovo->Proximo = NULL;
 		NoNovo->Anterior = NULL;
 	}
 	else
@@ -111,20 +113,16 @@ void TLista_Remover(TLista* Lista, TListaNo* No)
 	Lista->Tamanho--;
 }
 
-void TLista_Item(TLista* Lista, TListaNo* No, TListaItem* Item, const short Direcao)
+TListaItem TLista_Item(TLista* Lista, const unsigned int Posicao)
 {
-	if (No == NULL)
-	{
-		if (Direcao == 1)
-			No = Lista->Primeiro;
-		else if (Direcao == -1)
-			No = Lista->Ultimo;
-	}
-	*Item = No->Item;
-	if (Direcao == 1)
-		No = No->Proximo;
-	else if (Direcao == -1)
-		No = No->Anterior;
+	unsigned int i;
+	TListaNo* NoTemp;
+	
+	NoTemp = Lista->Primeiro;
+	for (i = 0; i < Posicao - 1; i++)
+		NoTemp = NoTemp->Proximo;
+
+	return NoTemp->Item;
 }
 
 bool TLista_SalvarNoArquivo(TLista* Lista, FILE* Arquivo)
@@ -139,7 +137,7 @@ bool TLista_SalvarNoArquivo(TLista* Lista, FILE* Arquivo)
 		resultado = resultado && TListaItem_SalvarNoArquivo(&(NoTemp->Item), Arquivo);
 		NoTemp = NoTemp->Proximo;
 	}
-
+	
 	return resultado;
 }
 

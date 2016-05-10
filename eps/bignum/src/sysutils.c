@@ -1,6 +1,6 @@
 #include "sysutils.h"
 
-unsigned short Min(unsigned short a, unsigned short b)
+unsigned short MenorValor(unsigned short a, unsigned short b)
 {
   if (a < b)
     return a;
