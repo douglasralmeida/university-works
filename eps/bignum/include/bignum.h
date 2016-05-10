@@ -28,7 +28,7 @@ void TBigNum_Destruir(TBigNum** PBigNum);
 void TBigNum_ApagarZeroEsquerda(TBigNum* Numero);
 
 /* Carrega um numero de um arquivo */
-void TBigNum_CarregarDeArquivo(TBigNum* Numero, FILE* Arquivo);
+bool TBigNum_CarregarDeArquivo(TBigNum* Numero, FILE* Arquivo);
 
 /* Compara dois numeros */
 TRelacao TBigNum_Comparar(TBigNum* NumeroX, TBigNum* NumeroY);

@@ -42,30 +42,36 @@ void TBigNum_ApagarZeroEsquerda(TBigNum* Numero)
 	TListaItem Algarismo;
 	
 	n = TBigNum_Tamanho(Numero);
-	Algarismo 
-	for (i = 1; i <= n; i++)
+	Algarismo = TLista_Item(Numero->Algarismos, 1);
+	for (i = 1; i < n; i++)
 	{
 		Algarismo = TLista_Item(Numero->Algarismos, 1);
 		if (Algarismo.Valor == 0)
 		{
-			TLista_Remover(
+			TLista_Remover(Numero->Algarismos, Numero->Algarismos->Primeiro);
 		}
+		else
+			return;
 	}
 }
 
-void TBigNum_CarregarDeArquivo(TBigNum* Numero, FILE* Arquivo)
+bool TBigNum_CarregarDeArquivo(TBigNum* Numero, FILE* Arquivo)
 {
 	char c;
 	TListaItem NovoAlgarismo;
 
 	TLista_Limpar(Numero->Algarismos);
 	c = fgetc(Arquivo);
-	while ((c != '\n') && (c != ' '))
+	if (c == EOF)
+		return false;
+	while ((c != '\n') && (c != ' ') && (c != EOF))
 	{
 		NovoAlgarismo.Valor = (short)(c - '0');
 		TLista_Adicionar(Numero->Algarismos, NovoAlgarismo);
 		c = fgetc(Arquivo);
 	}
+	
+	return true;
 }
 
 TRelacao TBigNum_Comparar(TBigNum* NumeroX, TBigNum* NumeroY)

@@ -26,8 +26,18 @@ TLista* TLista_Criar(void)
 
 void TLista_Destruir(TLista** PLista)
 {
+	TListaNo* No;
+	TListaNo* NoTemp;	
+	
 	if (PLista != NULL)
 	{
+		No = (*PLista)->Primeiro;
+		while (No != NULL)
+		{
+			NoTemp = No->Proximo;
+			free(No);
+			No = NoTemp;
+		}		
 		free(*PLista);
 		PLista = NULL;
 	}
