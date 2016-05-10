@@ -5,7 +5,7 @@ CFLAGS=-c -Wall -Wextra -Wpedantic $(DEFS) -Iinclude/
 DBGFLAGS=-ggdb -fno-inline -fno-omit-frame-pointer 
 BINDIR=bin
 OBJDIR=obj
-OBJFILES=sysutils.o item.o list.o bignum.o principal.o
+OBJFILES=sysutils.o arquivo.o item.o list.o bignum.o principal.o
 OBJECTS=$(addprefix $(OBJDIR)/, $(OBJFILES))
 SOURCEDIR=src
 

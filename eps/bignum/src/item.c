@@ -8,7 +8,7 @@
 
 #include "item.h"
 
-bool TListaItem_Salvar(TListaItem* Item, FILE* Arquivo)
+bool TListaItem_SalvarNoArquivo(TListaItem* Item, FILE* Arquivo)
 {
-	return (fprintf("%d", Item->Valor) >= 0);
+	return (fprintf(Arquivo, "%ud", Item->Valor) >= 0);
 }

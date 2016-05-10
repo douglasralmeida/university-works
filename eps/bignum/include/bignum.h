@@ -24,10 +24,13 @@ TBigNum* TBigNum_Criar();
 void TBigNum_Destruir(TBigNum** PBigNum);
 
 /* Carrega um numero de um arquivo */
-void TBigNum_CarregarDoArquivo(TBigNum* Numero, FILE* Arquivo);
+void TBigNum_CarregarDeArquivo(TBigNum* Numero, FILE* Arquivo);
+
+/* Checa se o numero e igual a zero */
+bool TBigNum_EZero(TBigNum* Numero);
 
 /* Soma dois numeros */
-TBigNum* TBigNum_Soma(TBigNum* NumeroX, TBigNum* NumeroY);
+TBigNum* TBigNum_Somar(TBigNum* NumeroX, TBigNum* NumeroY);
 
 /* Subtrai dois numeros */
 /*TBigNum* TBigNum_Subtrai(TBigNum* NumeroX, TBigNum* NumeroY);*/

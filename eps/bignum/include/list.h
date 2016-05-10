@@ -29,7 +29,7 @@ typedef struct _TLista {
 } TLista;
 
 /* Cria uma lista vazia */
-TLista* TList_Criar(void);
+TLista* TLista_Criar(void);
 
 /* Destroi a lista */
 void TLista_Destruir(TLista** PLista);

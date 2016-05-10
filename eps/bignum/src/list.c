@@ -120,7 +120,7 @@ void TLista_Item(TLista* Lista, TListaNo* No, TListaItem* Item, const short Dire
 		else if (Direcao == -1)
 			No = Lista->Ultimo;
 	}
-	Item = &(No->Item);
+	*Item = No->Item;
 	if (Direcao == 1)
 		No = No->Proximo;
 	else if (Direcao == -1)
