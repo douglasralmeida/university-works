@@ -50,7 +50,9 @@ void TBigNum_CarregarDeArquivo(TBigNum* Numero, FILE* Arquivo)
 
 TBigNum* TBigNum_Soma(TBigNum* NumeroX, TBigNum* NumeroY)
 {
-	int i, mais_um, n, tam_x, tam_y;
+	int i, n;
+	unsigned short mais_um; 
+	unsigned int tam_x, tam_y;
 	TBigNum* NovoNumero;
 	TListaNo* NoXTemp, NoYTemp;
 	TListaItem* Algarismo;
