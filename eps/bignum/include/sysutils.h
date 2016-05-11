@@ -1,6 +1,15 @@
+/*
+**	FUNCOES UTILITARIAS
+**	DOUGLAS RODRIGUES DE ALMEIDA
+**
+**	Cabecalho de funcoes com utilidade em futuros trabalhos
+**	
+**/
+
 #ifndef SYSUTILS_H
 #define SYSUTILS_H
 
+/* Estrutura auxiliar usada em comparacoes */
 typedef enum {
 	relacMenor, relacIgual, relacMaior
 	} TRelacao;

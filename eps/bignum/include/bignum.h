@@ -1,8 +1,8 @@
 /*
-**	BIGNUM
+**	TAD BIGNUM
 **	DOUGLAS RODRIGUES DE ALMEIDA
 **
-**	Cabecalho do TAD Bignum
+**	Cabecalhos e estruturas do TAD para manipulacao de inteiros de tamanho arbitrario
 **	
 **/
 
@@ -14,6 +14,7 @@
 #include "sysutils.h"
 #include "list.h"
 
+/* Estrutura do TAD Bignum */
 typedef struct TBigNum_ {
 	TLista* Algarismos;
 	} TBigNum;
@@ -35,6 +36,9 @@ TRelacao TBigNum_Comparar(TBigNum* NumeroX, TBigNum* NumeroY);
 
 /* Checa se o numero e igual a zero */
 bool TBigNum_EZero(TBigNum* Numero);
+
+/* Imprime um numero na tela */
+void TBigNum_Imprimir(TBigNum* Numero);
 
 /* Grava um numero em um arquivo */
 bool TBigNum_SalvarNoArquivo(TBigNum* Numero, FILE* Arquivo);

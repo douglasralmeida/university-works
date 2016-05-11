@@ -53,6 +53,18 @@ bool TLista_EstaVazia(TLista* Lista)
 	return (Lista->Primeiro == NULL);
 }
 
+void TLista_Imprimir(TLista* Lista)
+{
+	TListaNo* NoTemp;
+
+	NoTemp = Lista->Primeiro;
+	while (NoTemp != NULL)
+	{
+		TListaItem_Imprimir(&(NoTemp->Item));
+		NoTemp = NoTemp->Proximo;
+	}
+}
+
 void TLista_Inserir(TLista* Lista, const TListaItem Item, TListaNo* No)
 {
 	TListaNo* NoNovo;

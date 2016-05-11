@@ -1,3 +1,11 @@
+/*
+**	MANIPULACAO DE ARQUIVOS
+**	DOUGLAS RODRIGUES DE ALMEIDA
+**
+**	Implementacao de funcoes auxiliares para manipulacao de arquivos
+**	
+**/
+
 #include <stdio.h>
 #include "arquivo.h"
 

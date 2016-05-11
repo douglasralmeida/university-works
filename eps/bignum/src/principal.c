@@ -1,3 +1,11 @@
+/*
+**	EXERCICIO PRATICO 2 DE AEDS 2
+**	DOUGLAS RODRIGUES DE ALMEIDA
+**
+**	Algoritmos e Estrutura de Dados para manipulacao de inteiros de tamanho arbitrario
+**	
+**/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "arquivo.h"
@@ -41,7 +49,7 @@ void ProcessarEntrada(const char* Arquivo)
 		TBigNum_Destruir(&NumeroB);
 		return;
 	}
-	while ((!TBigNum_EZero(NumeroA)) && (!TBigNum_EZero(NumeroB)))
+	while (!((TBigNum_EZero(NumeroA)) && (TBigNum_EZero(NumeroB))))
 	{
 		if (soma)
 			NumeroR = TBigNum_Somar(NumeroA, NumeroB);
@@ -54,14 +62,14 @@ void ProcessarEntrada(const char* Arquivo)
 		soma = !soma;
 		if (!TBigNum_CarregarDeArquivo(NumeroA, ArquivoEntrada))
 		{
-			printf("Erro(0x54a): Formato de arquivo irreconhecivel.\n");
+			printf("Erro(0x54): Formato de arquivo irreconhecivel.\n");
 			TBigNum_Destruir(&NumeroA);
 			TBigNum_Destruir(&NumeroB);
 			return;
 		}
 		if (!TBigNum_CarregarDeArquivo(NumeroB, ArquivoEntrada))
 		{
-			printf("Erro(0x54a): Formato de arquivo irreconhecivel.\n");
+			printf("Erro(0x54): Formato de arquivo irreconhecivel.\n");
 			TBigNum_Destruir(&NumeroA);
 			TBigNum_Destruir(&NumeroB);
 			return;

@@ -1,3 +1,11 @@
+/*
+**	TAD BIGNUM
+**	DOUGLAS RODRIGUES DE ALMEIDA
+**
+**	Implementacao de TAD para manipulacao de inteiros de tamanho arbitrario
+**	
+**/
+
 #include "sysutils.h"
 #include "item.h"
 #include "list.h"
@@ -124,8 +132,12 @@ bool TBigNum_EZero(TBigNum* Numero)
 		if (i.Valor == 0)
 			return true;
 	}
-	
 	return false;
+}
+
+void TBigNum_Imprimir(TBigNum* Numero)
+{
+	TLista_Imprimir(Numero->Algarismos);
 }
 
 bool TBigNum_SalvarNoArquivo(TBigNum* Numero, FILE* Arquivo)
