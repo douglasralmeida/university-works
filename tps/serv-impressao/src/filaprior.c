@@ -7,118 +7,58 @@
 
 #include "filaprior.h"
 
-TFilaPrioridades* TFilaPrioridade_Criar(const unsigned int QuantTipoPrioridades)
+TFilaPrioridade* TFilaPrioridade_Criar(const unsigned int QuantTiposPrioridade)
 {
-	TLista* NovaLista;
+	int i;
+	TFilaPrioridade* NovaFila;
 	
-	NovaLista = (TLista*)malloc(sizeof(TLista));
-	if (NovaLista == NULL)
+	NovaFila = (TFilaPrioridade*)malloc(sizeof(TFilaPrioridade);
+	if (NovaFila == NULL)
 	{
 		printf("Erro (0x11): Erro durante alocacao de memoria.\n");
 		return NULL;
 	}
- 	NovaLista->Tamanho = 0;
-  	NovaLista->Primeiro = NULL;
-	NovaLista->Ultimo = NULL;
+	NovaFila->FilasVirtuais = (TFilaVirtal*)malloc(QuantTiposPrioridade * sizeof(TFilaVirtal));
+	if (NovaFila->FilasVirtuais == NULL)
+	{
+		printf("Erro (0x12): Erro durante alocacao de memoria.\n");
+		free(NovaFila);
+		return NULL;
+	}
+	for (i = 0; i < QuantTiposPrioridade; i++)
+	{
+		NovaFila->FilasVirtuais[i].Frente = NULL;
+		NovaFila->FilasVirtuais[i].Tras = NULL;
+	}
+	NovaFila->TiposPrioridade = QuantTiposPrioridade;
+ 	NovaFila->Tamanho = 0;
+  	NovaFila->Frente = NULL;
+	NovaFila->Tras = NULL;
   
-	return NovaLista;
+	return NovaFila;
 }
 
-void TLista_Destruir(TLista** PLista)
+void TFilaPrioridade_Destruir(TFilaPrioridade** PFila)
 {
-	TListaNo* No;
-	TListaNo* NoTemp;	
+	TFilaNo* No;
+	TFilaNo* NoTemp;	
 	
-	if (PLista != NULL)
+	if (PFila != NULL)
 	{
-		No = (*PLista)->Primeiro;
+		No = (*PFila)->Frente;
 		while (No != NULL)
 		{
 			NoTemp = No->Proximo;
 			free(No);
 			No = NoTemp;
-		}		
-		free(*PLista);
-		PLista = NULL;
-	}
-}
-
-void TLista_Adicionar(TLista* Lista, const TListaItem Item)
-{
-	TLista_Inserir(Lista, Item, Lista->Ultimo);
-}
-
-bool TLista_EstaVazia(TLista* Lista)
-{
-	return (Lista->Primeiro == NULL);
-}
-
-void TLista_Imprimir(TLista* Lista)
-{
-	TListaNo* NoTemp;
-
-	NoTemp = Lista->Primeiro;
-	while (NoTemp != NULL)
-	{
-		TListaItem_Imprimir(&(NoTemp->Item));
-		NoTemp = NoTemp->Proximo;
-	}
-}
-
-void TLista_Inserir(TLista* Lista, const TListaItem Item, TListaNo* No)
-{
-	TListaNo* NoNovo;
-	
-	NoNovo = (TListaNo*)malloc(sizeof(TListaNo));
-	if (NoNovo == NULL)
-	{
-		printf("Erro (0x12): Erro durante alocacao de memoria.\n");
-		return;
-	}
-	NoNovo->Item = Item;
-	if (No == NULL)
-	{
-		if (TLista_EstaVazia(Lista))
-		{
-			Lista->Ultimo = NoNovo;
-			NoNovo->Proximo = NULL;			
 		}
-		else
-		{
-			NoNovo->Proximo = Lista->Primeiro;
-			Lista->Primeiro->Anterior = NoNovo;			
-		}
-		Lista->Primeiro = NoNovo;
-		NoNovo->Anterior = NULL;
-	}
-	else
-	{		
-		NoNovo->Proximo = No->Proximo;
-		NoNovo->Anterior = No;
-		No->Proximo = NoNovo;
-		if (NoNovo->Proximo != NULL)
-			NoNovo->Proximo->Anterior = NoNovo;
-		else
-			Lista->Ultimo = NoNovo;
-	}
-	Lista->Tamanho++;
-}
-
-void TLista_Limpar(TLista* Lista)
-{
-	TListaNo* NoAnterior; 
-	TListaNo* NoTemp;
-	
-	NoTemp = Lista->Ultimo;
-	while (NoTemp != NULL)
-	{
-		NoAnterior = NoTemp->Anterior;
-		TLista_Remover(Lista, NoTemp);
-		NoTemp = NoAnterior;
+		free((*PFila)->FilasVirtuais);
+		free(*PFila);
+		PFila = NULL;
 	}
 }
 
-void TLista_Remover(TLista* Lista, TListaNo* No)
+TListaItem TFilaPrioridade_Desenfileirar(TFilaPrioridade* Fila)
 {
 	TListaNo* NoTemp;
 	
@@ -135,63 +75,118 @@ void TLista_Remover(TLista* Lista, TListaNo* No)
 	Lista->Tamanho--;
 }
 
-TListaItem TLista_Item(TLista* Lista, const unsigned int Posicao)
+void TFilaPrioridade_Enfileirar(TFilaPrioridade* Fila, const TListaItem Item, const unsigned int Prioridade)
 {
-	unsigned int i;
-	TListaNo* NoTemp;
+	bool atras_todos;
+	bool total_prioridade;
+	int i;
+	TFilaNo* NoNovo;
 	
-	NoTemp = Lista->Primeiro;
-	for (i = 0; i < Posicao - 1; i++)
-		NoTemp = NoTemp->Proximo;
+	if (Prioridade > Fila->TiposPrioridade)
+	{
+		printf("Erro (0x13): Prioridade informada nao suportada pela fila.\n");
+		return;
+	}
+	NoNovo = (TFIlaNo*)malloc(sizeof(TFilaNo));
+	if (NoNovo == NULL)
+	{
+		printf("Erro (0x12): Erro durante alocacao de memoria.\n");
+		return;
+	}
+	NoNovo->Item = Item;
+	
+	if (Fila->FilaVirtual[Prioridade-1].Frente == NULL)
+	{
+		Fila->FilaVirtual[Prioridade-1].Frente = NoNovo;
+		for (i = Prioridade - 2; i >= 0; i--)
+			if (Fila->FilaVirtual[i].Tras != NULL)
+			{
+				Fila->FilaVirtual[i].Tras->Proximo = NoNovo;
+				break;
+			}
+		if (Fila->Frente == NULL)
+			Fila->Frente = NoNovo;
+		else
+		{
+			total_prioridade = true;
+			for (i = 0; i < Prioridade - 1; i++)
+				if (Fila.Frente == Fila->FilaVirtual[i].Frente)
+				{
+					total_prioridade = false;
+					break;
+				}
+			if (total_prioridade)
+				Fila->Frente = NoNovo;
+		}
+	}
 
-	return NoTemp->Item;
+	if (Fila->FilaVirtual[Prioridade-1].Tras == NULL)
+	{
+		Fila->FilaVirtual[Prioridade-1].Tras = NoNovo;
+		for (i = Prioridade; i < Fila->TiposPrioridade; i++)
+			if (Fila->FilaVirtual[i].Frente != NULL)
+			{
+				NoNovo->Proximo = Fila->FilaVirtual[i].Frente;
+				break;
+			}
+		atras_todos = true;
+		for (i = Prioridade; i < Fila->TiposPrioridade; i++)
+		{
+			if (Fila->Tras == Fila->FilaVirtual[i].Tras)
+			{
+				atras_todos = false;
+				break;
+			}
+		}
+		if ((atras_todos) || (Fila->Tras == NULL))
+			Fila->Tras = NoNovo;
+	}
+	else
+	{
+		if (Fila->Tras == Fila-FilaVirtual[Prioridade-1].Tras)
+			Fila->Tras = NoNovo;
+		NoNovo->Proximo = Fila->FilaVirtual[Prioridade-1].Tras->Proximo;
+		Fila->FilaVirtual[Prioridade-1].Tras->Proximo = NoNovo;
+		Fila->FilaVirtual[Prioridade-1].Tras = NoNovo;
+	}
+	Lista->Tamanho++;
 }
 
-bool TLista_SalvarNoArquivo(TLista* Lista, FILE* Arquivo)
+void TFilaPrioridade_Imprimir(TFilaPrioridade* Fila)
 {
-	bool resultado;
-	TListaNo* NoTemp;
+	TFilaNo* NoTemp;
 
-	resultado = true;
-	NoTemp = Lista->Primeiro;
+	NoTemp = Fila->Frente;
 	while (NoTemp != NULL)
 	{
-		resultado = resultado && TListaItem_SalvarNoArquivo(&(NoTemp->Item), Arquivo);
+		TFilaItem_Imprimir(&(NoTemp->Item));
 		NoTemp = NoTemp->Proximo;
 	}
-	
-	return resultado;
 }
 
-unsigned int TLista_Tamanho(TLista* Lista)
+void TFilaPrioridade_Limpar(TFilaPrioridade* Fila)
 {
-	return Lista->Tamanho;
+	int i;
+	TFilaNo* NoProximo;
+	TFilaNo* NoTemp;
+	
+	NoTemp = Fila->Frente;
+	while (NoTemp != NULL)
+	{
+		NoProximo = NoTemp->Proximo;
+		free(NoTemp);
+		NoTemp = NoProximo;
+	}
+	for (i = 0; i < Fila-TiposPrioridade; i++)
+	{
+		Fila->FilasVirtuais[i].Frente = NULL;
+		Fila->FilasVirtuais[i].Tras = NULL;
+	}
+	Fila->Tamanho = 0;
+	Fila->Tras = NULL;
 }
 
-void TLista_Trocar(TLista* Lista, TListaNo* NoA, TListaNo* NoB)
+unsigned int TFilaPrioridade_Tamanho(TFilaPrioridade* Fila)
 {
-	TListaNo* NoTemp;
-	
-	if (NoA->Proximo != NULL)
-		NoA->Proximo->Anterior = NoB;
-	else
-		Lista->Ultimo = NoB;
-	if (NoA->Anterior != NULL)		
-		NoA->Anterior->Proximo = NoB;
-	else
-		Lista->Primeiro = NoB;
-	if (NoB->Proximo != NULL)
-		NoB->Proximo->Anterior = NoA;
-	else
-		Lista->Ultimo = NoA;
-	if (NoB->Anterior != NULL)	
-		NoB->Anterior->Proximo = NoA;
-	else
-		Lista->Primeiro = NoA;
-	NoTemp = NoA->Proximo;
-	NoA->Proximo = NoB->Proximo;
-	NoB->Proximo = NoTemp;
-	NoTemp = NoA->Anterior;
-	NoA->Anterior = NoB->Anterior;
-	NoB->Anterior = NoTemp;
+	return Fila->Tamanho;
 }

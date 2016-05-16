@@ -31,31 +31,69 @@ typedef struct _TFilaVirtual {
 /* Estrutura da fila com prioridades */
 typedef struct _TFilaPrioridade {
 	TFilaVirtual* FilasVirtuais;
-	unsigned int Prioridades;
+	TFilaNo* Frente;	
 	unsigned int Tamanho;
-	TFilaNo* Primeiro;
-	TFilaNo* Ultimo;
+	unsigned int TiposPrioridade;
+	TFilaNo* Tras;
 } TFilaPrioridade;
 
-/* Cria uma fila com prioridades vazia */
+/* ----------------------------------------------------------------------------
+ * funcao:		TFilaPrioridade_Criar
+ * 				Cria uma fila com prioridades vazia
+ * @param:		QuantTipoPrioridades: Quantidade de tipos de prioridades
+				diferentes.
+ * @retorna:	A filade prioridades alocada
+ *---------------------------------------------------------------------------*/ 
 TFilaPrioridade* TFilaPrioridade_Criar(const unsigned int QuantTipoPrioridades);
 
-/* Destroi a fila com prioridades */
+/* ----------------------------------------------------------------------------
+ * funcao:		TFilaPrioridade_Destruir
+ * 				Destroi a fila com prioridades
+ * @param:		Ponteiro para o ponteiro da fila
+ * @retorna:	(vazio)
+ *---------------------------------------------------------------------------*/ 
 void TFilaPrioridade_Destruir(TLista** PFila);
 
-/* Remove um item da fila com prioridades */
+/* ----------------------------------------------------------------------------
+ * funcao:		TFilaPrioridade_Desenfileirar
+ * 				Remove o proximo item da fila com prioridades
+ * @param:		Ponteiro para a fila
+ * @retorna:	O item removido
+ *---------------------------------------------------------------------------*/ 
 TFilaItem TFilaPrioridade_Desenfileirar(TFilaPrioridade* Fila);
 
-/* Adidiona um item a fila com prioridades */
-void TFilaPrioridade_Enfileirar(TFilaPrioridade* Fila, const TFilaItem Item, const int Prioridade);
+/* ----------------------------------------------------------------------------
+ * funcao:		TFilaPrioridade_Enfileirar
+ * 				Insere um item na fila com prioridades
+ * @param:		Ponteiro para a fila
+ * @param:		Item a ser inserido
+ * @param:		Prioridade de saida do item a ser inserido
+ * @retorna:	(vazio)
+ *---------------------------------------------------------------------------*/ 
+void TFilaPrioridade_Enfileirar(TFilaPrioridade* Fila, const TFilaItem Item, const unsigned int Prioridade);
 
-/* Imprime a fila com prioridades na tela */
+/* ----------------------------------------------------------------------------
+ * funcao:		TFilaPrioridade_Imprimir
+ * 				Imprime a fila com prioridades na tela
+ * @param:		Ponteiro para a fila
+ * @retorna:	(vazio)
+ *---------------------------------------------------------------------------*/ 
 void TFilaPrioridade_Imprimir(TFilaPrioridade* Fila);
 
-/* Remove todos os itens da fila com prioridades */
+/* ----------------------------------------------------------------------------
+ * funcao:		TFilaPrioridade_Limpar
+ * 				Remove todos os itens da fila com prioridades
+ * @param:		Ponteiro para a fila
+ * @retorna:	(vazio)
+ *---------------------------------------------------------------------------*/ 
 void TFilaPrioridade_Limpar(TFilaPrioridade* Fila);
 
-/* Retorna o quantidade de itens da fila com prioridaes */
+/* ----------------------------------------------------------------------------
+ * funcao:		TFilaPrioridade_Tamanho
+ * 				Retorna o quantidade de itens da fila com prioridaes
+ * @param:		Ponteiro para a fila
+ * @retorna:	Inteiro com o tamanho
+ *---------------------------------------------------------------------------*/ 
 unsigned int TFilaPrioridade_Tamanho(TFilaPrioridade* Fila);
 
 #endif
