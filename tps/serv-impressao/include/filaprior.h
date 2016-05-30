@@ -34,7 +34,6 @@ typedef struct _TFilaPrioridade {
 	TFilaNo* Frente;	
 	unsigned int Tamanho;
 	unsigned int TiposPrioridade;
-	TFilaNo* Tras;
 } TFilaPrioridade;
 
 /* ----------------------------------------------------------------------------

@@ -33,7 +33,6 @@ TFilaPrioridade* TFilaPrioridade_Criar(const unsigned int QuantTiposPrioridade)
 	NovaFila->TiposPrioridade = QuantTiposPrioridade;
  	NovaFila->Tamanho = 0;
   	NovaFila->Frente = NULL;
-	NovaFila->Tras = NULL;
   
 	return NovaFila;
 }
@@ -60,25 +59,45 @@ void TFilaPrioridade_Destruir(TFilaPrioridade** PFila)
 
 TListaItem TFilaPrioridade_Desenfileirar(TFilaPrioridade* Fila)
 {
-	TListaNo* NoTemp;
+	int i;
+	TFilaNo* NoTemp;
 	
-	NoTemp = No;
-	if (No->Proximo != NULL)
-		No->Proximo->Anterior = No->Anterior;
+	NoTemp = Fila->Frente;
+	if (NoTemp == NULL)
+	{
+		printf("Erro (0x14): Fila vazia.\n");
+		return;
+	}
 	else
-		Lista->Ultimo = No->Anterior;
-	if (No->Anterior != NULL)
-		No->Anterior->Proximo = No->Proximo;
-	else
-		Lista->Primeiro = No->Proximo;
+	{
+		if (NoTemp->Proximo != NULL)
+		{
+			i = 1;
+			while (i < Fila->TipoPrioridades)
+			{
+				if (Fila->FilaVirtual[i].Frente == NoTemp->Proximo)
+					break;
+				i++;	
+			}
+			if (i < Fila->TipoPrioridades)
+			{
+				FilaVirtual[i-1].Frente = NULL;
+				FilaVirtual[i-1].Tras = NULL;
+			}
+		}
+	}
+
 	free(NoTemp);
 	Lista->Tamanho--;
 }
 
+bool TFilaVirtual_Vazia(TFilaVirtual* Fila)
+{
+	return (Fila->Frente = NULL);
+}
+
 void TFilaPrioridade_Enfileirar(TFilaPrioridade* Fila, const TListaItem Item, const unsigned int Prioridade)
 {
-	bool atras_todos;
-	bool total_prioridade;
 	int i;
 	TFilaNo* NoNovo;
 	
@@ -94,57 +113,41 @@ void TFilaPrioridade_Enfileirar(TFilaPrioridade* Fila, const TListaItem Item, co
 		return;
 	}
 	NoNovo->Item = Item;
-	
-	if (Fila->FilaVirtual[Prioridade-1].Frente == NULL)
+	NoNovo->Proximo = NULL;
+	/* Se a fila virtual estiver vazia */	
+	if TFilaVirtual_Vazia(Fila->FilaVirtual + Prioridade - 1)
 	{
 		Fila->FilaVirtual[Prioridade-1].Frente = NoNovo;
-		for (i = Prioridade - 2; i >= 0; i--)
-			if (Fila->FilaVirtual[i].Tras != NULL)
-			{
-				Fila->FilaVirtual[i].Tras->Proximo = NoNovo;
+		Fila->FilaVirtual[Prioridade-1].Tras = NoNovo;
+		/* Checa a existencia de filas virtuais com prioridade maior que a prioridade informada */
+		i = Prioridade - 2;
+		while (i >= 0)
+		{
+			if (!TFilaVirtual_Vazia(Fila->FilaVirtual + i))
 				break;
-			}
-		if (Fila->Frente == NULL)
-			Fila->Frente = NoNovo;
+			i--;
+		}
+		if (i >= 0)
+		{
+			NoNovo->Proximo = Fila->FilaVirtual[i].Tras->Proximo;
+			Fila->FilaVirtual[i].Tras->Proximo = NoNovo;
+		}
 		else
 		{
-			total_prioridade = true;
-			for (i = 0; i < Prioridade - 1; i++)
-				if (Fila.Frente == Fila->FilaVirtual[i].Frente)
-				{
-					total_prioridade = false;
+			Fila->Frente = NoNovo;
+			i = Prioridade;
+			while (i < Fila->TiposPrioridade)
+			{
+				if (!TFilaVirtual_Vazia(Fila->FilaVirtual + i))
 					break;
-				}
-			if (total_prioridade)
-				Fila->Frente = NoNovo;
-		}
-	}
-
-	if (Fila->FilaVirtual[Prioridade-1].Tras == NULL)
-	{
-		Fila->FilaVirtual[Prioridade-1].Tras = NoNovo;
-		for (i = Prioridade; i < Fila->TiposPrioridade; i++)
-			if (Fila->FilaVirtual[i].Frente != NULL)
-			{
+				i++;
+			}
+			if (i < Fila->TiposPrioridade)
 				NoNovo->Proximo = Fila->FilaVirtual[i].Frente;
-				break;
-			}
-		atras_todos = true;
-		for (i = Prioridade; i < Fila->TiposPrioridade; i++)
-		{
-			if (Fila->Tras == Fila->FilaVirtual[i].Tras)
-			{
-				atras_todos = false;
-				break;
-			}
 		}
-		if ((atras_todos) || (Fila->Tras == NULL))
-			Fila->Tras = NoNovo;
 	}
 	else
 	{
-		if (Fila->Tras == Fila-FilaVirtual[Prioridade-1].Tras)
-			Fila->Tras = NoNovo;
 		NoNovo->Proximo = Fila->FilaVirtual[Prioridade-1].Tras->Proximo;
 		Fila->FilaVirtual[Prioridade-1].Tras->Proximo = NoNovo;
 		Fila->FilaVirtual[Prioridade-1].Tras = NoNovo;
@@ -183,7 +186,6 @@ void TFilaPrioridade_Limpar(TFilaPrioridade* Fila)
 		Fila->FilasVirtuais[i].Tras = NULL;
 	}
 	Fila->Tamanho = 0;
-	Fila->Tras = NULL;
 }
 
 unsigned int TFilaPrioridade_Tamanho(TFilaPrioridade* Fila)
