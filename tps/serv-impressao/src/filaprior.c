@@ -77,7 +77,7 @@ TListaItem TFilaPrioridade_Desenfileirar(TFilaPrioridade* Fila)
 			{
 				if (Fila->FilaVirtual[i].Frente == NoTemp->Proximo)
 					break;
-				i++;	
+				i++; 
 			}
 			if (i < Fila->TipoPrioridades)
 			{
