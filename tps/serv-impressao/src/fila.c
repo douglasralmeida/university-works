@@ -98,7 +98,7 @@ void TFila_Limpar(TFila* Fila)
 	Fila->Tamanho = 0;
 }
 
-unsigned int TFila_Tamanho(TFila* Fila)
+size_t TFila_Tamanho(TFila* Fila)
 {
 	return Fila->Tamanho;
 }

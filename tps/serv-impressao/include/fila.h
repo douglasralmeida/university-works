@@ -25,7 +25,7 @@ struct _TFilaNo {
 /* Estrutura da fila */
 typedef struct _TFila {
 	TFilaNo* Frente;
-	unsigned int Tamanho;
+	size_t Tamanho;
 	TFilaNo* Tras;
 } TFila;
 
@@ -84,6 +84,6 @@ void TFila_Limpar(TFila* Fila);
  * @param:		Fila
  * @retorna:	Inteiro com o tamanho
  *---------------------------------------------------------------------------*/ 
-unsigned int TFila_Tamanho(TFila* Fila);
+size_t TFila_Tamanho(TFila* Fila);
 
 #endif

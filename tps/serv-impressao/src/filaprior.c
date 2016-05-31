@@ -7,7 +7,7 @@
 
 #include "filaprior.h"
 
-TFilaPrioridade* TFilaPrioridade_Criar(const unsigned int QuantTiposPrioridade)
+TFilaPrioridade* TFilaPrioridade_Criar(void)
 {
 	int i;
 	TFilaPrioridade* NovaFila;
@@ -15,43 +15,20 @@ TFilaPrioridade* TFilaPrioridade_Criar(const unsigned int QuantTiposPrioridade)
 	NovaFila = (TFilaPrioridade*)malloc(sizeof(TFilaPrioridade);
 	if (NovaFila == NULL)
 	{
-		printf("Erro (0x11): Erro durante alocacao de memoria.\n");
+		printf("Erro (0x41): Erro durante alocacao de memoria.\n");
 		return NULL;
 	}
-	NovaFila->FilasVirtuais = (TFilaVirtal*)malloc(QuantTiposPrioridade * sizeof(TFilaVirtal));
-	if (NovaFila->FilasVirtuais == NULL)
-	{
-		printf("Erro (0x12): Erro durante alocacao de memoria.\n");
-		free(NovaFila);
-		return NULL;
-	}
-	for (i = 0; i < QuantTiposPrioridade; i++)
-	{
-		NovaFila->FilasVirtuais[i].Frente = NULL;
-		NovaFila->FilasVirtuais[i].Tras = NULL;
-	}
-	NovaFila->TiposPrioridade = QuantTiposPrioridade;
- 	NovaFila->Tamanho = 0;
-  	NovaFila->Frente = NULL;
+	NovaFila->Frente = NULL;
+	NovaFila->Tamanho = 0;
   
 	return NovaFila;
 }
 
 void TFilaPrioridade_Destruir(TFilaPrioridade** PFila)
-{
-	TFilaNo* No;
-	TFilaNo* NoTemp;	
-	
+{	
 	if (PFila != NULL)
 	{
-		No = (*PFila)->Frente;
-		while (No != NULL)
-		{
-			NoTemp = No->Proximo;
-			free(No);
-			No = NoTemp;
-		}
-		free((*PFila)->FilasVirtuais);
+		TFilaPrioridade_Limpar(*PFila);
 		free(*PFila);
 		PFila = NULL;
 	}
@@ -91,66 +68,33 @@ TListaItem TFilaPrioridade_Desenfileirar(TFilaPrioridade* Fila)
 	Lista->Tamanho--;
 }
 
-bool TFilaVirtual_Vazia(TFilaVirtual* Fila)
-{
-	return (Fila->Frente = NULL);
-}
-
-void TFilaPrioridade_Enfileirar(TFilaPrioridade* Fila, const TListaItem Item, const unsigned int Prioridade)
+void TFilaPrioridade_Enfileirar(TFilaPrioridade* Fila, const TListaItem Item)
 {
 	int i;
 	TFilaNo* NoNovo;
+	TFilaNo* NoAtual;
 	
-	if (Prioridade > Fila->TiposPrioridade)
-	{
-		printf("Erro (0x13): Prioridade informada nao suportada pela fila.\n");
-		return;
-	}
 	NoNovo = (TFIlaNo*)malloc(sizeof(TFilaNo));
 	if (NoNovo == NULL)
 	{
-		printf("Erro (0x12): Erro durante alocacao de memoria.\n");
+		printf("Erro (0x43): Erro durante alocacao de memoria.\n");
 		return;
 	}
 	NoNovo->Item = Item;
-	NoNovo->Proximo = NULL;
+	NoNovo->Esquerda = NULL;
+	NoNovo->Direita = NULL;
 	/* Se a fila virtual estiver vazia */	
-	if TFilaVirtual_Vazia(Fila->FilaVirtual + Prioridade - 1)
+	if (TFilaPrioridade_Tamanho(Fila) == 0)
 	{
-		Fila->FilaVirtual[Prioridade-1].Frente = NoNovo;
-		Fila->FilaVirtual[Prioridade-1].Tras = NoNovo;
-		/* Checa a existencia de filas virtuais com prioridade maior que a prioridade informada */
-		i = Prioridade - 2;
-		while (i >= 0)
-		{
-			if (!TFilaVirtual_Vazia(Fila->FilaVirtual + i))
-				break;
-			i--;
-		}
-		if (i >= 0)
-		{
-			NoNovo->Proximo = Fila->FilaVirtual[i].Tras->Proximo;
-			Fila->FilaVirtual[i].Tras->Proximo = NoNovo;
-		}
-		else
-		{
-			Fila->Frente = NoNovo;
-			i = Prioridade;
-			while (i < Fila->TiposPrioridade)
-			{
-				if (!TFilaVirtual_Vazia(Fila->FilaVirtual + i))
-					break;
-				i++;
-			}
-			if (i < Fila->TiposPrioridade)
-				NoNovo->Proximo = Fila->FilaVirtual[i].Frente;
-		}
+		Fila->Frente = NovoNo;
 	}
 	else
 	{
-		NoNovo->Proximo = Fila->FilaVirtual[Prioridade-1].Tras->Proximo;
-		Fila->FilaVirtual[Prioridade-1].Tras->Proximo = NoNovo;
-		Fila->FilaVirtual[Prioridade-1].Tras = NoNovo;
+		NoAtual = Fila->Frente;
+		if (TItem_Compara(Fila->Frente->Item, NoNovo->Item))
+			
+		else
+			
 	}
 	Lista->Tamanho++;
 }
@@ -188,7 +132,7 @@ void TFilaPrioridade_Limpar(TFilaPrioridade* Fila)
 	Fila->Tamanho = 0;
 }
 
-unsigned int TFilaPrioridade_Tamanho(TFilaPrioridade* Fila)
+size_t TFilaPrioridade_Tamanho(TFilaPrioridade* Fila)
 {
 	return Fila->Tamanho;
 }

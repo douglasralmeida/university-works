@@ -15,35 +15,27 @@
 #include "item.h"
 
 /* Estrutura do no da fila */
-typedef struct _TFilaNo TFilaNo;
+typedef struct _TFilaPrioridadeNo TFilaPrioridadeNo;
 
-struct _TFilaNo {
+struct _TFilaPrioridadeNo {
 	TFilaItem Item;
-	TFilaNo* Proximo;
+	TFilaPrioridadeNo* Esquerda;
+	TFilaPrioridadeNo* Direita;
 };
-
-/* Estrutura da fila virtual */
-typedef struct _TFilaVirtual {
-	TFilaNo* Frente;
-	TFilaNo* Tras;
-} TFilaVirtual;
 
 /* Estrutura da fila com prioridades */
 typedef struct _TFilaPrioridade {
-	TFilaVirtual* FilasVirtuais;
-	TFilaNo* Frente;	
-	unsigned int Tamanho;
-	unsigned int TiposPrioridade;
+	TFilaPrioridadeNo* Frente;
+	size_t Tamanho;
 } TFilaPrioridade;
 
 /* ----------------------------------------------------------------------------
  * funcao:		TFilaPrioridade_Criar
  * 				Cria uma fila com prioridades vazia
- * @param:		QuantTipoPrioridades: Quantidade de tipos de prioridades
-				diferentes.
+ * @param:		(vazio)
  * @retorna:	A filade prioridades alocada
  *---------------------------------------------------------------------------*/ 
-TFilaPrioridade* TFilaPrioridade_Criar(const unsigned int QuantTipoPrioridades);
+TFilaPrioridade* TFilaPrioridade_Criar(void);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TFilaPrioridade_Destruir
@@ -57,9 +49,10 @@ void TFilaPrioridade_Destruir(TLista** PFila);
  * funcao:		TFilaPrioridade_Desenfileirar
  * 				Remove o proximo item da fila com prioridades
  * @param:		Ponteiro para a fila
- * @retorna:	O item removido
+ * @param:		Item a ser removido
+ * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/ 
-TFilaItem TFilaPrioridade_Desenfileirar(TFilaPrioridade* Fila);
+void TFilaPrioridade_Desenfileirar(TFilaPrioridade* Fila, TItem* Item);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TFilaPrioridade_Enfileirar
@@ -93,6 +86,6 @@ void TFilaPrioridade_Limpar(TFilaPrioridade* Fila);
  * @param:		Ponteiro para a fila
  * @retorna:	Inteiro com o tamanho
  *---------------------------------------------------------------------------*/ 
-unsigned int TFilaPrioridade_Tamanho(TFilaPrioridade* Fila);
+size_t TFilaPrioridade_Tamanho(TFilaPrioridade* Fila);
 
 #endif
