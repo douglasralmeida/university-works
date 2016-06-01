@@ -19,13 +19,17 @@ typedef struct _TFilaPrioridadeNo TFilaPrioridadeNo;
 
 struct _TFilaPrioridadeNo {
 	TFilaItem Item;
-	TFilaPrioridadeNo* Esquerda;
-	TFilaPrioridadeNo* Direita;
 };
+
+/* Funcao para comparar nos da fila */
+typedef bool (*TFuncaoComparaPrioridade)(TFilaPrioridadeNo* No1, TFilaPrioridadeNo* No2);
 
 /* Estrutura da fila com prioridades */
 typedef struct _TFilaPrioridade {
-	TFilaPrioridadeNo* Frente;
+	size_t Capacidade;
+	size_t Expansao;
+	TFuncaoComparaPrioridade FuncaoCompara;
+	TFilaPrioridadeNo* Heap;
 	size_t Tamanho;
 } TFilaPrioridade;
 
@@ -35,7 +39,7 @@ typedef struct _TFilaPrioridade {
  * @param:		(vazio)
  * @retorna:	A filade prioridades alocada
  *---------------------------------------------------------------------------*/ 
-TFilaPrioridade* TFilaPrioridade_Criar(void);
+TFilaPrioridade* TFilaPrioridade_Criar(size_t Capacidade, TFuncaoComparaPrioridade Funcao);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TFilaPrioridade_Destruir

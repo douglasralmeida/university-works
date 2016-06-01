@@ -49,6 +49,7 @@ void TFila_Desenfileirar(TFila* Fila, TItem* Item)
 	else
 	{
 		NoTemp = Fila->Frente;
+		*Item = NoTemp->Item;
 		Fila->Frente = Fila->Frente->Prox;
 		Fila->Tamanho--;
 	}
