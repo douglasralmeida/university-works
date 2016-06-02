@@ -26,13 +26,14 @@ struct _TListaNo {
 /* Estrutura da lista */
 typedef struct _TLista {
 	TFuncaoDestruir FuncaoDestruir;
+	TFuncaoImprimir FuncaoImprimir;
 	size_t Tamanho;
 	TListaNo* Primeiro;
 	TListaNo* Ultimo;
 } TLista;
 
 /* Cria uma lista vazia */
-TLista* TLista_Criar(TFuncaoDestruir FuncaoDestruir);
+TLista* TLista_Criar(TFuncaoDestruir FuncaoDestruir, TFuncaoImprimir FuncaoImprimir);
 
 /* Destroi a lista */
 void TLista_Destruir(TLista** PLista);

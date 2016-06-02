@@ -52,7 +52,7 @@ void TLista_Imprimir(TLista* Lista)
 	NoTemp = Lista->Primeiro;
 	while (NoTemp != NULL)
 	{
-		TListaItem_Imprimir(&(NoTemp->Item));
+		Lista->FuncaoImprimir(NoTemp->Item);
 		NoTemp = NoTemp->Proximo;
 	}
 }

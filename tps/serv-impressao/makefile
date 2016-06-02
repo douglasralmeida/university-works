@@ -1,4 +1,5 @@
 PROJECTNAME=main
+TESTNAME=test
 CC=gcc
 
 MATRICULA=2015112728
@@ -7,7 +8,8 @@ CFLAGS=-c -Wall -Wextra -Wpedantic $(DEFS) -Iinclude/
 DBGFLAGS=-ggdb -fno-inline -fno-omit-frame-pointer 
 BINDIR=bin
 OBJDIR=obj
-OBJFILES=item.o filaprio.o principal.o
+TESTDIR=test
+OBJFILES=list.c
 OBJECTS=$(addprefix $(OBJDIR)/, $(OBJFILES))
 SOURCEDIR=src
 ARGS=$(BINDIR)/entrada.txt $(BINDIR)/saida.txt
@@ -17,7 +19,7 @@ $(OBJDIR)/%.o: $(SOURCEDIR)/%.c
 	@echo Compilando $<...
 	$(CC) $(DBGFLAGS) $(CFLAGS) $< -o $@
 
-$(PROJECTNAME): $(OBJECTS)
+$(PROJECTNAME): $(OBJECTS) 
 	@echo 
 	@echo Gerando executavel...
 	$(CC) $(LDFLAGS) -o $(BINDIR)/$@ $^ $(LIBS)
@@ -45,3 +47,13 @@ memcheck:
 
 run:
 	./$(BINDIR)/$(PROJECTNAME) $(ARGS)
+
+test:
+	@echo Compilando item.c...
+	$(CC) $(DBGFLAGS) $(CFLAGS) $(SOURCEDIR)/list.c -o $(OBJDIR)/list.o
+	@echo Compilando test-list.c...
+	$(CC) $(DBGFLAGS) $(CFLAGS) $(TESTDIR)/test-list.c -o $(TESTDIR)/test-list.o
+	@echo Compilando executavel de teste...
+	$(CC) $(LDFLAGS) -o $(TESTDIR)/test $(OBJDIR)/list.o $(TESTDIR)/test-list.o
+	@echo Testando...
+	gdb --args ./$(TESTDIR)/$(TESTNAME)

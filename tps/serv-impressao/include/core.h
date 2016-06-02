@@ -12,7 +12,10 @@
 /* Funcao para comparar dados */
 typedef bool (*TFuncaoComparaPrioridade)(void* Dado1, void* Dado2);
 
-/* Funcao para destruir dados */
+/* Funcao para destruir dado */
 typedef void (*TFuncaoDestruir)(void** Dado);
+
+/* Funcao para destruir dado */
+typedef void (*TFuncaoImprimir)(void* Dado);
 
 #endif
