@@ -35,38 +35,87 @@ typedef struct _TLista {
 /* ----------------------------------------------------------------------------
  * funcao:		TLista_Criar
  * 				Cria uma lista vazia
- * @param:		(vazio)
+ * @param:		Ponteiro para uma funcao que desaloca um item da memoria
+ * @param:		Ponteiro para uma funcao que imprime um item
  * @retorna:	A lista alocada
- *---------------------------------------------------------------------------*/ 
+ *---------------------------------------------------------------------------*/
 TLista* TLista_Criar(TFuncaoDestruir FuncaoDestruir, TFuncaoImprimir FuncaoImprimir);
 
-/* Destroi a lista */
+/* ----------------------------------------------------------------------------
+ * funcao:		TLista_Destruir
+ * 				Destroi a lista
+ * @param:		Ponteiro para lista
+ * @retorna:	(vazio)
+ *---------------------------------------------------------------------------*/
 void TLista_Destruir(TLista** PLista);
 
-/* Adidiona um item ao fim da lista */
+/* ----------------------------------------------------------------------------
+ * funcao:		TLista_Adicionar
+ * 				Adiciona um item ao fim da lista
+ * @param:		Lista
+ * @param:		Item a ser adicionado
+ * @retorna:	True em caso de insercao com sucesso, ou false em caso de falha
+ *---------------------------------------------------------------------------*/
 bool TLista_Adicionar(TLista* Lista, void* Item);
 
-/* Checa se a lista esta vazia */
-bool TLista_EstaVazia(TLista* Lista);
-
-/* Imprime uma lista na tela */
+/* ----------------------------------------------------------------------------
+ * funcao:		TLista_Imprimir
+ * 				Imprime uma lista na tela
+ * @param:		Lista
+ * @retorna:	(vazio)
+ *---------------------------------------------------------------------------*/
 void TLista_Imprimir(TLista* Lista);
 
-/* Adiciona um item apos o no informado */
+/* ----------------------------------------------------------------------------
+ * funcao:		TLista_Inserir
+ * 				Adiciona um item apos o no informado
+ * @param:		Lista
+ * @param:		Item a ser adicionado
+ * @param:		No que antecedera o item a ser adicionado
+ * @retorna:	True em caso de insercao com sucesso, ou false em caso de falha
+ *---------------------------------------------------------------------------*/
 bool TLista_Inserir(TLista* Lista, void* Item, TListaNo* No);
 
-/* Retorna o item da posicao informada */
+/* ----------------------------------------------------------------------------
+ * funcao:		TLista_Item
+ * 				Retorna o item da posicao informada
+ * @param:		Lista
+ * @param:		Posicao do item
+ * @retorna:	O item solicitado
+ *---------------------------------------------------------------------------*/
 void* TLista_Item(TLista* Lista, const unsigned int Posicao);
 
-/* Remove todos os itens da lista */
+/* ----------------------------------------------------------------------------
+ * funcao:		TLista_Limpar
+ * 				Remove todos os itens da lista
+ * @param:		Lista
+ * @retorna:	(vazio)
+ *---------------------------------------------------------------------------*/
 void TLista_Limpar(TLista* Lista);
 
-/* Remove o no da lista */
+/* ----------------------------------------------------------------------------
+ * funcao:		TLista_Remover
+ * 				Remove o no da lista
+ * @param:		Lista
+ * @param:		No a ser removido
+ * @retorna:	(vazio)
+ *---------------------------------------------------------------------------*/
 void TLista_Remover(TLista* Lista, TListaNo* No);
 
-/* Retorna o tamanho da lista */
-unsigned int TLista_Tamanho(TLista* Lista);
+/* ----------------------------------------------------------------------------
+ * funcao:		TLista_Tamanho
+ * 				Retorna a quantidade de itens da lista
+ * @param:		Lista
+ * @retorna:	O tamanho
+ *---------------------------------------------------------------------------*/
+size_t TLista_Tamanho(TLista* Lista);
 
-/* Troca dois nos de posicao */
+/* ----------------------------------------------------------------------------
+ * funcao:		TLista_Trocar
+ * 				Troca dois nos de posicao
+ * @param:		No a ser trocado
+ * @param:		Outro no a ser trocado 
+ * @retorna:	(vazio)
+ *---------------------------------------------------------------------------*/
 void TLista_Trocar(TLista* Lista, TListaNo* NoA, TListaNo* NoB);
 #endif

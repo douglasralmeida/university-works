@@ -1,3 +1,8 @@
+#Makefile do TAD Lista
+#
+#Douglas R. Almeida
+#
+
 PROJECTNAME=test
 CC=gcc
 

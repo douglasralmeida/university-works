@@ -1,21 +1,20 @@
-#Makefile do TP1 - Servidor de Impressao
+#Makefile do TAD Fila
 #
-#Douglas Rodrigue de Almeida
+#Douglas R. Almeida
 #
 
-PROJECTNAME=main
+PROJECTNAME=test
 CC=gcc
-
-MATRICULA=2015112728
 
 CFLAGS=-c -Wall -Wextra -Wpedantic $(DEFS) -Iinclude/
 DBGFLAGS=-ggdb -fno-inline -fno-omit-frame-pointer 
 BINDIR=bin
 OBJDIR=obj
-OBJFILES=list.c
+TESTDIR=test
+OBJFILES=fila.o test-fila.o
 OBJECTS=$(addprefix $(OBJDIR)/, $(OBJFILES))
 SOURCEDIR=src
-ARGS=$(BINDIR)/entrada.txt $(BINDIR)/saida.txt
+ARGS=
 
 $(OBJDIR)/%.o: $(SOURCEDIR)/%.c
 	@echo 
@@ -27,15 +26,10 @@ $(PROJECTNAME): $(OBJECTS)
 	@echo Gerando executavel...
 	$(CC) $(LDFLAGS) -o $(BINDIR)/$@ $^ $(LIBS)
 
-.PHONY: all build clean debug memcheck run
+.PHONY: all clean debug memcheck run
 
 all:
 	$(PROJECTNAME)
-
-build:
-	@echo 
-	@echo Gerando arquivo compactado...
-	tar zcvf ../$(MATRICULA).tar.gz * --exclude='main' --exclude='*.o' --exclude='*.txt' --exclude='*.pdf' --exclude='*.gz' --exclude-vcs
 
 clean:
 	@echo 
@@ -51,4 +45,4 @@ memcheck:
 	valgrind -v --leak-check=yes --track-origins=yes $(BINDIR)/$(PROJECTNAME) $(ARGS)
 
 run:
-	./$(BINDIR)/$(PROJECTNAME) $(ARGS)
+	./$(BINDIR)/$(PROJECTNAME) $(ARGS) 

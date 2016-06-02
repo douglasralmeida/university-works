@@ -145,7 +145,7 @@ void TLista_Remover(TLista* Lista, TListaNo* No)
 	Lista->Tamanho--;
 }
 
-unsigned int TLista_Tamanho(TLista* Lista)
+size_t TLista_Tamanho(TLista* Lista)
 {
 	return Lista->Tamanho;
 }
