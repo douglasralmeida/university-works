@@ -32,7 +32,12 @@ typedef struct _TLista {
 	TListaNo* Ultimo;
 } TLista;
 
-/* Cria uma lista vazia */
+/* ----------------------------------------------------------------------------
+ * funcao:		TLista_Criar
+ * 				Cria uma lista vazia
+ * @param:		(vazio)
+ * @retorna:	A lista alocada
+ *---------------------------------------------------------------------------*/ 
 TLista* TLista_Criar(TFuncaoDestruir FuncaoDestruir, TFuncaoImprimir FuncaoImprimir);
 
 /* Destroi a lista */

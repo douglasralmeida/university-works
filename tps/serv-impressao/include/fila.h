@@ -12,19 +12,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "boolutils.h"
-#include "item.h"
+#include "core.h"
 
 /* Estrutura do no da fila */
 typedef struct _TFilaNo TFilaNo;
 
 struct _TFilaNo {
-	TItem Item;
+	void* Item;
 	TFilaNo* Proximo;
 };
 
 /* Estrutura da fila */
 typedef struct _TFila {
 	TFilaNo* Frente;
+	TFuncaoDestruir FuncaoDestruir;
+	TFuncaoImprimir FuncaoImprimir;	
 	size_t Tamanho;
 	TFilaNo* Tras;
 } TFila;
@@ -35,7 +37,7 @@ typedef struct _TFila {
  * @param:		(vazio)
  * @retorna:	A fila alocada
  *---------------------------------------------------------------------------*/ 
-TFila* TFila_Criar(void);
+TFila* TFila_Criar(TFuncaoDestruir FuncaoDestruir, TFuncaoImprimir FuncaoImprimir);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TFila_Destruir
@@ -51,7 +53,7 @@ void TFila_Destruir(TLista** PFila);
  * @param:		Fila
  * @retorna:	O item removido
  *---------------------------------------------------------------------------*/ 
-TItem TFila_Desenfileirar(TFila* Fila);
+void* TFila_Desenfileirar(TFila* Fila);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TFila_Enfileirar
@@ -60,7 +62,7 @@ TItem TFila_Desenfileirar(TFila* Fila);
  * @param:		Item a ser inserido
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/ 
-void TFila_Enfileirar(TFila* Fila, const TItem Item);
+void TFila_Enfileirar(TFila* Fila, void* Item);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TFila_Imprimir

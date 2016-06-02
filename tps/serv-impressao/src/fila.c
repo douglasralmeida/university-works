@@ -7,7 +7,7 @@
 
 #include "fila.h"
 
-TFila* TFila_Criar(void)
+TFila* TFila_Criar(TFuncaoDestruir FuncaoDestruir, TFuncaoImprimir FuncaoImprimir)
 {
 	int i;
 	TFila* NovaFila;
@@ -19,6 +19,8 @@ TFila* TFila_Criar(void)
 		return NULL;
 	}
  	NovaFila->Frente = NULL;
+	NovaFila->FuncaoDestruir = FuncaoDestruir;
+	NovaFila->FuncaoImprimir = FuncaoImprimir;
   	NovaFila->Tamanho = 0;
 	NovaFila->Tras = NULL;
 	
@@ -38,24 +40,28 @@ void TFila_Destruir(TFila** PFila)
 	}
 }
 
-void TFila_Desenfileirar(TFila* Fila, TItem* Item)
+void* TFila_Desenfileirar(TFila* Fila)
 {
 	TFilaNo* NoTemp;
+	void* Item;
 	
 	if (TFila_Tamanho(Fila) == 0)
 	{
 		printf("Erro (0x22): Fila vazia.\n");
+		return NULL;
 	}
 	else
 	{
 		NoTemp = Fila->Frente;
-		*Item = NoTemp->Item;
+		Item = NoTemp->Item;
 		Fila->Frente = Fila->Frente->Prox;
+		free(NoTemp);
 		Fila->Tamanho--;
+		return Item;
 	}
 }
 
-void TFila_Enfileirar(TFila* Fila, const TListaItem Item)
+void TFila_Enfileirar(TFila* Fila, void* Item)
 {
 	TFilaNo* NoNovo;
 	
@@ -67,7 +73,10 @@ void TFila_Enfileirar(TFila* Fila, const TListaItem Item)
 	}
 	NoNovo->Item = Item;
 	NoNovo->Proximo = NULL;
-	Fila->Ultimo->Prox = NoNovo;
+	if (Fila->Frente == NULL)
+		Fila->Frente = NoNovo;
+	else
+		Fila->Ultimo->Prox = NoNovo;
 	Fila->Ultimo = NoNovo;
 	Fila->Tamanho++;
 }
@@ -79,7 +88,7 @@ void TFila_Imprimir(TFila* Fila)
 	NoTemp = Fila->Frente;
 	while (NoTemp != NULL)
 	{
-		TItem_Imprimir(&(NoTemp->Item));
+		Fila->FuncaoImprimir(NoTemp->Item);
 		NoTemp = NoTemp->Proximo;
 	}
 }
@@ -93,6 +102,7 @@ void TFila_Limpar(TFila* Fila)
 	while (NoTemp != NULL)
 	{
 		NoProximo = NoTemp->Proximo;
+		Fila->FuncaoDestruir(&(NoTemp->Item));
 		free(NoTemp);
 		NoTemp = NoProximo;
 	}

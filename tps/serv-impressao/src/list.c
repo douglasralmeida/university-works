@@ -98,6 +98,18 @@ bool TLista_Inserir(TLista* Lista, void* Item, TListaNo* No)
 	return true;
 }
 
+void* TLista_Item(TLista* Lista, const unsigned int Posicao)
+{
+	unsigned int i;
+	TListaNo* NoTemp;
+	
+	NoTemp = Lista->Primeiro;
+	for (i = 0; i < Posicao - 1; i++)
+		NoTemp = NoTemp->Proximo;
+
+	return NoTemp->Item;
+}
+
 void TLista_Limpar(TLista* Lista)
 {
 	TListaNo* NoAnterior; 
@@ -131,18 +143,6 @@ void TLista_Remover(TLista* Lista, TListaNo* No)
 		Lista->Primeiro = No->Proximo;
 	free(NoTemp);
 	Lista->Tamanho--;
-}
-
-void* TLista_Item(TLista* Lista, const unsigned int Posicao)
-{
-	unsigned int i;
-	TListaNo* NoTemp;
-	
-	NoTemp = Lista->Primeiro;
-	for (i = 0; i < Posicao - 1; i++)
-		NoTemp = NoTemp->Proximo;
-
-	return NoTemp->Item;
 }
 
 unsigned int TLista_Tamanho(TLista* Lista)
