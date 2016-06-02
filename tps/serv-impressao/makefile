@@ -24,6 +24,8 @@ $(PROJECTNAME): $(OBJECTS)
 	@echo Gerando executavel...
 	$(CC) $(LDFLAGS) -o $(BINDIR)/$@ $^ $(LIBS)
 
+.PHONY: all build clean debug memcheck run test
+
 all:
 	$(PROJECTNAME)
 
