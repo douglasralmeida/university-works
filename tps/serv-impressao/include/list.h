@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "boolutils.h"
+#include "core.h"
 
 /* Estrutura do no da lista */
 typedef struct _TListaNo TListaNo;
@@ -24,13 +25,14 @@ struct _TListaNo {
 
 /* Estrutura da lista */
 typedef struct _TLista {
+	TFuncaoDestruir FuncaoDestruir;
 	size_t Tamanho;
 	TListaNo* Primeiro;
 	TListaNo* Ultimo;
 } TLista;
 
 /* Cria uma lista vazia */
-TLista* TLista_Criar(void);
+TLista* TLista_Criar(TFuncaoDestruir FuncaoDestruir);
 
 /* Destroi a lista */
 void TLista_Destruir(TLista** PLista);

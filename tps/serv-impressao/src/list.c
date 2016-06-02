@@ -7,7 +7,7 @@
 
 #include "list.h"
 
-TLista* TLista_Criar(void)
+TLista* TLista_Criar(TFuncaoDestruir FuncaoDestruir)
 {
 	TLista* NovaLista;
 	
@@ -17,6 +17,7 @@ TLista* TLista_Criar(void)
 		printf("Erro (0x11): Erro durante alocacao de memoria.\n");
 		return NULL;
 	}
+	NovaLista->FuncaoDestruir = FuncaoDestruir
  	NovaLista->Tamanho = 0;
   	NovaLista->Primeiro = NULL;
 	NovaLista->Ultimo = NULL;
@@ -106,6 +107,7 @@ void TLista_Limpar(TLista* Lista)
 	{
 		NoAnterior = NoTemp->Anterior;
 		TLista_Remover(Lista, NoTemp);
+		Lista->FuncaoDestruir(NoTemp->Item);
 		NoTemp = NoAnterior;
 	}
 }

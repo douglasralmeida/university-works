@@ -11,8 +11,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "core.h"
 #include "boolutils.h"
 #include "item.h"
+
 
 /* Estrutura do no da fila */
 typedef struct _TFilaPrioridadeNo TFilaPrioridadeNo;
