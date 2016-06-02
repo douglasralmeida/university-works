@@ -12,25 +12,31 @@
 
 void DestruirInt(void** PInt)
 {
-	free(*PInt);
-	PInt = NULL;
+	if (PInt != NULL)
+	{
+		free(*PInt);
+		PInt = NULL;
+	}
 }
 
 void ImprimirInt(void* PInt)
 {
-	printf("%d ", (int)(*PInt));
+	int* item;
+	
+	item = (int*)PInt;
+	printf("%d ", *item);
 }
 
 int main(int argc, char *argv[])
 {	
-	int j;
-	int* i;
+	int i;
+	int* dado;
 	TFuncaoDestruir FuncaoDestruir;
 	TFuncaoImprimir FuncaoImprimir;
 	TLista* Lista;
 	
 	FuncaoDestruir = &DestruirInt;
-	TFuncaoImprimir = &ImprimirInt;
+	FuncaoImprimir = &ImprimirInt;
 	
 	printf("TESTE LISTA\n");
 	printf("===========\n");
@@ -45,9 +51,9 @@ int main(int argc, char *argv[])
 	printf("Preenchendo lista...");
 	for (i = 0; i < 10; i++)
 	{
-		i = (int*)malloc(sizeof(int));
-		*i = j;
-		TLista_Adicionar(i);
+		dado = (int*)malloc(sizeof(int));
+		*dado = i;
+		TLista_Adicionar(Lista, dado);
 	}
 	printf("OK.\n");
 	
@@ -62,9 +68,9 @@ int main(int argc, char *argv[])
 	printf("Preenchendo lista...");
 	for (i = 100; i < 110; i++)
 	{
-		i = (int*)malloc(sizeof(int));
-		*i = j;
-		TLista_Adicionar(i);
+		dado = (int*)malloc(sizeof(int));
+		*dado = i;
+		TLista_Adicionar(Lista, dado);
 	}
 	printf("OK.\n");
 
@@ -73,7 +79,7 @@ int main(int argc, char *argv[])
 	printf("OK.\n");
 
 	printf("Destruindo lista...");
-	TLista_Limpar(Lista);
+	TLista_Destruir(&Lista);
 	printf("OK.\n");
 	
 	exit(EXIT_SUCCESS);

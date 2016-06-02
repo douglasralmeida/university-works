@@ -51,7 +51,7 @@ void TLista_Imprimir(TLista* Lista);
 bool TLista_Inserir(TLista* Lista, void* Item, TListaNo* No);
 
 /* Retorna o item da posicao informada */
-TListaItem TLista_Item(TLista* Lista, const unsigned int Posicao);
+void* TLista_Item(TLista* Lista, const unsigned int Posicao);
 
 /* Remove todos os itens da lista */
 void TLista_Limpar(TLista* Lista);
@@ -61,9 +61,6 @@ void TLista_Remover(TLista* Lista, TListaNo* No);
 
 /* Retorna o tamanho da lista */
 unsigned int TLista_Tamanho(TLista* Lista);
-
-/* Grava a lista em um arquivo */
-bool TLista_SalvarNoArquivo(TLista* Lista, FILE* Arquivo);
 
 /* Troca dois nos de posicao */
 void TLista_Trocar(TLista* Lista, TListaNo* NoA, TListaNo* NoB);

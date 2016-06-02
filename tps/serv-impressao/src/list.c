@@ -7,7 +7,7 @@
 
 #include "list.h"
 
-TLista* TLista_Criar(TFuncaoDestruir FuncaoDestruir)
+TLista* TLista_Criar(TFuncaoDestruir FuncaoDestruir, TFuncaoImprimir FuncaoImprimir)
 {
 	TLista* NovaLista;
 	
@@ -17,7 +17,8 @@ TLista* TLista_Criar(TFuncaoDestruir FuncaoDestruir)
 		printf("Erro (0x11): Erro durante alocacao de memoria.\n");
 		return NULL;
 	}
-	NovaLista->FuncaoDestruir = FuncaoDestruir
+	NovaLista->FuncaoDestruir = FuncaoDestruir;
+	NovaLista->FuncaoImprimir = FuncaoImprimir;
  	NovaLista->Tamanho = 0;
   	NovaLista->Primeiro = NULL;
 	NovaLista->Ultimo = NULL;
@@ -106,10 +107,13 @@ void TLista_Limpar(TLista* Lista)
 	while (NoTemp != NULL)
 	{
 		NoAnterior = NoTemp->Anterior;
-		TLista_Remover(Lista, NoTemp);
-		Lista->FuncaoDestruir(NoTemp->Item);
+		Lista->FuncaoDestruir(&(NoTemp->Item));
+		free(NoTemp);
 		NoTemp = NoAnterior;
 	}
+	Lista->Tamanho = 0;
+	Lista->Primeiro = NULL;
+	Lista->Ultimo = NULL;
 }
 
 void TLista_Remover(TLista* Lista, TListaNo* No)
@@ -129,7 +133,7 @@ void TLista_Remover(TLista* Lista, TListaNo* No)
 	Lista->Tamanho--;
 }
 
-TListaItem TLista_Item(TLista* Lista, const unsigned int Posicao)
+void* TLista_Item(TLista* Lista, const unsigned int Posicao)
 {
 	unsigned int i;
 	TListaNo* NoTemp;
@@ -139,22 +143,6 @@ TListaItem TLista_Item(TLista* Lista, const unsigned int Posicao)
 		NoTemp = NoTemp->Proximo;
 
 	return NoTemp->Item;
-}
-
-bool TLista_SalvarNoArquivo(TLista* Lista, FILE* Arquivo)
-{
-	bool resultado;
-	TListaNo* NoTemp;
-
-	resultado = true;
-	NoTemp = Lista->Primeiro;
-	while (NoTemp != NULL)
-	{
-		resultado = resultado && TListaItem_SalvarNoArquivo(&(NoTemp->Item), Arquivo);
-		NoTemp = NoTemp->Proximo;
-	}
-	
-	return resultado;
 }
 
 unsigned int TLista_Tamanho(TLista* Lista)
