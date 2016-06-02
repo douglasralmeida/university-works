@@ -27,7 +27,7 @@ void ImprimirInt(void* PInt)
 	printf("%d ", *item);
 }
 
-int main(int argc, char *argv[])
+int main(void)
 {	
 	int i;
 	int* dado;
