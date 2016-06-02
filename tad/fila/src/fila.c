@@ -9,10 +9,9 @@
 
 TFila* TFila_Criar(TFuncaoDestruir FuncaoDestruir, TFuncaoImprimir FuncaoImprimir)
 {
-	int i;
 	TFila* NovaFila;
 	
-	NovaFila = (TFila*)malloc(sizeof(TFila);
+	NovaFila = (TFila*)malloc(sizeof(TFila));
 	if (NovaFila == NULL)
 	{
 		printf("Erro (0x21): Erro durante alocacao de memoria.\n");
@@ -29,9 +28,6 @@ TFila* TFila_Criar(TFuncaoDestruir FuncaoDestruir, TFuncaoImprimir FuncaoImprimi
 
 void TFila_Destruir(TFila** PFila)
 {
-	TFilaNo* No;
-	TFilaNo* NoTemp;	
-	
 	if (PFila != NULL)
 	{
 		TFila_Limpar(*PFila);
@@ -54,7 +50,7 @@ void* TFila_Desenfileirar(TFila* Fila)
 	{
 		NoTemp = Fila->Frente;
 		Item = NoTemp->Item;
-		Fila->Frente = Fila->Frente->Prox;
+		Fila->Frente = Fila->Frente->Proximo;
 		free(NoTemp);
 		Fila->Tamanho--;
 		return Item;
@@ -76,8 +72,8 @@ void TFila_Enfileirar(TFila* Fila, void* Item)
 	if (Fila->Frente == NULL)
 		Fila->Frente = NoNovo;
 	else
-		Fila->Ultimo->Prox = NoNovo;
-	Fila->Ultimo = NoNovo;
+		Fila->Tras->Proximo = NoNovo;
+	Fila->Tras = NoNovo;
 	Fila->Tamanho++;
 }
 
