@@ -102,6 +102,8 @@ void TFila_Limpar(TFila* Fila)
 		free(NoTemp);
 		NoTemp = NoProximo;
 	}
+	Fila->Frente = NULL;
+	Fila->Tras = NULL;
 	Fila->Tamanho = 0;
 }
 
