@@ -11,21 +11,21 @@ void AjustarHeap(TFilaPrioridade* Fila)
 {
 	size_t i;
 	size_t pai;
-	TFilaItem TempItem;
+	void* TempItem;
 	
 	i = Fila->Tamanho;
 	pai = i >> 1;
-	while ((i > 1) && (Fila->FuncaoCompara(Fila->Heap[pai], Fila->Heap[i])))
+	while ((i > 1) && (Fila->FuncaoComparar(Fila->Heap[pai], Fila->Heap[i])))
 	{
-		TempItem = Fila->Heap[pai].Item;
-		Fila->Heap[pai].Item = Fila->Heap[i].Item;
-		Fila->Heap[i].Item = TempItem;
+		TempItem = Fila->Heap[pai];
+		Fila->Heap[pai] = Fila->Heap[i];
+		Fila->Heap[i] = TempItem;
 		i = pai;
 		pai = i >> 1;
 	}
 }
 
-void RefazerHeap(TFilaPrioridade)
+void RefazerHeap(TFilaPrioridade* Fila, size_t n)
 {
 	
 }
@@ -40,7 +40,7 @@ TFilaPrioridade* TFilaPrioridade_Criar(size_t Capacidade, TFuncaoComparar Funcao
 		printf("Erro (0x41): Erro durante alocacao de memoria.\n");
 		return NULL;
 	}
-	NovaFila->Heap = (TFilaPrioridadeNo*)malloc((Capacidade + 1) * sizeof(TFilaPrioridade));
+	NovaFila->Heap = malloc((Capacidade + 1) * sizeof(void*));
 	if (NovaFila == NULL)
 	{
 		printf("Erro(0x44): Erro durante alocacao de memoria.\n");
@@ -61,12 +61,13 @@ void TFilaPrioridade_Destruir(TFilaPrioridade** PFila)
 {	
 	if (PFila != NULL)
 	{
+		TFilaPrioridade_Limpar(*PFila);
 		free((*PFila)->Heap);
 		free(*PFila);
 		PFila = NULL;
 	}
 }
-*
+
 void* TFilaPrioridade_Desenfileirar(TFilaPrioridade* Fila)
 {
 	void* Item;
@@ -78,9 +79,8 @@ void* TFilaPrioridade_Desenfileirar(TFilaPrioridade* Fila)
 	else
 	{
 		Item = Fila->Heap[1];
-		Fila[1]->Item = *(Fila[Fila->Tamanho]->Item);
 		Fila->Tamanho--;
-		RefazHeap(Fila, 1);
+		RefazerHeap(Fila, 1);
 		return Item;
 	}
 }
@@ -88,13 +88,13 @@ void* TFilaPrioridade_Desenfileirar(TFilaPrioridade* Fila)
 bool TFilaPrioridade_Enfileirar(TFilaPrioridade* Fila, void* Item)
 {
 	size_t novacapacidade;
-	TFilaPrioridadeNo* NovoHeap;
+	void* NovoHeap;
 	
 	/* ops...fila cheia. Hora de alocar mais memoria */
 	if (Fila->Tamanho >= Fila->Capacidade)
 	{
 		novacapacidade = Fila->Capacidade + Fila->Expansao;
-		NovoHeap = realloc(Fila->Heap, sizeof(TFilaPrioridadeNo) * (novotamanho + 1));
+		NovoHeap = realloc(Fila->Heap, (novacapacidade + 1) * sizeof(void*));
 		if (NovoHeap == NULL)
 		{
 			printf("Erro (0x45): Erro durante alocacao de memoria.\n");
@@ -104,16 +104,27 @@ bool TFilaPrioridade_Enfileirar(TFilaPrioridade* Fila, void* Item)
 		Fila->Capacidade = novacapacidade;
 	}
 	/* inserindo item no heap */
-	Fila->Heap[Fila->Tamanho].Item = Item;
 	Fila->Tamanho++;
-	AjustarFila(Fila);
+	Fila->Heap[Fila->Tamanho] = Item;
+	AjustarHeap(Fila);
 	
 	return true;
 }
 
 void TFilaPrioridade_Imprimir(TFilaPrioridade* Fila)
 {
-	//Fila->FuncaoImprimir(*(NoTemp->Item));
+	/* */
+}
+
+void TFilaPrioridade_Limpar(TFilaPrioridade* Fila)
+{
+	size_t i;
+	
+	for(i = 1; i <= Fila->Tamanho; i++)
+	{
+			Fila->FuncaoDestruir(&(Fila->Heap[i]));
+	}
+	Fila->Tamanho = 0;
 }
 
 size_t TFilaPrioridade_Tamanho(TFilaPrioridade* Fila)

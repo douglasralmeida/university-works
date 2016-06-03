@@ -9,8 +9,10 @@
 #ifndef CORE_H
 #define CORE_H
 
+#include "boolutils.h"
+
 /* Funcao para comparar dados */
-typedef bool (*TFuncaoComparaPrioridade)(void* Dado1, void* Dado2);
+typedef bool (*TFuncaoComparar)(void* Dado1, void* Dado2);
 
 /* Funcao para destruir dado */
 typedef void (*TFuncaoDestruir)(void** Dado);

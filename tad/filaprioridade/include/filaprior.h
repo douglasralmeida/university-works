@@ -39,7 +39,7 @@ TFilaPrioridade* TFilaPrioridade_Criar(size_t Capacidade, TFuncaoComparar Funcao
  * @param:		Ponteiro para o ponteiro da fila
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/ 
-void TFilaPrioridade_Destruir(TLista** PFila);
+void TFilaPrioridade_Destruir(TFilaPrioridade** PFila);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TFilaPrioridade_Desenfileirar
@@ -58,7 +58,7 @@ void* TFilaPrioridade_Desenfileirar(TFilaPrioridade* Fila);
  * @param:		Prioridade de saida do item a ser inserido
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/ 
-void TFilaPrioridade_Enfileirar(TFilaPrioridade* Fila, void* Item);
+bool TFilaPrioridade_Enfileirar(TFilaPrioridade* Fila, void* Item);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TFilaPrioridade_Imprimir
