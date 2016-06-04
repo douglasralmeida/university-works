@@ -57,7 +57,7 @@ void* TFila_Desenfileirar(TFila* Fila)
 	}
 }
 
-void TFila_Enfileirar(TFila* Fila, void* Item)
+bool TFila_Enfileirar(TFila* Fila, void* Item)
 {
 	TFilaNo* NoNovo;
 	
@@ -65,7 +65,7 @@ void TFila_Enfileirar(TFila* Fila, void* Item)
 	if (NoNovo == NULL)
 	{
 		printf("Erro (0x23): Erro durante alocacao de memoria.\n");
-		return;
+		return false;
 	}
 	NoNovo->Item = Item;
 	NoNovo->Proximo = NULL;
@@ -75,6 +75,8 @@ void TFila_Enfileirar(TFila* Fila, void* Item)
 		Fila->Tras->Proximo = NoNovo;
 	Fila->Tras = NoNovo;
 	Fila->Tamanho++;
+	
+	return true;
 }
 
 void TFila_Imprimir(TFila* Fila)

@@ -86,11 +86,7 @@ int main(void)
 	}
 	printf("OK.\n");
 
-	printf("Exibindo fila...");
-	TFilaPrioridade_Imprimir(Fila);
-	printf("OK.\n");
-
-	printf("Desenfileirando fila...");
+	printf("Desenfileirando itens...");
 	dado = (int*)TFilaPrioridade_Desenfileirar(Fila);
 	printf("Item %d. ", *dado);
 	free(dado);
@@ -99,10 +95,13 @@ int main(void)
 	free(dado);
 	printf("OK.\n");
 
-	printf("Exibindo fila...");
-	TFilaPrioridade_Imprimir(Fila);
-	printf("OK.\n");	
-
+	printf("Enfileirando item...");
+	dado = (int*)malloc(sizeof(int));
+	*dado = 50;
+	printf("Item %d. ", *dado);
+	TFilaPrioridade_Enfileirar(Fila, dado);
+	printf("OK.\n");
+	
 	printf("Destruindo fila...");
 	TFilaPrioridade_Destruir(&Fila);
 	printf("OK.\n");
