@@ -98,10 +98,13 @@ bool TLista_Inserir(TLista* Lista, void* Item, TListaNo* No)
 	return true;
 }
 
-void* TLista_Item(TLista* Lista, const unsigned int Posicao)
+void* TLista_Item(TLista* Lista, const size_t Posicao)
 {
-	unsigned int i;
+	size_t i;
 	TListaNo* NoTemp;
+	
+	if (Posicao == 0)
+		return NULL;
 	
 	NoTemp = Lista->Primeiro;
 	for (i = 0; i < Posicao - 1; i++)
@@ -128,6 +131,23 @@ void TLista_Limpar(TLista* Lista)
 	Lista->Ultimo = NULL;
 }
 
+size_t TLista_Posicao(TLista* Lista, void* Item)
+{
+	size_t resultado;
+	TListaNo* NoTemp;
+	
+	resultado = 0;
+	NoTemp = Lista->Primeiro;
+	while (NoTemp != NULL)
+	{
+		resultado++;
+		if (Lista->FuncaoIguais(NoTemp->Item, Item))
+			return resultado;
+		NoTemp = NoTemp->Proximo;
+	}
+	return 0;
+}
+
 void TLista_Remover(TLista* Lista, TListaNo* No)
 {
 	TListaNo* NoTemp;
@@ -152,28 +172,9 @@ size_t TLista_Tamanho(TLista* Lista)
 
 void TLista_Trocar(TLista* Lista, TListaNo* NoA, TListaNo* NoB)
 {
-	TListaNo* NoTemp;
+	void* Item;
 	
-	if (NoA->Proximo != NULL)
-		NoA->Proximo->Anterior = NoB;
-	else
-		Lista->Ultimo = NoB;
-	if (NoA->Anterior != NULL)		
-		NoA->Anterior->Proximo = NoB;
-	else
-		Lista->Primeiro = NoB;
-	if (NoB->Proximo != NULL)
-		NoB->Proximo->Anterior = NoA;
-	else
-		Lista->Ultimo = NoA;
-	if (NoB->Anterior != NULL)	
-		NoB->Anterior->Proximo = NoA;
-	else
-		Lista->Primeiro = NoA;
-	NoTemp = NoA->Proximo;
-	NoA->Proximo = NoB->Proximo;
-	NoB->Proximo = NoTemp;
-	NoTemp = NoA->Anterior;
-	NoA->Anterior = NoB->Anterior;
-	NoB->Anterior = NoTemp;
+	Item = NoA->Item;
+	NoA->Item = NoB->Item;
+	NoB->Item = Item;
 }

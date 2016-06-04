@@ -54,7 +54,7 @@ void TLista_Destruir(TLista** PLista);
  * 				Adiciona um item ao fim da lista
  * @param:		Lista
  * @param:		Item a ser adicionado
- * @retorna:	True em caso de insercao com sucesso, ou false em caso de falha
+ * @retorna:	True em caso de adicao com sucesso, ou false em caso de falha
  *---------------------------------------------------------------------------*/
 bool TLista_Adicionar(TLista* Lista, void* Item);
 
@@ -72,7 +72,7 @@ void TLista_Imprimir(TLista* Lista);
  * @param:		Lista
  * @param:		Item a ser adicionado
  * @param:		No que antecedera o item a ser adicionado
- * @retorna:	True em caso de insercao com sucesso, ou false em caso de falha
+ * @retorna:	True em caso de adicao com sucesso, ou false em caso de falha
  *---------------------------------------------------------------------------*/
 bool TLista_Inserir(TLista* Lista, void* Item, TListaNo* No);
 
@@ -83,7 +83,7 @@ bool TLista_Inserir(TLista* Lista, void* Item, TListaNo* No);
  * @param:		Posicao do item
  * @retorna:	O item solicitado
  *---------------------------------------------------------------------------*/
-void* TLista_Item(TLista* Lista, const unsigned int Posicao);
+void* TLista_Item(TLista* Lista, const size_t Posicao);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TLista_Limpar
@@ -92,6 +92,15 @@ void* TLista_Item(TLista* Lista, const unsigned int Posicao);
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/
 void TLista_Limpar(TLista* Lista);
+
+/* ----------------------------------------------------------------------------
+ * funcao:		TLista_Posicao
+ * 				Retorna a posicao de um item da lista
+ * @param:		Lista
+ * @param:		Item a ser pesquisado
+ * @retorna:	Posicao do item. Retorna zero em caso de inexistencia
+ *---------------------------------------------------------------------------*/
+size_t TLista_Posicao(TLista* Lista, void* Item);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TLista_Remover
