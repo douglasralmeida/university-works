@@ -95,12 +95,21 @@ int main(void)
 	free(dado);
 	printf("OK.\n");
 
-	printf("Enfileirando item...");
+	printf("Enfileirando itens...");
 	dado = (int*)malloc(sizeof(int));
 	*dado = 50;
 	printf("Item %d. ", *dado);
 	TFilaPrioridade_Enfileirar(Fila, dado);
+	dado = (int*)malloc(sizeof(int));
+	*dado = 51;
+	printf("Item %d. ", *dado);
+	TFilaPrioridade_Enfileirar(Fila, dado);
 	printf("OK.\n");
+
+	printf("Desenfileirando itens...");
+	dado = (int*)TFilaPrioridade_Desenfileirar(Fila);
+	printf("Item %d. ", *dado);
+	free(dado);
 	
 	printf("Destruindo fila...");
 	TFilaPrioridade_Destruir(&Fila);
