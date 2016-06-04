@@ -26,6 +26,7 @@ struct _TListaNo {
 /* Estrutura da lista */
 typedef struct _TLista {
 	TFuncaoDestruir FuncaoDestruir;
+	TFuncaoIguais FuncaoIguais;
 	TFuncaoImprimir FuncaoImprimir;
 	size_t Tamanho;
 	TListaNo* Primeiro;
@@ -36,10 +37,11 @@ typedef struct _TLista {
  * funcao:		TLista_Criar
  * 				Cria uma lista vazia
  * @param:		Ponteiro para uma funcao que desaloca um item da memoria
+ * @param:		Ponteiro para uma funcao de comparacao do conteudo de itens
  * @param:		Ponteiro para uma funcao que imprime um item
  * @retorna:	A lista alocada
  *---------------------------------------------------------------------------*/
-TLista* TLista_Criar(TFuncaoDestruir FuncaoDestruir, TFuncaoImprimir FuncaoImprimir);
+TLista* TLista_Criar(TFuncaoDestruir FuncaoDestruir, TFuncaoIguais FuncaoIguais, TFuncaoImprimir FuncaoImprimir);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TLista_Destruir

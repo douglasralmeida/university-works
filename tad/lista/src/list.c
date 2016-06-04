@@ -7,7 +7,7 @@
 
 #include "list.h"
 
-TLista* TLista_Criar(TFuncaoDestruir FuncaoDestruir, TFuncaoImprimir FuncaoImprimir)
+TLista* TLista_Criar(TFuncaoDestruir FuncaoDestruir, TFuncaoIguais FuncaoIguais, TFuncaoImprimir FuncaoImprimir)
 {
 	TLista* NovaLista;
 	
@@ -18,6 +18,7 @@ TLista* TLista_Criar(TFuncaoDestruir FuncaoDestruir, TFuncaoImprimir FuncaoImpri
 		return NULL;
 	}
 	NovaLista->FuncaoDestruir = FuncaoDestruir;
+	NovaLista->FuncaoIguais = FuncaoIguais;
 	NovaLista->FuncaoImprimir = FuncaoImprimir;
  	NovaLista->Tamanho = 0;
   	NovaLista->Primeiro = NULL;
