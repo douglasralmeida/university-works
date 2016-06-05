@@ -9,11 +9,14 @@
 #ifndef CORE_H
 #define CORE_H
 
-/* Funcao para comparar dados */
-typedef bool (*TFuncaoComparaPrioridade)(void* Dado1, void* Dado2);
+/* Funcao para comparar valor dos dados */
+typedef bool (*TFuncaoComparar)(void* Dado1, void* Dado2);
 
 /* Funcao para destruir dado */
 typedef void (*TFuncaoDestruir)(void** Dado);
+
+/* Funcao para comparar conteudo dos dados */
+typedef bool (*TFuncaoIguais)(void* Dado1, void* Dado2);
 
 /* Funcao para destruir dado */
 typedef void (*TFuncaoImprimir)(void* Dado);

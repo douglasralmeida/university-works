@@ -2,35 +2,56 @@
 **	TIPO ABSTRATO DE DADOS FILA COM PRIORIDADES
 **	DOUGLAS RODRIGUES DE ALMEIDA
 **
-**	Implementacao de fila com prioridades encadeada por ponteiros
+**	Implementacao de fila com prioridades usando heap
 */
 
 #include "filaprior.h"
 
-void AjustarHeap(TFilaPrioridade* Fila)
+void SubirHeap(TFilaPrioridade* Fila)
 {
 	size_t i;
 	size_t pai;
-	TFilaItem TempItem;
+	void* tempitem;
 	
 	i = Fila->Tamanho;
-	pai = i >> 1;
-	while ((i > 1) && (Fila->FuncaoCompara(Fila->Heap[pai], Fila->Heap[i])))
+	pai = i >> 1; /* div2 */
+	while ((i > 1) && (Fila->FuncaoComparar(Fila->Heap[pai], Fila->Heap[i])))
 	{
-		TempItem = Fila->Heap[pai].Item;
-		Fila->Heap[pai].Item = Fila->Heap[i].Item;
-		Fila->Heap[i].Item = TempItem;
+		tempitem = Fila->Heap[pai];
+		Fila->Heap[pai] = Fila->Heap[i];
+		Fila->Heap[i] = tempitem;
 		i = pai;
 		pai = i >> 1;
 	}
 }
 
-void RefazerHeap(TFilaPrioridade)
+void DescerHeap(TFilaPrioridade* Fila)
 {
+	size_t i;
+	size_t filho;
+	void* tempitem;
 	
+	i = 1;
+	filho = i << 1; /* x2 */
+	tempitem = Fila->Heap[i];
+	while (filho <= Fila->Tamanho)
+	{
+		if (filho < Fila->Tamanho)
+		{
+			if (Fila->FuncaoComparar(Fila->Heap[filho], Fila->Heap[filho+1]))
+				filho++;
+		}
+		if (Fila->FuncaoComparar(Fila->Heap[i]), Fila->Heap[filho])
+		{
+			Fila->Heap[i] = Fila->Heap[filho];
+			i = filho;
+			filho = i << 1;
+		}
+	}
+	Fila->Heap[i] = tempitem;
 }
 
-TFilaPrioridade* TFilaPrioridade_Criar(size_t Capacidade, TFuncaoComparaPrioridade Funcao)
+TFilaPrioridade* TFilaPrioridade_Criar(size_t Capacidade, TFuncaoComparar FuncaoComparar, TFuncaoDestruir FuncaoDestruir, TFuncaoImprimir FuncaoImprimir)
 {
 	TFilaPrioridade* NovaFila;
 	
@@ -40,8 +61,8 @@ TFilaPrioridade* TFilaPrioridade_Criar(size_t Capacidade, TFuncaoComparaPriorida
 		printf("Erro (0x41): Erro durante alocacao de memoria.\n");
 		return NULL;
 	}
-	NovaFila->Heap = (TFilaPrioridadeNo*)malloc((Capacidade + 1) * sizeof(TFilaPrioridade));
-	if (NovaFila == NULL)
+	NovaFila->Heap = malloc((Capacidade + 1) * sizeof(void*));
+	if (NovaFila->Heap == NULL)
 	{
 		printf("Erro(0x44): Erro durante alocacao de memoria.\n");
 		free(NovaFila);
@@ -49,47 +70,54 @@ TFilaPrioridade* TFilaPrioridade_Criar(size_t Capacidade, TFuncaoComparaPriorida
 	}
 	NovaFila->Capacidade = Capacidade;
 	NovaFila->Expansao = 1024;
-	NovaFila->FuncaoCompara = Funcao;
+	NovaFila->FuncaoComparar = FuncaoComparar;
+	NovaFila->FuncaoImprimir = FuncaoImprimir;
+	NovaFila->FuncaoDestruir = FuncaoDestruir;
 	NovaFila->Tamanho = 0;
   
 	return NovaFila;
 }
 
 void TFilaPrioridade_Destruir(TFilaPrioridade** PFila)
-{	
+{
 	if (PFila != NULL)
 	{
+		TFilaPrioridade_Limpar(*PFila);
 		free((*PFila)->Heap);
 		free(*PFila);
 		PFila = NULL;
 	}
 }
-*
-void TFilaPrioridade_Desenfileirar(TFilaPrioridade* Fila, TItem* Item)
+
+void* TFilaPrioridade_Desenfileirar(TFilaPrioridade* Fila)
 {
+	void* Item;
 	if (Fila->Tamanho == 0)
 	{
 		printf("Erro (0x42): Erro ao desenfileirar. Fila vazia.\n");
+		return NULL;
 	}
 	else
 	{
-		*Item = Fila->Heap[1];
-		Fila[1]->Item = Fila[Fila->Tamanho]->Item;
+		Item = Fila->Heap[1];
+		Fila->Heap[1] = Fila->Heap[Fila->Tamanho];
 		Fila->Tamanho--;
-		RefazHeap(Fila, 1);
+		if (Fila->Tamanho > 1)
+			DescerHeap(Fila);
+		return Item;
 	}
 }
 
-bool TFilaPrioridade_Enfileirar(TFilaPrioridade* Fila, const TListaItem Item)
+bool TFilaPrioridade_Enfileirar(TFilaPrioridade* Fila, void* Item)
 {
 	size_t novacapacidade;
-	TFilaPrioridadeNo* NovoHeap;
+	void** NovoHeap;
 	
 	/* ops...fila cheia. Hora de alocar mais memoria */
 	if (Fila->Tamanho >= Fila->Capacidade)
 	{
 		novacapacidade = Fila->Capacidade + Fila->Expansao;
-		NovoHeap = realloc(Fila->Heap, sizeof(TFilaPrioridadeNo) * (novotamanho + 1));
+		NovoHeap = realloc(Fila->Heap, (novacapacidade + 1) * sizeof(void*));
 		if (NovoHeap == NULL)
 		{
 			printf("Erro (0x45): Erro durante alocacao de memoria.\n");
@@ -99,23 +127,23 @@ bool TFilaPrioridade_Enfileirar(TFilaPrioridade* Fila, const TListaItem Item)
 		Fila->Capacidade = novacapacidade;
 	}
 	/* inserindo item no heap */
-	Fila->Heap[Fila->Tamanho].Item = Item;
 	Fila->Tamanho++;
-	AjustarFila(Fila);
-	
+	Fila->Heap[Fila->Tamanho] = Item;
+	/* refazendo o heap */
+	if (Fila->Tamanho > 1)
+		SubirHeap(Fila);
 	return true;
 }
 
-void TFilaPrioridade_Imprimir(TFilaPrioridade* Fila)
+void TFilaPrioridade_Limpar(TFilaPrioridade* Fila)
 {
-	TFilaNo* NoTemp;
-
-	NoTemp = Fila->Frente;
-	while (NoTemp != NULL)
+	size_t i;
+	
+	for(i = 1; i <= Fila->Tamanho; i++)
 	{
-		TFilaItem_Imprimir(&(NoTemp->Item));
-		NoTemp = NoTemp->Proximo;
+		Fila->FuncaoDestruir(&(Fila->Heap[i]));
 	}
+	Fila->Tamanho = 0;
 }
 
 size_t TFilaPrioridade_Tamanho(TFilaPrioridade* Fila)

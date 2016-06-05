@@ -13,25 +13,15 @@
 #include <stdlib.h>
 #include "core.h"
 #include "boolutils.h"
-#include "item.h"
-
-
-/* Estrutura do no da fila */
-typedef struct _TFilaPrioridadeNo TFilaPrioridadeNo;
-
-struct _TFilaPrioridadeNo {
-	TFilaItem Item;
-};
-
-/* Funcao para comparar nos da fila */
-typedef bool (*TFuncaoComparaPrioridade)(TFilaPrioridadeNo* No1, TFilaPrioridadeNo* No2);
 
 /* Estrutura da fila com prioridades */
 typedef struct _TFilaPrioridade {
 	size_t Capacidade;
 	size_t Expansao;
-	TFuncaoComparaPrioridade FuncaoCompara;
-	TFilaPrioridadeNo* Heap;
+	TFuncaoComparar FuncaoComparar;
+	TFuncaoDestruir FuncaoDestruir;
+	TFuncaoImprimir FuncaoImprimir;	
+	void** Heap;
 	size_t Tamanho;
 } TFilaPrioridade;
 
@@ -41,7 +31,7 @@ typedef struct _TFilaPrioridade {
  * @param:		(vazio)
  * @retorna:	A filade prioridades alocada
  *---------------------------------------------------------------------------*/ 
-TFilaPrioridade* TFilaPrioridade_Criar(size_t Capacidade, TFuncaoComparaPrioridade Funcao);
+TFilaPrioridade* TFilaPrioridade_Criar(size_t Capacidade, TFuncaoComparar FuncaoComparar, TFuncaoDestruir FuncaoDestruir, TFuncaoImprimir FuncaoImprimir);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TFilaPrioridade_Destruir
@@ -49,7 +39,7 @@ TFilaPrioridade* TFilaPrioridade_Criar(size_t Capacidade, TFuncaoComparaPriorida
  * @param:		Ponteiro para o ponteiro da fila
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/ 
-void TFilaPrioridade_Destruir(TLista** PFila);
+void TFilaPrioridade_Destruir(TFilaPrioridade** PFila);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TFilaPrioridade_Desenfileirar
@@ -58,7 +48,7 @@ void TFilaPrioridade_Destruir(TLista** PFila);
  * @param:		Item a ser removido
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/ 
-void TFilaPrioridade_Desenfileirar(TFilaPrioridade* Fila, TItem* Item);
+void* TFilaPrioridade_Desenfileirar(TFilaPrioridade* Fila);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TFilaPrioridade_Enfileirar
@@ -68,7 +58,7 @@ void TFilaPrioridade_Desenfileirar(TFilaPrioridade* Fila, TItem* Item);
  * @param:		Prioridade de saida do item a ser inserido
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/ 
-void TFilaPrioridade_Enfileirar(TFilaPrioridade* Fila, const TFilaItem Item, const unsigned int Prioridade);
+bool TFilaPrioridade_Enfileirar(TFilaPrioridade* Fila, void* Item);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TFilaPrioridade_Imprimir

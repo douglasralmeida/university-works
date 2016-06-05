@@ -3,7 +3,6 @@
  *	DOUGLAS RODRIGUES DE ALMEIDA
  *
  *	Cabecalho e estruturas de uma fila
- *	
  */
 
 #ifndef FILA_H
@@ -45,7 +44,7 @@ TFila* TFila_Criar(TFuncaoDestruir FuncaoDestruir, TFuncaoImprimir FuncaoImprimi
  * @param:		Fila
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/ 
-void TFila_Destruir(TLista** PFila);
+void TFila_Destruir(TFila** PFila);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TFila_Desenfileirar
