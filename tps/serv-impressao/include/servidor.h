@@ -23,10 +23,21 @@ typedef struct _TServidor {
 
 TServidor* TServidor_Criar(void);
 
-bool TServidor_CarregarEntrada(TServidor* Servidor, const char* Arquivo);
+void TServidor_Destruir(TServidor** PServidor);
 
 bool TServidor_Analisar(TServidor* Servidor);
 
-bool TServidor_SalvarResultado(TServidor* Servidor, const char* Arquivo);
+bool TServidor_CadastrarImpressora(TServidor* Servidor, char* Impressora, const int Capacidade, const int Escalonador);
 
+bool TServidor_Finalizar(TServidor* Servidor);
+
+void TServidor_Imprimir(TServidor* Servidor, const char* Nome, const int Hora, const int Prioridade, const int Paginas, const int TempoMaximo);
+
+bool TServidor_Preparar(TServidor* Servidor, const char* NomeArquivoEntrada, const char* NomeArquivoSaida);
+
+void TServidor_Relatorio(TServidor* Servidor);
+
+void TServidor_UsuarioExcluir(TServidor* Servidor, const char* Nome);
+
+void TServidor_UsuarioNovo(TServidor* Servidor, const char* nome, const int Prioridade);
 #endif
