@@ -20,7 +20,6 @@ typedef struct _TFilaPrioridade {
 	size_t Expansao;
 	TFuncaoComparar FuncaoComparar;
 	TFuncaoDestruir FuncaoDestruir;
-	TFuncaoImprimir FuncaoImprimir;	
 	void** Heap;
 	size_t Tamanho;
 } TFilaPrioridade;
@@ -31,7 +30,7 @@ typedef struct _TFilaPrioridade {
  * @param:		(vazio)
  * @retorna:	A filade prioridades alocada
  *---------------------------------------------------------------------------*/ 
-TFilaPrioridade* TFilaPrioridade_Criar(size_t Capacidade, TFuncaoComparar FuncaoComparar, TFuncaoDestruir FuncaoDestruir, TFuncaoImprimir FuncaoImprimir);
+TFilaPrioridade* TFilaPrioridade_Criar(size_t Capacidade, TFuncaoComparar FuncaoComparar, TFuncaoDestruir FuncaoDestruir);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TFilaPrioridade_Destruir
@@ -59,14 +58,6 @@ void* TFilaPrioridade_Desenfileirar(TFilaPrioridade* Fila);
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/ 
 bool TFilaPrioridade_Enfileirar(TFilaPrioridade* Fila, void* Item);
-
-/* ----------------------------------------------------------------------------
- * funcao:		TFilaPrioridade_Imprimir
- * 				Imprime a fila com prioridades na tela
- * @param:		Ponteiro para a fila
- * @retorna:	(vazio)
- *---------------------------------------------------------------------------*/ 
-void TFilaPrioridade_Imprimir(TFilaPrioridade* Fila);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TFilaPrioridade_Limpar

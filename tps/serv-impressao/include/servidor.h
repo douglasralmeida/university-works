@@ -8,6 +8,8 @@
 #ifndef SERVIDOR_H
 #define SERVIDOR_H
 
+#include <stdio.h>
+#include <stdlib.h>
 #include "boolutils.h"
 #include "core.h"
 

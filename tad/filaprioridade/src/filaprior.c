@@ -53,7 +53,7 @@ void DescerHeap(TFilaPrioridade* Fila)
 	Fila->Heap[i] = tempitem;
 }
 
-TFilaPrioridade* TFilaPrioridade_Criar(size_t Capacidade, TFuncaoComparar FuncaoComparar, TFuncaoDestruir FuncaoDestruir, TFuncaoImprimir FuncaoImprimir)
+TFilaPrioridade* TFilaPrioridade_Criar(size_t Capacidade, TFuncaoComparar FuncaoComparar, TFuncaoDestruir FuncaoDestruir)
 {
 	TFilaPrioridade* NovaFila;
 	
@@ -73,7 +73,6 @@ TFilaPrioridade* TFilaPrioridade_Criar(size_t Capacidade, TFuncaoComparar Funcao
 	NovaFila->Capacidade = Capacidade;
 	NovaFila->Expansao = 1024;
 	NovaFila->FuncaoComparar = FuncaoComparar;
-	NovaFila->FuncaoImprimir = FuncaoImprimir;
 	NovaFila->FuncaoDestruir = FuncaoDestruir;
 	NovaFila->Tamanho = 0;
   

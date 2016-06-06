@@ -1,7 +1,7 @@
 #ifndef SERVIDOR_ARQUIVO_H
 #define SERVIDOR_ARQUIVO_H
 
-#include <stdlib.h>
+#include <stdio.h>
 #include "servidor.h"
 
 #define CMD_USUARIONOVO 1
