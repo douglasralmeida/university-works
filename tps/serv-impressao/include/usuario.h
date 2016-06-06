@@ -17,4 +17,9 @@ typedef struct _TUsuario {
 	size_t Prioridade;
 } TUsuario;
 
+TUsuario* TUsuario_Criar(char* Nome, size_t Prioridade);
+
+void TUsuario_Destruir(void** PUsuario);
+
+bool TUsuario_Iguais(void* Usuario1, void* Usuario2);
 #endif

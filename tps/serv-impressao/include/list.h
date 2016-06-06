@@ -96,6 +96,15 @@ void* TLista_Item(TLista* Lista, const size_t Posicao);
 void TLista_Limpar(TLista* Lista);
 
 /* ----------------------------------------------------------------------------
+ * funcao:		TLista_Pesquisar'
+ * 				Procura por um item na lista
+ * @param:		Lista
+ * @param:		Item a ser pesquisado
+ * @retorna:	No onde o item se encontra
+ *---------------------------------------------------------------------------*/
+TListaNo* TLista_Pesquisar(TLista* Lista, void* Item);
+
+/* ----------------------------------------------------------------------------
  * funcao:		TLista_Posicao
  * 				Retorna a posicao de um item da lista
  * @param:		Lista
