@@ -17,7 +17,7 @@ bool CompararInt(void* PInt1, void* PInt2)
 	
 	Int1 = (int*)PInt1;
 	Int2 = (int*)PInt2;	
-	return *Int1 < *Int2;
+	return (*Int1) > (*Int2);
 }
 
 void DestruirInt(void** PInt)
@@ -61,27 +61,31 @@ int main(void)
 		exit(EXIT_FAILURE);
 
 	printf("Preenchendo fila...");
-	for (i = 0; i < 10; i++)
+	for (i = 10; i > 0; i--)
 	{
 		dado = (int*)malloc(sizeof(int));
 		*dado = i;
+		printf("%d ",  *dado);
 		TFilaPrioridade_Enfileirar(Fila, dado);
 	}
 	printf("OK.\n");
 	
-	printf("Exibindo fila...");
-	TFilaPrioridade_Imprimir(Fila);
+	printf("Desenfileirando itens...");
+	dado = (int*)TFilaPrioridade_Desenfileirar(Fila);
+	printf("Item %d. ", *dado);
+	free(dado);
 	printf("OK.\n");
 	
 	printf("Limpando fila...");
 	TFilaPrioridade_Limpar(Fila);
 	printf("OK.\n");
-	
+
 	printf("Preenchendo fila...");
 	for (i = 100; i < 110; i++)
 	{
 		dado = (int*)malloc(sizeof(int));
 		*dado = i;
+		printf("%d ", *dado);
 		TFilaPrioridade_Enfileirar(Fila, dado);
 	}
 	printf("OK.\n");
@@ -110,7 +114,8 @@ int main(void)
 	dado = (int*)TFilaPrioridade_Desenfileirar(Fila);
 	printf("Item %d. ", *dado);
 	free(dado);
-	
+	printf("OK.\n");
+
 	printf("Destruindo fila...");
 	TFilaPrioridade_Destruir(&Fila);
 	printf("OK.\n");

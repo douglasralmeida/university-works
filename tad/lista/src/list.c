@@ -171,7 +171,7 @@ size_t TLista_Tamanho(TLista* Lista)
 	return Lista->Tamanho;
 }
 
-void TLista_Trocar(TLista* Lista, TListaNo* NoA, TListaNo* NoB)
+void TLista_Trocar(TListaNo* NoA, TListaNo* NoB)
 {
 	void* Item;
 	

@@ -61,7 +61,7 @@ void* TFila_Desenfileirar(TFila* Fila);
  * @param:		Item a ser inserido
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/ 
-void TFila_Enfileirar(TFila* Fila, void* Item);
+bool TFila_Enfileirar(TFila* Fila, void* Item);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TFila_Imprimir

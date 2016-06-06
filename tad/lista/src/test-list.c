@@ -19,6 +19,16 @@ void DestruirInt(void** PInt)
 	}
 }
 
+bool IguaisInt(void* PInt1, void* PInt2)
+{
+	int* Int1;
+	int* Int2;
+
+	Int1 = (int*)PInt1;
+	Int2 = (int*)PInt2;
+	return (*Int1 == *Int2);
+}
+
 void ImprimirInt(void* PInt)
 {
 	int* item;
@@ -32,17 +42,19 @@ int main(void)
 	int i;
 	int* dado;
 	TFuncaoDestruir FuncaoDestruir;
+	TFuncaoIguais FuncaoIguais;
 	TFuncaoImprimir FuncaoImprimir;
 	TLista* Lista;
 	
 	FuncaoDestruir = &DestruirInt;
+	FuncaoIguais = &IguaisInt;
 	FuncaoImprimir = &ImprimirInt;
 	
 	printf("TESTE LISTA\n");
 	printf("===========\n");
 	
 	printf("Criando lista...");
-	Lista = TLista_Criar(FuncaoDestruir, FuncaoImprimir);
+	Lista = TLista_Criar(FuncaoDestruir, FuncaoIguais, FuncaoImprimir);
 	if (Lista != NULL)
 		printf("OK.\n");
 	else

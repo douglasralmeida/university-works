@@ -128,5 +128,5 @@ size_t TLista_Tamanho(TLista* Lista);
  * @param:		Outro no a ser trocado 
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/
-void TLista_Trocar(TLista* Lista, TListaNo* NoA, TListaNo* NoB);
+void TLista_Trocar(TListaNo* NoA, TListaNo* NoB);
 #endif
