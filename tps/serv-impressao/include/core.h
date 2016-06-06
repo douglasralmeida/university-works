@@ -9,6 +9,8 @@
 #ifndef CORE_H
 #define CORE_H
 
+#include "boolutils.h"
+
 /* Funcao para comparar valor dos dados */
 typedef bool (*TFuncaoComparar)(void* Dado1, void* Dado2);
 
