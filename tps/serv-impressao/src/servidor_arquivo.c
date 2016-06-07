@@ -7,26 +7,26 @@ int BufferAnalisar(TServidor* Servidor, char* Buffer)
 	int comando;
 	int encerrar = 0;
 	int paginas, prioridade, tempo, inteiro;
-	char[21] texto;
+	char texto[21];
 
 	/* primeiro item da linha: comando */
 	comando = Buffer[0] - '0';
 	switch (comando)
 	{
 		case	CMD_USUARIONOVO:
-			sscanf(Buffer, "%*d %20s %d", &texto, &inteiro);
+			sscanf(Buffer, "%*d %20s %d", &texto[0], &inteiro);
 			TServidor_UsuarioNovo(Servidor, texto, inteiro);
 		break;
 		case	CMD_USUARIOEXCLUIR:
-			sscanf(Buffer, "%*d %20s", texto);
+			sscanf(Buffer, "%*d %20s", &texto[0]);
 			TServidor_UsuarioExcluir(Servidor, texto);
 		break;
 		case	CMD_RELATORIO:
-			sscanf(Buffer, "%d", inteiro);
+			sscanf(Buffer, "%d", &inteiro);
 			TServidor_Relatorio(Servidor);
 		break;
 		case	CMD_IMPRIMIR:
-			sscanf(Buffer, "%*d %d %20s %d %d %d", &inteiro, texto, &prioridade, &paginas, &tempo);
+			sscanf(Buffer, "%*d %d %20s %d %d %d", &inteiro, &texto[0], &prioridade, &paginas, &tempo);
 			TServidor_Imprimir(Servidor, texto, inteiro, prioridade, paginas, tempo);
 		break;
 		case	CMD_SAIR:
@@ -38,10 +38,10 @@ int BufferAnalisar(TServidor* Servidor, char* Buffer)
 
 bool BufferImpressora(TServidor* Servidor, char* Buffer)
 {
-	char[11] impressora;
+	char impressora[11];
 	int capacidade;
 	int escalonador;
 	
-	sscanf(Buffer, "%10s %d %d", impressora, &capacidade, &escalonador);
-	return Servidor_CadastrarImpressora(Servidor, impressora, capacidade, escalonador);
+	sscanf(Buffer, "%10s %d %d", &impressora[0], &capacidade, &escalonador);
+	return TServidor_CadastrarImpressora(Servidor, impressora, capacidade, escalonador);
 }

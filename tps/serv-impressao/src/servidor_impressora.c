@@ -1,13 +1,16 @@
-#include "servidor_impressao.h"
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include "servidor_impressora.h"
 
 TImpressao* TImpressao_Criar(TUsuario* Usuario, time_t Horario, unsigned int MaxEspera, unsigned int Paginas, size_t Prioridade)
 {
 	TImpressao* NovaImpressao;
 	
-	NovaImpressao = (TUsuario*)malloc(sizeof(TUsuario));
+	NovaImpressao = (TImpressao*)malloc(sizeof(TImpressao));
 	NovaImpressao->Usuario = Usuario;
 	NovaImpressao->Horario = Horario;
-	NovaImpressao->MaxExpera = MaxEspera;
+	NovaImpressao->MaxEspera = MaxEspera;
 	NovaImpressao->Paginas = Paginas;
 	NovaImpressao->Prioridade = Prioridade;
 	
@@ -30,8 +33,9 @@ TImpressora* TImpressora_Criar(size_t Capacidade, size_t Escalonador, char* Nome
 	NovaImpressora = (TImpressora*)malloc(sizeof(TImpressora));
 	NovaImpressora->Capacidade = Capacidade;
 	NovaImpressora->Escalonador = Escalonador;
-	strcopy(NovaImpressora->Nome, Nome);
+	strcpy(NovaImpressora->Nome, Nome);
 	switch (Escalonador)
+	{
 		case 1:
 			FuncImpComparar = NULL;
 		break;
@@ -41,7 +45,7 @@ TImpressora* TImpressora_Criar(size_t Capacidade, size_t Escalonador, char* Nome
 		case 3:
 			FuncImpComparar = &TImpressao_Comparar2;
 		break;
-		
+	}	
 	NovaImpressora->FilaImpressao = TFilaPrioridade_Criar(1024, FuncImpComparar, FuncImpDestruir);
 	
 	return NovaImpressora;
@@ -50,8 +54,8 @@ TImpressora* TImpressora_Criar(size_t Capacidade, size_t Escalonador, char* Nome
 void TImpressora_Destruir(TImpressora** PImpressora)
 {
 	TFilaPrioridade_Destruir(&(*PImpressora)->FilaImpressao);
-	free(*PUsuario);
-	PUsuario = NULL;	
+	free(*PImpressora);
+	PImpressora = NULL;	
 }
 
 bool TImpressao_Comparar1(void* Impressao1, void* Impressao2)
@@ -77,8 +81,8 @@ bool TImpressao_Comparar1(void* Impressao1, void* Impressao2)
 			}
 			else
 				return (Imp1->Prioridade < Imp2->Prioridade);
-		}
-		else(Imp1->Usuario->Prioridade == 0) && (Imp2->Usuario->Prioridade > 0)
+		} 
+		else
 			return (tre1 < tre2);
 	}
 	else
@@ -105,9 +109,7 @@ bool TImpressao_Comparar2(void* Impressao1, void* Impressao2)
 	else if ((Imp1->Usuario->Prioridade == 0) && (Imp2->Usuario->Prioridade == 0))
 	{
 		if (Imp1->Prioridade == Imp2->Prioridade)
-		{
-			return (Imp1->MaxExpera < Imp2->MaxEspera);
-		}
+			return (Imp1->MaxEspera < Imp2->MaxEspera);
 		else
 			return (Imp1->Prioridade < Imp2->Prioridade);
 	}
@@ -116,8 +118,8 @@ bool TImpressao_Comparar2(void* Impressao1, void* Impressao2)
 		horaatual = time(&horaatual);
 		tempoespera1 = horaatual - Imp1->Horario;
 		tempoespera2 = horaatual - Imp1->Horario;
-		nivelprior1 = Impressao1->Usuario->Prioridade * 0.2 + Impressao1->Prioridade * 0.6 = Impressao1->MaxEspera / tempoespera1 * 0.2;
-		nivelprior2 = Impressao2->Usuario->Prioridade * 0.2 + Impressao2->Prioridade * 0.6 = Impressao2->MaxEspera / tempoespera2 * 0.2;
+		nivelprior1 = Imp1->Usuario->Prioridade * 0.2 + Imp1->Prioridade * 0.6 + Imp1->MaxEspera / tempoespera1 * 0.2;
+		nivelprior2 = Imp2->Usuario->Prioridade * 0.2 + Imp2->Prioridade * 0.6 + Imp2->MaxEspera / tempoespera2 * 0.2;
 		return (nivelprior1 < nivelprior2);
 	}
 }

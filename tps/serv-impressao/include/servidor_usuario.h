@@ -14,11 +14,11 @@
 
 /* Usuario do sistema */
 typedef struct _TUsuario {
-	char[11] Nome;
+	char Nome[22];
 	size_t Prioridade;
 } TUsuario;
 
-TUsuario* TUsuario_Criar(char* Nome, size_t Prioridade);
+TUsuario* TUsuario_Criar(const char* Nome, const size_t Prioridade);
 
 void TUsuario_Destruir(void** PUsuario);
 

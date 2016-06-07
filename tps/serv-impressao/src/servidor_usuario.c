@@ -1,6 +1,8 @@
-#include "usuario.h"
+#include <stdlib.h>
+#include <string.h>
+#include "servidor_usuario.h"
 
-TUsuario* TUsuario_Criar(char* Nome, size_t Prioridade)
+TUsuario* TUsuario_Criar(const char* Nome, const size_t Prioridade)
 {
 	TUsuario* NovoUsuario;
 	

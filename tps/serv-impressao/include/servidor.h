@@ -12,6 +12,9 @@
 #include <stdlib.h>
 #include "boolutils.h"
 #include "core.h"
+#include "list.h"
+#include "servidor_impressora.h"
+#include "servidor_usuario.h"
 
 #define BUFFER_TAMANHO 128
 
@@ -31,7 +34,7 @@ bool TServidor_Analisar(TServidor* Servidor);
 
 bool TServidor_CadastrarImpressora(TServidor* Servidor, char* Impressora, const int Capacidade, const int Escalonador);
 
-bool TServidor_Finalizar(TServidor* Servidor);
+void TServidor_Finalizar(TServidor* Servidor);
 
 void TServidor_Imprimir(TServidor* Servidor, const char* Nome, const int Hora, const int Prioridade, const int Paginas, const int TempoMaximo);
 

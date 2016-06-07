@@ -12,6 +12,8 @@
 #include <time.h>
 #include "boolutils.h"
 #include "core.h"
+#include "filaprior.h"
+#include "servidor_usuario.h"
 
 typedef struct _TImpressao {
 	time_t Horario;
@@ -23,7 +25,7 @@ typedef struct _TImpressao {
 
 /* Impressora do sistema */
 typedef struct _TImpressora {
-	char[11] Nome;
+	char Nome[11];
 	size_t Capacidade;
 	size_t Escalonador;
 	TFilaPrioridade* FilaImpressao;

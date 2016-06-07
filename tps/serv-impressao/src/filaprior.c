@@ -12,17 +12,17 @@ void SubirHeap(TFilaPrioridade* Fila)
 	size_t i;
 	size_t pai;
 	void* tempitem;
-	
+
 	i = Fila->Tamanho;
 	pai = i / 2;
-	while ((i > 1) && (Fila->FuncaoComparar(Fila->Heap[pai], Fila->Heap[i])))
+	tempitem = Fila->Heap[Fila->Tamanho];
+	while ((i > 1) && (Fila->FuncaoComparar(Fila->Heap[pai], tempitem)))
 	{
-		tempitem = Fila->Heap[pai];
-		Fila->Heap[pai] = Fila->Heap[i];
-		Fila->Heap[i] = tempitem;
+		Fila->Heap[i] = Fila->Heap[pai];
 		i = pai;
 		pai = i / 2;
 	}
+	Fila->Heap[i] = tempitem;
 }
 
 void DescerHeap(TFilaPrioridade* Fila)
@@ -41,7 +41,7 @@ void DescerHeap(TFilaPrioridade* Fila)
 			if (Fila->FuncaoComparar(Fila->Heap[filho], Fila->Heap[filho+1]))
 				filho++;
 		}
-		if (Fila->FuncaoComparar(Fila->Heap[i], Fila->Heap[filho]))
+		if (Fila->FuncaoComparar(tempitem, Fila->Heap[filho]))
 		{
 			Fila->Heap[i] = Fila->Heap[filho];
 			i = filho;
@@ -141,9 +141,7 @@ void TFilaPrioridade_Limpar(TFilaPrioridade* Fila)
 	size_t i;
 	
 	for(i = 1; i <= Fila->Tamanho; i++)
-	{
 		Fila->FuncaoDestruir(&(Fila->Heap[i]));
-	}
 	Fila->Tamanho = 0;
 }
 
