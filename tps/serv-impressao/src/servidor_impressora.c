@@ -107,6 +107,7 @@ bool TImpressao_Comparar3(void* Impressao1, void* Impressao2)
 
 TImpressora* TImpressora_Criar(size_t Capacidade, size_t Escalonador, char* Nome)
 {
+	time_t horaatual;
 	TImpressora* NovaImpressora;
 	TFuncaoComparar FuncImpComparar;
 	TFuncaoDestruir FuncImpDestruir;
@@ -135,6 +136,8 @@ TImpressora* TImpressora_Criar(size_t Capacidade, size_t Escalonador, char* Nome
 		return NULL;
 	}
 	NovaImpressora->TotalPrioridades = QUANT_PRIORIDADES;
+	time(&horaatual);
+	NovaImpressora->InicioTrabalhos = horaatual;
 	
 	return NovaImpressora;
 }

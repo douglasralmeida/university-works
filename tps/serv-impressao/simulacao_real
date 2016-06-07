@@ -1,0 +1,68 @@
+tempo: inicio (0)
+capacidade 1
+
+nome|prior|taman|chegada|maxespera|limite
+T1  |1    |6	|2      |3		|5
+T2  |0    |5	|4      |6		|10
+T3  |1    |8	|10     |5		|15
+T4  |0    |5	|11     |6		|20
+T5  |0    |5	|15     |6		|20
+
+iniciar_loop:
+>
+	proxima tarefa:
+		imprimir T1	
+	
+	tempo_chegada_t1 < tempo?
+		não
+	
+	fila vazia?
+		sim -> tempo: tempo_chegada_T1 (2)
+
+	processa T1
+	temponecessario_T1: taman_T1 / capacidade (6)
+	tempo = tempo + temponecessario_T1 (8)
+>
+	proxima tarefa:
+	imprimir T2
+	
+	tempo_chegada_t2 < tempo?
+		sim -> enfileira T2
+	
+	proxima tarefa:
+	imprimir T3
+	
+	tempo_chegada_t3 < tempo?
+		nao		
+		
+	filavazia?
+		não -> desenfileira T2
+		
+	processa T2
+	temponecessario_T2: taman_T2 / capacidade (5)
+	tempo: tempo + temponecessario_T2 (13)
+	
+	proxima tarefa:
+	imprimir T3
+	
+	tempo_chegada_t3 < tempo?
+		sim > enfileira T3
+		
+	proxima tarefa:
+	imprimir T4
+	
+	tempo_chegada_t4 < tempo?
+		sim -> enfileira T4
+		
+	proxima tarefa:
+	imprmir T5
+	
+	tempo_chegadat5 < tempo?
+		não
+		
+	filavazia?
+		não -> desenfileira T3
+		
+	processa T3
+	temponecessario_T3: taman_T3 / capacidade (8)
+	tempo: tempo + temponecessario_T3 (21)

@@ -46,6 +46,7 @@ bool TServidor_Analisar(TServidor* Servidor)
 	bool encerraanalise;
 	
 	encerraanalise = false;
+	time(&(Servidor->HoraAtual));
 	/* Ler primeira linha com cadastro da impressora */
 	if ((fgets(buffer, BUFFER_TAMANHO, Servidor->ArquivoEntrada) != NULL) && (BufferImpressora(Servidor, buffer)))
 			while ((encerraanalise == false) && (fgets(buffer, BUFFER_TAMANHO, Servidor->ArquivoEntrada) != NULL))
@@ -82,7 +83,10 @@ void TServidor_Imprimir(TServidor* Servidor, const char* Nome, const time_t Hora
 	Usuario = TUsuario_Criar(Nome, 0);
 	No = TLista_Pesquisar(Servidor->Usuarios, Usuario);
 	if (No != NULL)
+	{
+		TServidor_ProcessarFila(Servidor);
 		TImpressora_Imprimir(Servidor->Impressora, (TUsuario*)No->Item, Hora, Prioridade, Paginas, TempoMaximo);
+	}
 	free(Usuario);
 }
 
