@@ -16,8 +16,8 @@ bool CompararInt(void* PInt1, void* PInt2)
 	int* Int2;
 	
 	Int1 = (int*)PInt1;
-	Int2 = (int*)PInt2;	
-	return (*Int1) > (*Int2);
+	Int2 = (int*)PInt2;
+	return ((*Int1) > (*Int2));
 }
 
 void DestruirInt(void** PInt)
@@ -29,32 +29,22 @@ void DestruirInt(void** PInt)
 	}
 }
 
-void ImprimirInt(void* PInt)
-{
-	int* item;
-	
-	item = (int*)PInt;
-	printf("%d ", *item);
-}
-
 int main(void)
 {	
 	int i;
 	int* dado;
 	TFuncaoComparar FuncaoComparar;	
 	TFuncaoDestruir FuncaoDestruir;
-	TFuncaoImprimir FuncaoImprimir;
 	TFilaPrioridade* Fila;
 	
 	FuncaoComparar = &CompararInt;
 	FuncaoDestruir = &DestruirInt;
-	FuncaoImprimir = &ImprimirInt;
 	
 	printf("TESTE FILA COM PRIORIDADE\n");
 	printf("=========================\n");
 	
 	printf("Criando fila com prioridade...");
-	Fila = TFilaPrioridade_Criar(1024, FuncaoComparar, FuncaoDestruir, FuncaoImprimir);
+	Fila = TFilaPrioridade_Criar(1024, FuncaoComparar, FuncaoDestruir);
 	if (Fila != NULL)
 		printf("OK.\n");
 	else
@@ -70,14 +60,13 @@ int main(void)
 	}
 	printf("OK.\n");
 	
-	printf("Desenfileirando itens...");
-	dado = (int*)TFilaPrioridade_Desenfileirar(Fila);
-	printf("Item %d. ", *dado);
-	free(dado);
-	printf("OK.\n");
-	
-	printf("Limpando fila...");
-	TFilaPrioridade_Limpar(Fila);
+	printf("Desenfileirando fila...");
+	while (Fila->Tamanho > 0)
+	{
+		dado = (int*)TFilaPrioridade_Desenfileirar(Fila);
+		printf("Item %d. ", *dado);
+		free(dado);
+	}
 	printf("OK.\n");
 
 	printf("Preenchendo fila...");
@@ -88,15 +77,6 @@ int main(void)
 		printf("%d ", *dado);
 		TFilaPrioridade_Enfileirar(Fila, dado);
 	}
-	printf("OK.\n");
-
-	printf("Desenfileirando itens...");
-	dado = (int*)TFilaPrioridade_Desenfileirar(Fila);
-	printf("Item %d. ", *dado);
-	free(dado);
-	dado = (int*)TFilaPrioridade_Desenfileirar(Fila);
-	printf("Item %d. ", *dado);
-	free(dado);
 	printf("OK.\n");
 
 	printf("Enfileirando itens...");
@@ -111,9 +91,12 @@ int main(void)
 	printf("OK.\n");
 
 	printf("Desenfileirando itens...");
-	dado = (int*)TFilaPrioridade_Desenfileirar(Fila);
-	printf("Item %d. ", *dado);
-	free(dado);
+	while (Fila->Tamanho > 0)
+	{
+		dado = (int*)TFilaPrioridade_Desenfileirar(Fila);
+		printf("Item %d. ", *dado);
+		free(dado);
+	}
 	printf("OK.\n");
 
 	printf("Destruindo fila...");
