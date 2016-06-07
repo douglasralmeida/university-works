@@ -12,10 +12,10 @@ CFLAGS=-c -Wall -Wextra -Wpedantic $(DEFS) -Iinclude/
 DBGFLAGS=-ggdb -fno-inline -fno-omit-frame-pointer 
 BINDIR=bin
 OBJDIR=obj
-OBJFILES=list.o fila.o filaprior.o servidor_arquivo.o servidor_usuario.o servidor_impressora.o servidor.o
+OBJFILES=list.o fila.o filaprior.o servidor_arquivo.o servidor_usuario.o servidor_impressora.o servidor.o principal.o
 OBJECTS=$(addprefix $(OBJDIR)/, $(OBJFILES))
 SOURCEDIR=src
-ARGS=$(BINDIR)/entrada.txt $(BINDIR)/saida.txt
+ARGS=test/entrada.txt test/saida.txt
 
 $(OBJDIR)/%.o: $(SOURCEDIR)/%.c
 	@echo 

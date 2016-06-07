@@ -43,7 +43,7 @@ bool TServidor_Analisar(TServidor* Servidor)
 	encerraanalise = false;
 	/* Ler primeira linha com cadastro da impressora */
 	if ((fgets(buffer, BUFFER_TAMANHO, Servidor->ArquivoEntrada) != NULL) && (BufferImpressora(Servidor, buffer)))
-			while ((encerraanalise == false) || (fgets(buffer, BUFFER_TAMANHO, Servidor->ArquivoEntrada) != NULL))
+			while ((encerraanalise == false) && (fgets(buffer, BUFFER_TAMANHO, Servidor->ArquivoEntrada) != NULL))
 				encerraanalise = BufferAnalisar(Servidor, buffer);
 		else	
 		{
@@ -55,13 +55,9 @@ bool TServidor_Analisar(TServidor* Servidor)
 
 bool TServidor_CadastrarImpressora(TServidor* Servidor, char* Impressora, int Capacidade, int Escalonador)
 {
-	Servidor->Impressora = malloc(sizeof(TImpressora));
+	Servidor->Impressora = TImpressora_Criar(Capacidade, Escalonador, Impressora);
 	if (Servidor->Impressora == NULL)
 		return false;
-	
-	strcpy(Servidor->Impressora->Nome, Impressora);
-	Servidor->Impressora->Capacidade = Capacidade;
-	Servidor->Impressora->Escalonador = Escalonador;
 	
 	return true;
 }
@@ -75,13 +71,13 @@ void TServidor_Finalizar(TServidor* Servidor)
 void TServidor_Imprimir(TServidor* Servidor, const char* Nome, const time_t Hora, const int Prioridade, const int Paginas, const int TempoMaximo)
 {
 	TListaNo* No;
-	TUsuario Usuario;
+	TUsuario* Usuario;
 	
 	Usuario = TUsuario_Criar(Nome, 0);
 	No = TLista_Pesquisar(Servidor->Usuarios, Usuario);
 	if (No != NULL)
-		TImpressora_Imprimir(Servidor->Impressora, (TUsuario*)No->Item, Hora, Prioridade, PAginas, TempoMaximo);
-	free(Usuario;)
+		TImpressora_Imprimir(Servidor->Impressora, (TUsuario*)No->Item, Hora, Prioridade, Paginas, TempoMaximo);
+	free(Usuario);
 }
 
 bool TServidor_Preparar(TServidor* Servidor, const char* NomeArquivoEntrada, const char* NomeArquivoSaida)
@@ -101,65 +97,65 @@ void TServidor_Relatorio(TServidor* Servidor)
 	
 	fprintf(Servidor->ArquivoSaida, "## por prioridade de usuario\n");
 	fprintf(Servidor->ArquivoSaida, "# total perdas:\n");
-	for (i = 0; i < totalprioridades, i++)
+	for (i = 0; i < totalprioridades; i++)
 	{
-		perdas = 0;
-		fprintf(Servidor->ArquivoSaida, "%d, %d\n", i, perdas);
+		numero_i = 0;
+		fprintf(Servidor->ArquivoSaida, "%d %d\n", i, numero_i);
 	}
 	fprintf(Servidor->ArquivoSaida, "# tempo medio espera:\n");
-	for (i = 0; i < totalprioridades, i++)
+	for (i = 0; i < totalprioridades; i++)
 	{
 		numero_f = 0.0;
-		fprintf(Servidor->ArquivoSaida, "%d, %.3f\n", i, numero_f);
+		fprintf(Servidor->ArquivoSaida, "%d %.3f\n", i, numero_f);
 	}
 	fprintf(Servidor->ArquivoSaida, "# tempo minimo espera:\n");
-	for (i = 0; i < totalprioridades, i++)
+	for (i = 0; i < totalprioridades; i++)
 	{
 		numero_i = 0;
-		fprintf(Servidor->ArquivoSaida, "%d, %d\n", i, numero_i);
+		fprintf(Servidor->ArquivoSaida, "%d %d\n", i, numero_i);
 	}
 	fprintf(Servidor->ArquivoSaida, "# tempo maximo espera:\n");
-	for (i = 0; i < totalprioridades, i++)
+	for (i = 0; i < totalprioridades; i++)
 	{
 		numero_i = 0;
-		fprintf(Servidor->ArquivoSaida, "%d, %d\n", i, numero_i);
+		fprintf(Servidor->ArquivoSaida, "%d %d\n", i, numero_i);
 	}
 	fprintf(Servidor->ArquivoSaida, "# numero de paginas impressas:\n");
-	for (i = 0; i < totalprioridades, i++)
+	for (i = 0; i < totalprioridades; i++)
 	{
 		numero_i = 0;
-		fprintf(Servidor->ArquivoSaida, "%d, %d\n", i, numero_i);
+		fprintf(Servidor->ArquivoSaida, "%d %d\n", i, numero_i);
 	}
 	fprintf(Servidor->ArquivoSaida, "## por prioridade de tarefa\n");
 	fprintf(Servidor->ArquivoSaida, "# total perdas:\n");
-	for (i = 0; i < totalprioridades, i++)
+	for (i = 0; i < totalprioridades; i++)
 	{
 		numero_i = 0;
-		fprintf(Servidor->ArquivoSaida, "%d, %d\n", i, numero_i);
+		fprintf(Servidor->ArquivoSaida, "%d %d\n", i, numero_i);
 	}
 	fprintf(Servidor->ArquivoSaida, "# tempo medio espera:\n");
-	for (i = 0; i < totalprioridades, i++)
+	for (i = 0; i < totalprioridades; i++)
 	{
 		numero_f = 0.0;
-		fprintf(Servidor->ArquivoSaida, "%d, %.3f\n", i, numero_f);
+		fprintf(Servidor->ArquivoSaida, "%d %.3f\n", i, numero_f);
 	}
 	fprintf(Servidor->ArquivoSaida, "# tempo minimo espera:\n");
-	for (i = 0; i < totalprioridades, i++)
+	for (i = 0; i < totalprioridades; i++)
 	{
 		numero_i = 0;
-		fprintf(Servidor->ArquivoSaida, "%d, %d\n", i, numero_i);
+		fprintf(Servidor->ArquivoSaida, "%d %d\n", i, numero_i);
 	}
 	fprintf(Servidor->ArquivoSaida, "# tempo maximo espera:\n");
-	for (i = 0; i < totalprioridades, i++)
+	for (i = 0; i < totalprioridades; i++)
 	{
 		numero_i = 0;
-		fprintf(Servidor->ArquivoSaida, "%d, %d\n", i, numero_i);
+		fprintf(Servidor->ArquivoSaida, "%d %d\n", i, numero_i);
 	}
 	fprintf(Servidor->ArquivoSaida, "# numero de paginas impressas:\n");
-	for (i = 0; i < totalprioridades, i++)
+	for (i = 0; i < totalprioridades; i++)
 	{
 		numero_i = 0;
-		fprintf(Servidor->ArquivoSaida, "%d, %d\n", i, numero_i);
+		fprintf(Servidor->ArquivoSaida, "%d %d\n", i, numero_i);
 	}
 	fprintf(Servidor->ArquivoSaida, "## geral:\n");
 	numero_i = 0;

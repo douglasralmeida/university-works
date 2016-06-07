@@ -1,0 +1,31 @@
+## por prioridade de usuario
+# total perdas:
+0 0
+# tempo medio espera:
+0 0.000
+# tempo minimo espera:
+0 0
+# tempo maximo espera:
+0 0
+# numero de paginas impressas:
+0 0
+## por prioridade de tarefa
+# total perdas:
+0 0
+# tempo medio espera:
+0 0.000
+# tempo minimo espera:
+0 0
+# tempo maximo espera:
+0 0
+# numero de paginas impressas:
+0 0
+## geral:
+# total perdas: 0
+# tempo medio espera: 0.000
+# tempo minimo espera: 0
+# tempo maximo espera: 0
+# numero de paginas impressas: 0
+# quantidade de usuarios inseridos: 0
+# quantidade de usuarios removidos: 0
+# quantidade de tarefas removidas com os usuarios: 0

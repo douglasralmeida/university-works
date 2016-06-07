@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 			if (TServidor_Preparar(Servidor, argv[1], argv[2]))
 			{
 				TServidor_Analisar(Servidor);
-				TServidor_Finalisar(Servidor);				
+				TServidor_Finalizar(Servidor);				
 			}
 			TServidor_Destruir(&Servidor);
 		}

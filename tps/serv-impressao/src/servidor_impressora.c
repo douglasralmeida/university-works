@@ -114,7 +114,11 @@ TImpressora* TImpressora_Criar(size_t Capacidade, size_t Escalonador, char* Nome
 		break;
 	}	
 	NovaImpressora->FilaImpressao = TFilaPrioridade_Criar(1024, FuncImpComparar, FuncImpDestruir);
-	
+	if (NovaImpressora->FilaImpressao == NULL)
+	{
+		free(NovaImpressora);
+		return NULL;
+	}	
 	return NovaImpressora;
 }
 
@@ -125,7 +129,7 @@ void TImpressora_Destruir(TImpressora** PImpressora)
 	PImpressora = NULL;	
 }
 
-void TImpressora_Imprimir(TImpressora* Impressora, TUsuario Usuario, const time_t Hora, const int Prioridade, const int Paginas, const int TempoMaximo)
+void TImpressora_Imprimir(TImpressora* Impressora, TUsuario* Usuario, const time_t Hora, const int Prioridade, const int Paginas, const int TempoMaximo)
 {
 	TImpressao* NovaImpressao;
 	
@@ -137,6 +141,6 @@ void TImpressora_Imprimir(TImpressora* Impressora, TUsuario Usuario, const time_
 		NovaImpressao->Paginas = Paginas;
 		NovaImpressao->MaxEspera = TempoMaximo;
 		NovaImpressao->Usuario = Usuario;
-		TFilaPrioridade_Enfileirar(Impressora->FilaImpressao, Impressao);
+		TFilaPrioridade_Enfileirar(Impressora->FilaImpressao, NovaImpressao);
 	}
 }
