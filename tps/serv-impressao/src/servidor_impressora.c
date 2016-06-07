@@ -94,6 +94,17 @@ bool TImpressao_Comparar2(void* Impressao1, void* Impressao2)
 	}
 }
 
+bool TImpressao_Comparar3(void* Impressao1, void* Impressao2)
+{
+	TImpressao* Imp1;
+	TImpressao* Imp2;
+	
+	Imp1 = (TImpressao*)Impressao1;
+	Imp2 = (TImpressao*)Impressao2;
+
+	return (Imp1->HorarioChegada < Imp2->HorarioChegada);	
+}
+
 TImpressora* TImpressora_Criar(size_t Capacidade, size_t Escalonador, char* Nome)
 {
 	time_t horatual;
@@ -109,7 +120,7 @@ TImpressora* TImpressora_Criar(size_t Capacidade, size_t Escalonador, char* Nome
 	switch (Escalonador)
 	{
 		case 1:
-			FuncImpComparar = NULL;
+			FuncImpComparar = &TImpressao_Comparar3;
 		break;
 		case 2:
 			FuncImpComparar = &TImpressao_Comparar1;

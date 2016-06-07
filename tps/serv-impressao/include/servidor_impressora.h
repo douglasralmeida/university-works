@@ -39,9 +39,14 @@ TImpressao* TImpressao_Criar(TUsuario* Usuario, time_t Horario, unsigned int Max
 
 void TImpressao_Destruir(void** PImpressao);
 
+/* Modo prioridade de usuario*/
 bool TImpressao_Comparar1(void* Impressao1, void* Impressao2);
 
+/* Modo combinacao */
 bool TImpressao_Comparar2(void* Impressao1, void* Impressao2);
+
+/* Modo FIFO */
+bool TImpressao_Comparar3(void* Impressao1, void* Impressao2);
 
 TImpressora* TImpressora_Criar(size_t Capacidade, size_t Escalonador, char* Nome);
 

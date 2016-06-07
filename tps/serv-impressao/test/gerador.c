@@ -8,6 +8,7 @@ int main(void){
     int *usuarios;
     int escalonador, capacidade, n_usuarios, n_impressoes, tempo_inicial = 0, n_operacao = 1, 
     tamanho_original, n_usuarios_removidos, n_usuarios_vetor = 0, i;
+    time_t horaatual;
  
     srand((unsigned)time(NULL));
  
@@ -38,6 +39,8 @@ int main(void){
  
     fprintf(arq_saida, "impressora %d %d\n", capacidade, escalonador);
  
+ 	time(&horaatual);
+ 	tempo_inicial = horaatual;
     while(n_usuarios != 0 || n_impressoes != 0 || n_usuarios_removidos != 0){
  
         if(n_operacao == 1 && n_usuarios != 0){
