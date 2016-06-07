@@ -106,8 +106,11 @@ void TServidor_UsuarioExcluir(TServidor* Servidor, const char* Nome)
 	
 	Usuario = TUsuario_Criar(Nome, 0);
 	No = TLista_Pesquisar(Servidor->Usuarios, Usuario);
-	TLista_Remover(Servidor->Usuarios, No);
-	TUsuario_Destruir((void**)&Usuario);
+	if (No != NULL)
+	{
+		TLista_Remover(Servidor->Usuarios, No);
+		TUsuario_Destruir((void**)&Usuario);
+	}
 }
 
 void TServidor_UsuarioNovo(TServidor* Servidor, const char* Nome, const int Prioridade)
@@ -115,5 +118,6 @@ void TServidor_UsuarioNovo(TServidor* Servidor, const char* Nome, const int Prio
 	TUsuario* Usuario;
 	
 	Usuario = TUsuario_Criar(Nome, Prioridade);
-	TLista_Adicionar(Servidor->Usuarios, Usuario);
+	if (TLista_Posicao(Servidor->Usuarios, Usuario) == 0)
+		TLista_Adicionar(Servidor->Usuarios, Usuario);
 }

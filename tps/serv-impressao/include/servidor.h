@@ -42,6 +42,8 @@ void TServidor_Finalizar(TServidor* Servidor);
 
 void TServidor_Imprimir(TServidor* Servidor, const char* Nome, const time_t Hora, const int Prioridade, const int Paginas, const int TempoMaximo);
 
+void TServidor_Processarr(TServidor* Servidor);
+
 bool TServidor_Preparar(TServidor* Servidor, const char* NomeArquivoEntrada, const char* NomeArquivoSaida);
 
 void TServidor_Relatorio(TServidor* Servidor);
