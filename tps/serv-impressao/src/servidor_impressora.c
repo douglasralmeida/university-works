@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "list.h"
 #include "servidor_impressora.h"
 
 TImpressao* TImpressao_Criar(TUsuario* Usuario, time_t Horario, unsigned int MaxEspera, unsigned int Paginas, size_t Prioridade)
@@ -21,41 +22,6 @@ void TImpressao_Destruir(void** PImpressao)
 {
 	free(*PImpressao);
 	PImpressao = NULL;
-}
-
-TImpressora* TImpressora_Criar(size_t Capacidade, size_t Escalonador, char* Nome)
-{
-	TImpressora* NovaImpressora;
-	TFuncaoComparar FuncImpComparar;
-	TFuncaoDestruir FuncImpDestruir;
-	
-	FuncImpDestruir = &TImpressao_Destruir;
-	NovaImpressora = (TImpressora*)malloc(sizeof(TImpressora));
-	NovaImpressora->Capacidade = Capacidade;
-	NovaImpressora->Escalonador = Escalonador;
-	strcpy(NovaImpressora->Nome, Nome);
-	switch (Escalonador)
-	{
-		case 1:
-			FuncImpComparar = NULL;
-		break;
-		case 2:
-			FuncImpComparar = &TImpressao_Comparar1;
-		break;
-		case 3:
-			FuncImpComparar = &TImpressao_Comparar2;
-		break;
-	}	
-	NovaImpressora->FilaImpressao = TFilaPrioridade_Criar(1024, FuncImpComparar, FuncImpDestruir);
-	
-	return NovaImpressora;
-}
-
-void TImpressora_Destruir(TImpressora** PImpressora)
-{
-	TFilaPrioridade_Destruir(&(*PImpressora)->FilaImpressao);
-	free(*PImpressora);
-	PImpressora = NULL;	
 }
 
 bool TImpressao_Comparar1(void* Impressao1, void* Impressao2)
@@ -124,7 +90,53 @@ bool TImpressao_Comparar2(void* Impressao1, void* Impressao2)
 	}
 }
 
-void TImpressora_Imprimir(void)
+TImpressora* TImpressora_Criar(size_t Capacidade, size_t Escalonador, char* Nome)
 {
+	TImpressora* NovaImpressora;
+	TFuncaoComparar FuncImpComparar;
+	TFuncaoDestruir FuncImpDestruir;
 	
+	FuncImpDestruir = &TImpressao_Destruir;
+	NovaImpressora = (TImpressora*)malloc(sizeof(TImpressora));
+	NovaImpressora->Capacidade = Capacidade;
+	NovaImpressora->Escalonador = Escalonador;
+	strcpy(NovaImpressora->Nome, Nome);
+	switch (Escalonador)
+	{
+		case 1:
+			FuncImpComparar = NULL;
+		break;
+		case 2:
+			FuncImpComparar = &TImpressao_Comparar1;
+		break;
+		case 3:
+			FuncImpComparar = &TImpressao_Comparar2;
+		break;
+	}	
+	NovaImpressora->FilaImpressao = TFilaPrioridade_Criar(1024, FuncImpComparar, FuncImpDestruir);
+	
+	return NovaImpressora;
+}
+
+void TImpressora_Destruir(TImpressora** PImpressora)
+{
+	TFilaPrioridade_Destruir(&(*PImpressora)->FilaImpressao);
+	free(*PImpressora);
+	PImpressora = NULL;	
+}
+
+void TImpressora_Imprimir(TImpressora* Impressora, TUsuario Usuario, const time_t Hora, const int Prioridade, const int Paginas, const int TempoMaximo)
+{
+	TImpressao* NovaImpressao;
+	
+	NovaImpressao = (TImpressao*)malloc(sizeof(TImpressao));
+	if (NovaImpressao != NULL)
+	{
+		NovaImpressao->Horario = Hora;
+		NovaImpressao->Prioridade =Prioridade;
+		NovaImpressao->Paginas = Paginas;
+		NovaImpressao->MaxEspera = TempoMaximo;
+		NovaImpressao->Usuario = Usuario;
+		TFilaPrioridade_Enfileirar(Impressora->FilaImpressao, Impressao);
+	}
 }

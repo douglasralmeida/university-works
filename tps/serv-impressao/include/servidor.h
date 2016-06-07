@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "boolutils.h"
 #include "core.h"
 #include "list.h"
@@ -36,7 +37,7 @@ bool TServidor_CadastrarImpressora(TServidor* Servidor, char* Impressora, const 
 
 void TServidor_Finalizar(TServidor* Servidor);
 
-void TServidor_Imprimir(TServidor* Servidor, const char* Nome, const int Hora, const int Prioridade, const int Paginas, const int TempoMaximo);
+void TServidor_Imprimir(TServidor* Servidor, const char* Nome, const time_t Hora, const int Prioridade, const int Paginas, const int TempoMaximo);
 
 bool TServidor_Preparar(TServidor* Servidor, const char* NomeArquivoEntrada, const char* NomeArquivoSaida);
 

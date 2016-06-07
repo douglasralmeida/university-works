@@ -43,6 +43,6 @@ TImpressora* TImpressora_Criar(size_t Capacidade, size_t Escalonador, char* Nome
 
 void TImpressora_Destruir(TImpressora** PImpressora);
 
-void TImpressora_Imprimir(void);
+void TImpressora_Imprimir(TImpressora* Impressora, TUsuario Usuario, const time_t Hora, const int Prioridade, const int Paginas, const int TempoMaximo);
 
 #endif
