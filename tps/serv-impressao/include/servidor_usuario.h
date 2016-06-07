@@ -8,7 +8,7 @@
 #ifndef USUARIO_H
 #define USUARIO_H
 
-#include <string.h>
+#include <string.h>	
 #include "boolutils.h"
 #include "core.h"
 

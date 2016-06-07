@@ -29,9 +29,13 @@ typedef struct _TImpressora {
 	TFilaPrioridade* FilaImpressao;
 } TImpressora;
 
-TImpressao* TImpressao_Criar(TUsuario* Usuario);
+TImpressao* TImpressao_Criar(TUsuario* Usuario, time_t Horario, unsigned int MaxEspera, unsigned int Paginas, size_t Prioridade);
 
 void TImpressao_Destruir(void** PImpressao);
+
+bool TImpressao_Comparar1(void* Impressao1, void* Impressao2);
+
+bool TImpressao_Comparar2(void* Impressao1, void* Impressao2);
 
 TImpressora* TImpressora_Criar(size_t Capacidade, size_t Escalonador, char* Nome);
 
