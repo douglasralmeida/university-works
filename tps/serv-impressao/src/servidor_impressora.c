@@ -2,15 +2,19 @@
 #include <string.h>
 #include <time.h>
 #include "list.h"
+#include "servidor.h"
 #include "servidor_impressora.h"
 
 TImpressao* TImpressao_Criar(TUsuario* Usuario, time_t Horario, unsigned int MaxEspera, unsigned int Paginas, size_t Prioridade)
 {
+	time_t horaatual;
 	TImpressao* NovaImpressao;
 	
+	time(&horaatual);
 	NovaImpressao = (TImpressao*)malloc(sizeof(TImpressao));
 	NovaImpressao->Usuario = Usuario;
-	NovaImpressao->Horario = Horario;
+	NovaImpressao->HorarioChegada = Horario;
+	NovaImpressao->HorarioLimite = Horario + horaatual;
 	NovaImpressao->MaxEspera = MaxEspera;
 	NovaImpressao->Paginas = Paginas;
 	NovaImpressao->Prioridade = Prioridade;
@@ -37,13 +41,13 @@ bool TImpressao_Comparar1(void* Impressao1, void* Impressao2)
 	if (Imp1->Usuario->Prioridade == Imp2->Usuario->Prioridade)
 	{
 		horaatual = time(&horaatual);
-		tre1 = Imp1->Horario + Imp1->MaxEspera - horaatual;
-		tre2 = Imp2->Horario + Imp2->MaxEspera - horaatual;
+		tre1 = Imp1->HorarioChegada + Imp1->MaxEspera - horaatual;
+		tre2 = Imp2->HorarioChegada + Imp2->MaxEspera - horaatual;
 		if (tre1 == tre2)
 		{
 			if (Imp1->Prioridade == Imp2->Prioridade)
 			{
-				return (Imp1->Horario < Imp1->Horario);
+				return (Imp1->HorarioChegada < Imp1->HorarioChegada);
 			}
 			else
 				return (Imp1->Prioridade < Imp2->Prioridade);
@@ -82,16 +86,17 @@ bool TImpressao_Comparar2(void* Impressao1, void* Impressao2)
 	else
 	{
 		horaatual = time(&horaatual);
-		tempoespera1 = horaatual - Imp1->Horario;
-		tempoespera2 = horaatual - Imp1->Horario;
-		nivelprior1 = Imp1->Usuario->Prioridade * 0.2 + Imp1->Prioridade * 0.6 + Imp1->MaxEspera / tempoespera1 * 0.2;
-		nivelprior2 = Imp2->Usuario->Prioridade * 0.2 + Imp2->Prioridade * 0.6 + Imp2->MaxEspera / tempoespera2 * 0.2;
-		return (nivelprior1 < nivelprior2);
+		tempoespera1 = horaatual - Imp1->HorarioChegada;
+		tempoespera2 = horaatual - Imp1->HorarioChegada;
+		nivelprior1 = Imp1->Usuario->Prioridade * 0.2 + Imp1->Prioridade * 0.6 + tempoespera1 / Imp1->MaxEspera * 0.2;
+		nivelprior2 = Imp2->Usuario->Prioridade * 0.2 + Imp2->Prioridade * 0.6 + tempoespera2 / Imp2->MaxEspera * 0.2;
+		return (nivelprior1 < nivelprior2); 
 	}
 }
 
 TImpressora* TImpressora_Criar(size_t Capacidade, size_t Escalonador, char* Nome)
 {
+	time_t horatual;
 	TImpressora* NovaImpressora;
 	TFuncaoComparar FuncImpComparar;
 	TFuncaoDestruir FuncImpDestruir;
@@ -118,7 +123,11 @@ TImpressora* TImpressora_Criar(size_t Capacidade, size_t Escalonador, char* Nome
 	{
 		free(NovaImpressora);
 		return NULL;
-	}	
+	}
+	NovaImpressora->TotalPrioridades = QUANT_PRIORIDADES;
+	time(&horatual);
+	NovaImpressora->InicioTrabalhos = horatual;
+	
 	return NovaImpressora;
 }
 
@@ -136,8 +145,9 @@ void TImpressora_Imprimir(TImpressora* Impressora, TUsuario* Usuario, const time
 	NovaImpressao = (TImpressao*)malloc(sizeof(TImpressao));
 	if (NovaImpressao != NULL)
 	{
-		NovaImpressao->Horario = Hora;
-		NovaImpressao->Prioridade =Prioridade;
+		NovaImpressao->HorarioChegada = Hora;
+		NovaImpressao->HorarioLimite = Hora + TempoMaximo;
+		NovaImpressao->Prioridade = Prioridade;
 		NovaImpressao->Paginas = Paginas;
 		NovaImpressao->MaxEspera = TempoMaximo;
 		NovaImpressao->Usuario = Usuario;

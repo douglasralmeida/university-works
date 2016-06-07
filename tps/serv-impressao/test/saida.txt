@@ -1,25 +1,65 @@
 ## por prioridade de usuario
 # total perdas:
 0 0
+1 0
+2 0
+3 0
+4 0
 # tempo medio espera:
 0 0.000
+1 0.000
+2 0.000
+3 0.000
+4 0.000
 # tempo minimo espera:
 0 0
+1 0
+2 0
+3 0
+4 0
 # tempo maximo espera:
 0 0
+1 0
+2 0
+3 0
+4 0
 # numero de paginas impressas:
 0 0
+1 0
+2 0
+3 0
+4 0
 ## por prioridade de tarefa
 # total perdas:
 0 0
+1 0
+2 0
+3 0
+4 0
 # tempo medio espera:
 0 0.000
+1 0.000
+2 0.000
+3 0.000
+4 0.000
 # tempo minimo espera:
 0 0
+1 0
+2 0
+3 0
+4 0
 # tempo maximo espera:
 0 0
+1 0
+2 0
+3 0
+4 0
 # numero de paginas impressas:
 0 0
+1 0
+2 0
+3 0
+4 0
 ## geral:
 # total perdas: 0
 # tempo medio espera: 0.000

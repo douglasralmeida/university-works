@@ -9,6 +9,7 @@
 #include <string.h>
 #include "list.h"
 #include "servidor_arquivo.h"
+#include "servidor_relatorio.h"
 #include "servidor_usuario.h"
 #include "servidor.h"
 
@@ -21,6 +22,8 @@ TServidor* TServidor_Criar(void)
 	FuncUsuarDestruir = &TUsuario_Destruir;
 	FuncUsuarIguais = &TUsuario_Iguais;
 	NovoServidor = (TServidor*)malloc(sizeof(TServidor));
+	NovoServidor->Impressora = NULL;
+	NovoServidor->Relatorio = NULL;
 	NovoServidor->Usuarios = TLista_Criar(FuncUsuarDestruir, FuncUsuarIguais, NULL);
 	
 	return NovoServidor;
@@ -29,8 +32,10 @@ TServidor* TServidor_Criar(void)
 void TServidor_Destruir(TServidor** PServidor)
 {
 	if ((*PServidor)->Impressora != NULL)
-		free((*PServidor)->Impressora);
-	TLista_Destruir(&(*PServidor)->Usuarios);
+		TImpressora_Destruir(&((*PServidor)->Impressora));
+	if ((*PServidor)->Relatorio != NULL)
+		TRelatorio_Destruir(&(*PServidor)->Relatorio);
+	TLista_Destruir(&(*PServidor)->Usuarios);	
 	free(*PServidor);
 	PServidor = NULL;
 }
@@ -58,6 +63,7 @@ bool TServidor_CadastrarImpressora(TServidor* Servidor, char* Impressora, int Ca
 	Servidor->Impressora = TImpressora_Criar(Capacidade, Escalonador, Impressora);
 	if (Servidor->Impressora == NULL)
 		return false;
+	Servidor->Relatorio = TRelatorio_Criar(Servidor->Impressora->TotalPrioridades);
 	
 	return true;
 }
@@ -90,90 +96,7 @@ bool TServidor_Preparar(TServidor* Servidor, const char* NomeArquivoEntrada, con
 
 void TServidor_Relatorio(TServidor* Servidor)
 {
-	int i;
-	int totalprioridades = 1;
-	float numero_f;
-	int numero_i;
-	
-	fprintf(Servidor->ArquivoSaida, "## por prioridade de usuario\n");
-	fprintf(Servidor->ArquivoSaida, "# total perdas:\n");
-	for (i = 0; i < totalprioridades; i++)
-	{
-		numero_i = 0;
-		fprintf(Servidor->ArquivoSaida, "%d %d\n", i, numero_i);
-	}
-	fprintf(Servidor->ArquivoSaida, "# tempo medio espera:\n");
-	for (i = 0; i < totalprioridades; i++)
-	{
-		numero_f = 0.0;
-		fprintf(Servidor->ArquivoSaida, "%d %.3f\n", i, numero_f);
-	}
-	fprintf(Servidor->ArquivoSaida, "# tempo minimo espera:\n");
-	for (i = 0; i < totalprioridades; i++)
-	{
-		numero_i = 0;
-		fprintf(Servidor->ArquivoSaida, "%d %d\n", i, numero_i);
-	}
-	fprintf(Servidor->ArquivoSaida, "# tempo maximo espera:\n");
-	for (i = 0; i < totalprioridades; i++)
-	{
-		numero_i = 0;
-		fprintf(Servidor->ArquivoSaida, "%d %d\n", i, numero_i);
-	}
-	fprintf(Servidor->ArquivoSaida, "# numero de paginas impressas:\n");
-	for (i = 0; i < totalprioridades; i++)
-	{
-		numero_i = 0;
-		fprintf(Servidor->ArquivoSaida, "%d %d\n", i, numero_i);
-	}
-	fprintf(Servidor->ArquivoSaida, "## por prioridade de tarefa\n");
-	fprintf(Servidor->ArquivoSaida, "# total perdas:\n");
-	for (i = 0; i < totalprioridades; i++)
-	{
-		numero_i = 0;
-		fprintf(Servidor->ArquivoSaida, "%d %d\n", i, numero_i);
-	}
-	fprintf(Servidor->ArquivoSaida, "# tempo medio espera:\n");
-	for (i = 0; i < totalprioridades; i++)
-	{
-		numero_f = 0.0;
-		fprintf(Servidor->ArquivoSaida, "%d %.3f\n", i, numero_f);
-	}
-	fprintf(Servidor->ArquivoSaida, "# tempo minimo espera:\n");
-	for (i = 0; i < totalprioridades; i++)
-	{
-		numero_i = 0;
-		fprintf(Servidor->ArquivoSaida, "%d %d\n", i, numero_i);
-	}
-	fprintf(Servidor->ArquivoSaida, "# tempo maximo espera:\n");
-	for (i = 0; i < totalprioridades; i++)
-	{
-		numero_i = 0;
-		fprintf(Servidor->ArquivoSaida, "%d %d\n", i, numero_i);
-	}
-	fprintf(Servidor->ArquivoSaida, "# numero de paginas impressas:\n");
-	for (i = 0; i < totalprioridades; i++)
-	{
-		numero_i = 0;
-		fprintf(Servidor->ArquivoSaida, "%d %d\n", i, numero_i);
-	}
-	fprintf(Servidor->ArquivoSaida, "## geral:\n");
-	numero_i = 0;
-	fprintf(Servidor->ArquivoSaida, "# total perdas: %d\n", numero_i);
-	numero_f = 0.0;
-	fprintf(Servidor->ArquivoSaida, "# tempo medio espera: %.3f\n", numero_f);
-	numero_i = 0;
-	fprintf(Servidor->ArquivoSaida, "# tempo minimo espera: %d\n", numero_i);
-	numero_i = 0;
-	fprintf(Servidor->ArquivoSaida, "# tempo maximo espera: %d\n", numero_i);
-	numero_i = 0;
-	fprintf(Servidor->ArquivoSaida, "# numero de paginas impressas: %d\n", numero_i);
-	numero_i = 0;
-	fprintf(Servidor->ArquivoSaida, "# quantidade de usuarios inseridos: %d\n", numero_i);
-	numero_i = 0;
-	fprintf(Servidor->ArquivoSaida, "# quantidade de usuarios removidos: %d\n", numero_i);
-	numero_i = 0;
-	fprintf(Servidor->ArquivoSaida, "# quantidade de tarefas removidas com os usuarios: %d\n", numero_i);
+	TRelatorio_Emitir(Servidor->Relatorio, Servidor->ArquivoSaida);		
 }
 
 void TServidor_UsuarioExcluir(TServidor* Servidor, const char* Nome)

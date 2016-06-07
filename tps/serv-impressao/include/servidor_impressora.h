@@ -12,11 +12,13 @@
 #include <time.h>
 #include "boolutils.h"
 #include "core.h"
+#include "fila.h"
 #include "filaprior.h"
 #include "servidor_usuario.h"
 
 typedef struct _TImpressao {
-	time_t Horario;
+	time_t HorarioChegada;
+	time_t HorarioLimite;
 	unsigned int MaxEspera;
 	unsigned int Paginas;
 	size_t Prioridade;
@@ -28,7 +30,9 @@ typedef struct _TImpressora {
 	char Nome[11];
 	size_t Capacidade;
 	size_t Escalonador;
+	time_t InicioTrabalhos;
 	TFilaPrioridade* FilaImpressao;
+	size_t TotalPrioridades;
 } TImpressora;
 
 TImpressao* TImpressao_Criar(TUsuario* Usuario, time_t Horario, unsigned int MaxEspera, unsigned int Paginas, size_t Prioridade);

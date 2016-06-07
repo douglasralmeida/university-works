@@ -15,15 +15,18 @@
 #include "core.h"
 #include "list.h"
 #include "servidor_impressora.h"
+#include "servidor_relatorio.h"
 #include "servidor_usuario.h"
 
 #define BUFFER_TAMANHO 128
+#define QUANT_PRIORIDADES 5
 
 /* Usuario do sistema */
 typedef struct _TServidor {
 	FILE* ArquivoEntrada;
 	FILE* ArquivoSaida;
 	TImpressora* Impressora;
+	TRelatorio* Relatorio;
 	TLista* Usuarios;
 } TServidor;
 
