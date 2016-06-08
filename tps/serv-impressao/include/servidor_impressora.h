@@ -12,8 +12,8 @@
 #include <time.h>
 #include "boolutils.h"
 #include "core.h"
-#include "fila.h"
 #include "filaprior.h"
+#include "servidor.h"
 #include "servidor_usuario.h"
 
 typedef struct _TImpressao {
@@ -52,6 +52,6 @@ TImpressora* TImpressora_Criar(size_t Capacidade, size_t Escalonador, char* Nome
 
 void TImpressora_Destruir(TImpressora** PImpressora);
 
-void TImpressora_Imprimir(TImpressora* Impressora, TUsuario* Usuario, const time_t Hora, const int Prioridade, const int Paginas, const int TempoMaximo);
+void TImpressora_Imprimir(TServidor* Servidor, TImpressao* Impressao);
 
 #endif
