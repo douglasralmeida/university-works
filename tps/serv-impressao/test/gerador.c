@@ -12,7 +12,7 @@ int main(void){
  
     srand((unsigned)time(NULL));
  
-    FILE *arq_saida = fopen("entrada_random.txt", "w");
+    FILE *arq_saida = fopen("entrada.txt", "w");
  
     printf("Digite a capacidade: \n");
     scanf("%d", &capacidade);

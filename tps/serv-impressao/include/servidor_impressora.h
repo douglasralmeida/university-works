@@ -15,8 +15,7 @@
 #include "filaprior.h"
 #include "servidor.h"
 #include "servidor_usuario.h"
-
-typedef struct _TServidor TServidor;
+#include "servidor_relatorio.h"
 
 typedef struct _TImpressao {
 	time_t HorarioChegada;
@@ -54,6 +53,6 @@ TImpressora* TImpressora_Criar(size_t Capacidade, size_t Escalonador, char* Nome
 
 void TImpressora_Destruir(TImpressora** PImpressora);
 
-void TImpressora_Imprimir(TServidor* Servidor, TImpressao* Impressao);
+void TImpressora_Imprimir(time_t HoraAtual, TImpressao* Impressao, TRelatorio* Relatorio);
 
 #endif

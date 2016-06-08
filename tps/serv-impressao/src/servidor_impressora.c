@@ -24,7 +24,7 @@ TImpressao* TImpressao_Criar(TUsuario* Usuario, time_t Horario, unsigned int Max
 
 void TImpressao_Destruir(void** PImpressao)
 {
-	TUsuario_Destruir(&(NovaImpressao->Usuario));
+	TUsuario_Destruir((void**)&((TImpressao*)*PImpressao)->Usuario);
 	free(*PImpressao);
 	PImpressao = NULL;
 }
@@ -63,8 +63,8 @@ bool TImpressao_Comparar1(void* Impressao1, void* Impressao2)
 bool TImpressao_Comparar2(void* Impressao1, void* Impressao2)
 {
 	time_t horaatual;
-	unsigned float nivelprior1;
-	unsigned float nivelprior2;
+	float nivelprior1;
+	float nivelprior2;
 	unsigned int tempoespera1;
 	unsigned int tempoespera2;
 	TImpressao* Imp1;
@@ -148,44 +148,30 @@ void TImpressora_Destruir(TImpressora** PImpressora)
 	PImpressora = NULL;	
 }
 
-void TImpressora_Imprimir(TServidor* Servidor, TImpressao* Impressao)
+void TImpressora_Imprimir(time_t HoraAtual, TImpressao* Impressao, TRelatorio* Relatorio)
 {
 	time_t tempoespera;
 	
-	tempoespera = Servidor->HoraAtual - Impressao->HorarioChegada;
-	Servidor->Relatorio->DadosPorTarefas->Documentos[Impressao->Prioridade]++;
-	Servidor->Relatorio->DadosPorTarefas->PaginasImpressas[Impressao->Prioridade] =+ Impressao->Paginas;
-	if (tempoespera < Servidor->Relatorio->DadosPorTarefas->TempoMinimoEspera[Impressao->Prioridade])
-		Servidor->Relatorio->DadosPorTarefas->TempoMinimoEspera[Impressao->Prioridade] = tempoespera;
-	else if (tempoespera > Servidor->Relatorio->DadosPorTarefas->TempoMaximoEspera[Impressao->Prioridade])
-		Servidor->Relatorio->DadosPorTarefas->TempoMaximoEspera[Impressao->Prioridade] = tempoespera;
-	Servidor->Relatorio->DadosPorUsuario->Documentos[Impressao->Usuario->Prioridade]++;
-	Servidor->Relatorio->DadosPorUsuario->PaginasImpressas[Impressao->Usuario->Prioridade] =+ Impressao->Paginas;
-	if (tempoespera < Servidor->Relatorio->DadosPorUsuario->TempoMinimoEspera[Impressao->Usuario->Prioridade])
-		Servidor->Relatorio->DadosPorUsuario->TempoMinimoEspera[Impressao->Usuario->Prioridade] = tempoespera;
-	else if (tempoespera > Servidor->Relatorio->DadosPorUsuario->TempoMaximoEspera[Impressao->Usuario->Prioridade])
-		Servidor->Relatorio->DadosPorUsuario->TempoMaximoEspera[Impressao->Usuario->Prioridade] = tempoespera;	
-	Servidor->Relatorio->DadosPorTarefas->TempoTotalEspera[Impressao->Prioridade] =+ tempoespera;
-	Servidor->Relatorio->DadosPorUsuario->TempoTotalEspera[Impressao->Usuario->Prioridade] =+ tempoespera;
-	Servidor->Relatorio->Documentos++;
-	if (tempoespera < Servidor->Relatorio->TempoMinimoEspera)
-		Servidor->Relatorio->TempoMinimoEspera = tempoespera;
-	else if (tempoespera > Servidor->Relatorio->TempoMaximoEspera)
-		Servidor->Relatorio->TempoMaximoEspera = tempoespera;
-	Servidor->Relatorio->TempoTotalEspera += tempoespera;
-	Servidor->Relatorio->TotalPaginasImpressas += Impressao->Paginas;
-	
-	/*TImpressao* NovaImpressao;
-	
-	NovaImpressao = (TImpressao*)malloc(sizeof(TImpressao));
-	if (NovaImpressao != NULL)
-	{
-		NovaImpressao->HorarioChegada = Hora;
-		NovaImpressao->HorarioLimite = Hora + TempoMaximo;
-		NovaImpressao->Prioridade = Prioridade;
-		NovaImpressao->Paginas = Paginas;
-		NovaImpressao->MaxEspera = TempoMaximo;
-		NovaImpressao->Usuario = Usuario;
-		TFilaPrioridade_Enfileirar(Impressora->FilaImpressao, NovaImpressao);
-	}*/
+	tempoespera = HoraAtual - Impressao->HorarioChegada;
+	Relatorio->DadosPorTarefas->Documentos[Impressao->Prioridade]++;
+	Relatorio->DadosPorTarefas->PaginasImpressas[Impressao->Prioridade] =+ Impressao->Paginas;
+	if (tempoespera < Relatorio->DadosPorTarefas->TempoMinimoEspera[Impressao->Prioridade])
+		Relatorio->DadosPorTarefas->TempoMinimoEspera[Impressao->Prioridade] = tempoespera;
+	else if (tempoespera > Relatorio->DadosPorTarefas->TempoMaximoEspera[Impressao->Prioridade])
+		Relatorio->DadosPorTarefas->TempoMaximoEspera[Impressao->Prioridade] = tempoespera;
+	Relatorio->DadosPorUsuario->Documentos[Impressao->Usuario->Prioridade]++;
+	Relatorio->DadosPorUsuario->PaginasImpressas[Impressao->Usuario->Prioridade] =+ Impressao->Paginas;
+	if (tempoespera < Relatorio->DadosPorUsuario->TempoMinimoEspera[Impressao->Usuario->Prioridade])
+		Relatorio->DadosPorUsuario->TempoMinimoEspera[Impressao->Usuario->Prioridade] = tempoespera;
+	else if (tempoespera > Relatorio->DadosPorUsuario->TempoMaximoEspera[Impressao->Usuario->Prioridade])
+		Relatorio->DadosPorUsuario->TempoMaximoEspera[Impressao->Usuario->Prioridade] = tempoespera;	
+	Relatorio->DadosPorTarefas->TempoTotalEspera[Impressao->Prioridade] =+ tempoespera;
+	Relatorio->DadosPorUsuario->TempoTotalEspera[Impressao->Usuario->Prioridade] =+ tempoespera;
+	Relatorio->Documentos++;
+	if (tempoespera < Relatorio->TempoMinimoEspera)
+		Relatorio->TempoMinimoEspera = tempoespera;
+	else if (tempoespera > Relatorio->TempoMaximoEspera)
+		Relatorio->TempoMaximoEspera = tempoespera;
+	Relatorio->TempoTotalEspera += tempoespera;
+	Relatorio->TotalPaginasImpressas += Impressao->Paginas;
 }

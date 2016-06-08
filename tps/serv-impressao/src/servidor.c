@@ -45,11 +45,9 @@ bool TServidor_Analisar(TServidor* Servidor)
 {
 	char buffer[BUFFER_TAMANHO + 1];
 	bool encerraanalise;
-	TImpressao* Impressao;
 	
 	encerraanalise = false;
-	time(&Servidor->HoraAtual);
-	Impressao = NULL;
+	time(&Servidor->HoraAtual);	
 	/* Ler primeira linha com cadastro da impressora */
 	if ((fgets(buffer, BUFFER_TAMANHO, Servidor->ArquivoEntrada) != NULL) && (BufferImpressora(Servidor, buffer)))
 	{	
@@ -62,8 +60,7 @@ bool TServidor_Analisar(TServidor* Servidor)
 					TServidor_ProcessarImpressao(Servidor);
 			}
 		}
-		//esvaziar fila
-		TServidor_FinalizaFila(Servidor);
+		TServidor_Relatorio(Servidor);
 	}
 	else	
 	{
@@ -86,7 +83,7 @@ bool TServidor_CadastrarImpressora(TServidor* Servidor, char* Impressora, int Ca
 
 bool TServidor_ChecarImpressao(TServidor* Servidor, TImpressao* Impressao)
 {
-	if (Impressao->Usuario == NULL);
+	if (Impressao->Usuario == NULL)
 	{
 		Servidor->Relatorio->TotalTarefasRejeitadas++;		
 		
@@ -101,22 +98,6 @@ bool TServidor_ChecarImpressao(TServidor* Servidor, TImpressao* Impressao)
 	}
 	
 	return true;
-}
-
-void TServidor_FinalizaFila(TServidor* Servidor)
-{
-	TImpressao* Impressao;
-	
-	while (Servidor->Impressora->FilaImpressao->Tamanho > 0)
-	{
-		Impressao = (TImpressao*)TFilaPrioridade_Desenfileirar(Servidor->Impressora->FilaImpressao);
-		if (TServidor_ChecarImpressao(Impressao))
-		{
-			Servidor->HoraAtual = Servidor->HoraAtual + Servidor->Impressora->Paginas / Impressora->Capacidade;
-			TImpressora_Imprimir(Impressao);
-		}
-	}
-	TServidor_Relatorio(Servidor);
 }
 
 void TServidor_Finalizar(TServidor* Servidor)
@@ -139,23 +120,23 @@ void TServidor_ProcessarImpressao(TServidor* Servidor)
 	
 	if (Servidor->Impressora->ImpressaoRecebida->HorarioChegada < Servidor->HoraAtual)
 	{
-		TFilaPrioridade_Enfileirar(Servidor->Impressao->FilaImpressao, Servidor->Impressora->ImpressaoRecebida);
+		TFilaPrioridade_Enfileirar(Servidor->Impressora->FilaImpressao, Servidor->Impressora->ImpressaoRecebida);
 		Servidor->Impressora->ImpressaoRecebida = NULL;
 	}
 	else
 	{
-		while ((Servidor->Impressora->ImpressaoRecebida->HorarioChegada >= Servidor->HoraAtual) && (Servidor->Impressao->FilaImpressao->Tamanho > 0))
+		while ((Servidor->Impressora->ImpressaoRecebida->HorarioChegada >= Servidor->HoraAtual) && (Servidor->Impressora->FilaImpressao->Tamanho > 0))
 		{
-			Impressao = (TImpressao*)TFilaPrioridade_Desenfileirar(Servidor->Impressao->FilaImpressao);
+			Impressao = (TImpressao*)TFilaPrioridade_Desenfileirar(Servidor->Impressora->FilaImpressao);
 			if (TServidor_ChecarImpressao(Servidor, Impressao))
 			{
-				Servidor->HoraAtual = Servidor->HoraAtual + Servidor->Impressora->Paginas / Impressora->Capacidade;
-				TImpressora_Imprimir(Servidor, Impressao);
+				Servidor->HoraAtual = Servidor->HoraAtual + Impressao->Paginas / Servidor->Impressora->Capacidade;
+				TImpressora_Imprimir(Servidor->HoraAtual, Impressao, Servidor->Relatorio);
 			}
 		}
 		if (Servidor->Impressora->ImpressaoRecebida->HorarioChegada < Servidor->HoraAtual)
 		{
-			TFilaPrioridade_Enfileirar(Servidor->Impressao->FilaImpressao, Servidor->Impressora->ImpressaoRecebida);
+			TFilaPrioridade_Enfileirar(Servidor->Impressora->FilaImpressao, Servidor->Impressora->ImpressaoRecebida);
 			Servidor->Impressora->ImpressaoRecebida = NULL;
 		}
 		else
@@ -163,8 +144,8 @@ void TServidor_ProcessarImpressao(TServidor* Servidor)
 			Impressao = Servidor->Impressora->ImpressaoRecebida;
 			if (TServidor_ChecarImpressao(Servidor, Impressao))
 			{
-				horaatual = Impressao->HorarioChegada + Servidor->Impressora->Paginas / Impressora->Capacidade;
-				TImpressora_Imprimir(Servidor, Impressao);
+				Servidor->HoraAtual = Impressao->HorarioChegada + Impressao->Paginas / Servidor->Impressora->Capacidade;
+				TImpressora_Imprimir(Servidor->HoraAtual, Impressao, Servidor->Relatorio);
 			}
 			Servidor->Impressora->ImpressaoRecebida = NULL;
 		}
@@ -192,7 +173,7 @@ void TServidor_UsuarioExcluir(TServidor* Servidor, const char* Nome)
 	{
 		TLista_Remover(Servidor->Usuarios, No);
 		TUsuario_Destruir((void**)&Usuario);
-		Servidor->Relatorios->TotalUsuariosRemovidos++;
+		Servidor->Relatorio->TotalUsuariosRemovidos++;
 	}
 }
 
@@ -204,6 +185,6 @@ void TServidor_UsuarioNovo(TServidor* Servidor, const char* Nome, const int Prio
 	if (TLista_Posicao(Servidor->Usuarios, Usuario) == 0)
 	{
 		TLista_Adicionar(Servidor->Usuarios, Usuario);
-		Servidor->Relatorios->TotalUsuariosInseridos++;
+		Servidor->Relatorio->TotalUsuariosInseridos++;
 	}
 }

@@ -29,7 +29,7 @@ typedef struct _TServidor {
 	TImpressora* Impressora;
 	TRelatorio* Relatorio;
 	TLista* Usuarios;
-};
+} TServidor;
 
 TServidor* TServidor_Criar(void);
 
