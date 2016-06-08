@@ -30,8 +30,8 @@ typedef struct _TImpressora {
 	char Nome[11];
 	size_t Capacidade;
 	size_t Escalonador;
-	time_t InicioTrabalhos;
 	TFilaPrioridade* FilaImpressao;
+	TImpressao* ImpressaoRecebida;
 	size_t TotalPrioridades;
 } TImpressora;
 

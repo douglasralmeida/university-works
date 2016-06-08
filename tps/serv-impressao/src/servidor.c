@@ -7,6 +7,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "list.h"
 #include "servidor_arquivo.h"
 #include "servidor_relatorio.h"
@@ -44,18 +45,32 @@ bool TServidor_Analisar(TServidor* Servidor)
 {
 	char buffer[BUFFER_TAMANHO + 1];
 	bool encerraanalise;
+	TImpressao* Impressao;
 	
 	encerraanalise = false;
-	time(&(Servidor->HoraAtual));
+	time(&Servidor->HoraAtual);
+	Impressao = NULL;
 	/* Ler primeira linha com cadastro da impressora */
 	if ((fgets(buffer, BUFFER_TAMANHO, Servidor->ArquivoEntrada) != NULL) && (BufferImpressora(Servidor, buffer)))
-			while ((encerraanalise == false) && (fgets(buffer, BUFFER_TAMANHO, Servidor->ArquivoEntrada) != NULL))
-				encerraanalise = BufferAnalisar(Servidor, buffer);
-		else	
+	{	
+		while (!encerraanalise)
 		{
-			printf("Erro (0x101): Erro ao abrir arquivo de entrada de dados.\n");
-			return false;
+			if (fgets(buffer, BUFFER_TAMANHO, Servidor->ArquivoEntrada) != NULL)
+			{
+				encerraanalise = BufferAnalisar(Servidor, buffer);
+				if (Servidor->Impressora->ImpressaoRecebida != NULL)
+					TServidor_ProcessarImpressao(Servidor);
+			}
 		}
+		//esvaziar fila
+		TServidor_FinalizaFila(Servidor);
+	}
+	else	
+	{
+		printf("Erro (0x101): Erro ao abrir arquivo de entrada de dados.\n");
+		return false;
+	}
+	
 	return true;
 }
 
@@ -69,25 +84,45 @@ bool TServidor_CadastrarImpressora(TServidor* Servidor, char* Impressora, int Ca
 	return true;
 }
 
+bool TServidor_ChecarImpressao(TServidor* Servidor, TImpressao* Impressao)
+{
+	if (Impressao->Usuario == NULL);
+	{
+		Servidor->Relatorio->TotalTarefasRejeitadas++;		
+		
+		return false;
+	} else if (Impressao->HorarioLimite > Servidor->HoraAtual)
+	{
+		Servidor->Relatorio->DadosPorTarefas->Perdas[Impressao->Prioridade]++;
+		Servidor->Relatorio->DadosPorUsuario->Perdas[Impressao->Usuario->Prioridade]++;
+		Servidor->Relatorio->TotalPerdas++;
+		
+		return false;
+	}
+	
+	return true;
+}
+
+void TServidor_FinalizaFila(TServidor* Servidor)
+{
+	TImpressao* Impressao;
+	
+	while (Servidor->Impressora->FilaImpressao->Tamanho > 0)
+	{
+		Impressao = (TImpressao*)TFilaPrioridade_Desenfileirar(Servidor->Impressora->FilaImpressao);
+		if (TServidor_ChecarImpressao(Impressao))
+		{
+			Servidor->HoraAtual = Servidor->HoraAtual + Servidor->Impressora->Paginas / Impressora->Capacidade;
+			TImpressora_Imprimir(Impressao);
+		}
+	}
+	TServidor_Relatorio(Servidor);
+}
+
 void TServidor_Finalizar(TServidor* Servidor)
 {
 	fclose(Servidor->ArquivoEntrada);
 	fclose(Servidor->ArquivoSaida);
-}
-
-void TServidor_Imprimir(TServidor* Servidor, const char* Nome, const time_t Hora, const int Prioridade, const int Paginas, const int TempoMaximo)
-{
-	TListaNo* No;
-	TUsuario* Usuario;
-	
-	Usuario = TUsuario_Criar(Nome, 0);
-	No = TLista_Pesquisar(Servidor->Usuarios, Usuario);
-	if (No != NULL)
-	{
-		TServidor_ProcessarFila(Servidor);
-		TImpressora_Imprimir(Servidor->Impressora, (TUsuario*)No->Item, Hora, Prioridade, Paginas, TempoMaximo);
-	}
-	free(Usuario);
 }
 
 bool TServidor_Preparar(TServidor* Servidor, const char* NomeArquivoEntrada, const char* NomeArquivoSaida)
@@ -96,6 +131,44 @@ bool TServidor_Preparar(TServidor* Servidor, const char* NomeArquivoEntrada, con
 	Servidor->ArquivoSaida = fopen(NomeArquivoSaida , "wt");
 	
 	return ((Servidor->ArquivoEntrada != NULL) && (Servidor->ArquivoSaida != NULL));
+}
+
+void TServidor_ProcessarImpressao(TServidor* Servidor)
+{
+	TImpressao* Impressao;
+	
+	if (Servidor->Impressora->ImpressaoRecebida->HorarioChegada < Servidor->HoraAtual)
+	{
+		TFilaPrioridade_Enfileirar(Servidor->Impressao->FilaImpressao, Servidor->Impressora->ImpressaoRecebida);
+		Servidor->Impressora->ImpressaoRecebida = NULL;
+	}
+	else
+	{
+		while ((Servidor->Impressora->ImpressaoRecebida->HorarioChegada >= Servidor->HoraAtual) && (Servidor->Impressao->FilaImpressao->Tamanho > 0))
+		{
+			Impressao = (TImpressao*)TFilaPrioridade_Desenfileirar(Servidor->Impressao->FilaImpressao);
+			if (TServidor_ChecarImpressao(Servidor, Impressao))
+			{
+				Servidor->HoraAtual = Servidor->HoraAtual + Servidor->Impressora->Paginas / Impressora->Capacidade;
+				TImpressora_Imprimir(Servidor, Impressao);
+			}
+		}
+		if (Servidor->Impressora->ImpressaoRecebida->HorarioChegada < Servidor->HoraAtual)
+		{
+			TFilaPrioridade_Enfileirar(Servidor->Impressao->FilaImpressao, Servidor->Impressora->ImpressaoRecebida);
+			Servidor->Impressora->ImpressaoRecebida = NULL;
+		}
+		else
+		{
+			Impressao = Servidor->Impressora->ImpressaoRecebida;
+			if (TServidor_ChecarImpressao(Servidor, Impressao))
+			{
+				horaatual = Impressao->HorarioChegada + Servidor->Impressora->Paginas / Impressora->Capacidade;
+				TImpressora_Imprimir(Servidor, Impressao);
+			}
+			Servidor->Impressora->ImpressaoRecebida = NULL;
+		}
+	}	
 }
 
 void TServidor_Relatorio(TServidor* Servidor)
@@ -114,6 +187,7 @@ void TServidor_UsuarioExcluir(TServidor* Servidor, const char* Nome)
 	{
 		TLista_Remover(Servidor->Usuarios, No);
 		TUsuario_Destruir((void**)&Usuario);
+		Servidor->Relatorios->TotalUsuariosRemovidos++;
 	}
 }
 
@@ -123,5 +197,8 @@ void TServidor_UsuarioNovo(TServidor* Servidor, const char* Nome, const int Prio
 	
 	Usuario = TUsuario_Criar(Nome, Prioridade);
 	if (TLista_Posicao(Servidor->Usuarios, Usuario) == 0)
+	{
 		TLista_Adicionar(Servidor->Usuarios, Usuario);
+		Servidor->Relatorios->TotalUsuariosInseridos++;
+	}
 }

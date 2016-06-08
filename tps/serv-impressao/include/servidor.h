@@ -25,6 +25,7 @@
 typedef struct _TServidor {
 	FILE* ArquivoEntrada;
 	FILE* ArquivoSaida;
+	time_t HoraAtual;
 	TImpressora* Impressora;
 	TRelatorio* Relatorio;
 	TLista* Usuarios;
@@ -38,13 +39,13 @@ bool TServidor_Analisar(TServidor* Servidor);
 
 bool TServidor_CadastrarImpressora(TServidor* Servidor, char* Impressora, const int Capacidade, const int Escalonador);
 
-void TServidor_Finalizar(TServidor* Servidor);
+bool TServidor_ChecarImpressao(TServidor* Servidor, TImpressao* Impressao);
 
-void TServidor_Imprimir(TServidor* Servidor, const char* Nome, const time_t Hora, const int Prioridade, const int Paginas, const int TempoMaximo);
+void TServidor_Finalizar(TServidor* Servidor);
 
 bool TServidor_Preparar(TServidor* Servidor, const char* NomeArquivoEntrada, const char* NomeArquivoSaida);
 
-void TServidor_ProcessarFila(TServidor* Servidor);
+void TServidor_ProcessarImpressao(TServidor* Servidor);
 
 void TServidor_Relatorio(TServidor* Servidor);
 

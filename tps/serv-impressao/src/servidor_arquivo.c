@@ -31,7 +31,6 @@ int BufferAnalisar(TServidor* Servidor, char* Buffer)
 		break;
 		case	CMD_SAIR:
 			encerrar = 1;
-			TServidor_Relatorio(Servidor);
 		break;
 	}
 	return encerrar;
