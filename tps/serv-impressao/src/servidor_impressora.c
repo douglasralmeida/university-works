@@ -62,8 +62,8 @@ bool TImpressao_Comparar1(void* Impressao1, void* Impressao2)
 bool TImpressao_Comparar2(void* Impressao1, void* Impressao2)
 {
 	time_t horaatual;
-	unsigned int nivelprior1;
-	unsigned int nivelprior2;
+	unsigned float nivelprior1;
+	unsigned float nivelprior2;
 	unsigned int tempoespera1;
 	unsigned int tempoespera2;
 	TImpressao* Imp1;
