@@ -174,4 +174,5 @@ void TImpressora_Imprimir(time_t HoraAtual, TImpressao* Impressao, TRelatorio* R
 		Relatorio->TempoMaximoEspera = tempoespera;
 	Relatorio->TempoTotalEspera += tempoespera;
 	Relatorio->TotalPaginasImpressas += Impressao->Paginas;
+	TImpressao_Destruir((void**)&Impressao);
 }

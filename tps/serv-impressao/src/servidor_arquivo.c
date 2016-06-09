@@ -38,7 +38,7 @@ int BufferAnalisar(TServidor* Servidor, char* Buffer)
 			{
 				UsuarioSistema = (TUsuario*)No->Item;
 				Usuario->Prioridade = UsuarioSistema->Prioridade;
-				Impressao = TImpressao_Criar(Usuario, inteiro, prioridade, paginas, tempo);
+				Impressao = TImpressao_Criar(Usuario, inteiro, tempo, paginas, prioridade);
 				TServidor_RecebeImpressao(Servidor, Impressao);
 			}
 		break;

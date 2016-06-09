@@ -22,7 +22,7 @@ typedef struct _TImpressao {
 	time_t HorarioLimite;
 	unsigned int MaxEspera;
 	unsigned int Paginas;
-	size_t Prioridade;
+	int Prioridade;
 	TUsuario* Usuario;
 } TImpressao;
 
@@ -33,7 +33,7 @@ typedef struct _TImpressora {
 	size_t Escalonador;
 	TFilaPrioridade* FilaImpressao;
 	TImpressao* ImpressaoRecebida;
-	size_t TotalPrioridades;
+	int TotalPrioridades;
 } TImpressora;
 
 TImpressao* TImpressao_Criar(TUsuario* Usuario, time_t Horario, unsigned int MaxEspera, unsigned int Paginas, size_t Prioridade);
