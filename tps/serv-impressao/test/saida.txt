@@ -2,70 +2,70 @@
 # total perdas:
 0 0
 1 0
-2 0
-3 0
-4 0
+2 92
+3 200
+4 90
 # tempo medio espera:
-0 64.000
+0 0.000
 1 0.000
-2 0.000
+2 -10697105.000
 3 0.000
-4 0.000
+4 -8422431.000
 # tempo minimo espera:
 0 0
 1 0
-2 0
-3 0
-4 0
+2 -1465503521
+3 -1465503334
+4 -1465503127
 # tempo maximo espera:
-0 248
-1 4025
-2 0
-3 0
-4 1614
+0 0
+1 0
+2 236
+3 250
+4 245
 # numero de paginas impressas:
-0 315
-1 30
-2 0
-3 0
-4 486
+0 0
+1 0
+2 464
+3 120
+4 24
 ## por prioridade de tarefa
 # total perdas:
-0 0
-1 0
-2 0
-3 0
-4 0
+0 56
+1 74
+2 75
+3 80
+4 97
 # tempo medio espera:
-0 1.000
-1 0.000
-2 0.000
-3 0.000
-4 1.000
+0 0.000
+1 1.000
+2 -14803065.000
+3 -12743506.000
+4 -12633648.000
 # tempo minimo espera:
-0 0
-1 0
-2 0
-3 0
-4 0
+0 -1465503238
+1 -1465502212
+2 -1465503521
+3 -1465503223
+4 -1465503334
 # tempo maximo espera:
-0 2502
-1 3315
-2 2356
-3 1960
-4 4025
+0 245
+1 249
+2 248
+3 249
+4 250
 # numero de paginas impressas:
-0 486
-1 33
-2 30
-3 51
-4 489
+0 120
+1 478
+2 464
+3 28
+4 450
 ## geral:
-# total perdas: 0
-# tempo medio espera: 279.713
-# tempo minimo espera: 0
-# tempo maximo espera: 4025
-# numero de paginas impressas: 155790
-# quantidade de usuarios inseridos: 6
-# quantidade de usuarios removidos: 2
+# total perdas: 382
+# tempo medio espera: 88251.148
+# tempo minimo espera: -1465503521
+# tempo maximo espera: 250
+# numero de paginas impressas: 151398
+# quantidade de usuarios inseridos: 5
+# quantidade de usuarios removidos: 1
 # quantidade de tarefas removidas com os usuarios: 0

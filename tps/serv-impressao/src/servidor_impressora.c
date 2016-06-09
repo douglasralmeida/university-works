@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include "hora.h"
 #include <time.h>
 #include "list.h"
 #include "servidor.h"
@@ -7,17 +8,15 @@
 
 TImpressao* TImpressao_Criar(TUsuario* Usuario, time_t Horario, unsigned int MaxEspera, unsigned int Paginas, size_t Prioridade)
 {
-	time_t horaatual;
 	TImpressao* NovaImpressao;
 	
-	time(&horaatual);
 	NovaImpressao = (TImpressao*)malloc(sizeof(TImpressao));
 	NovaImpressao->Usuario = Usuario;
 	NovaImpressao->HorarioChegada = Horario;
-	NovaImpressao->HorarioLimite = Horario + horaatual;
+	NovaImpressao->HorarioLimite = Horario + MaxEspera;
 	NovaImpressao->MaxEspera = MaxEspera;
 	NovaImpressao->Paginas = Paginas;
-	NovaImpressao->Prioridade = Prioridade;
+	NovaImpressao->Prioridade = Prioridade;	
 	
 	return NovaImpressao;
 }
@@ -31,9 +30,8 @@ void TImpressao_Destruir(void** PImpressao)
 
 bool TImpressao_Comparar1(void* Impressao1, void* Impressao2)
 {
-	time_t horaatual;
-	unsigned int tre1;
-	unsigned int tre2;
+	time_t tre1;
+	time_t tre2;
 	TImpressao* Imp1;
 	TImpressao* Imp2;
 	
@@ -41,9 +39,8 @@ bool TImpressao_Comparar1(void* Impressao1, void* Impressao2)
 	Imp2 = (TImpressao*)Impressao2;
 	if (Imp1->Usuario->Prioridade == Imp2->Usuario->Prioridade)
 	{
-		horaatual = time(&horaatual);
-		tre1 = Imp1->HorarioChegada + Imp1->MaxEspera - horaatual;
-		tre2 = Imp2->HorarioChegada + Imp2->MaxEspera - horaatual;
+		tre1 = Imp1->HorarioLimite - horaatual;
+		tre2 = Imp2->HorarioLimite - horaatual;
 		if (tre1 == tre2)
 		{
 			if (Imp1->Prioridade == Imp2->Prioridade)
@@ -62,11 +59,10 @@ bool TImpressao_Comparar1(void* Impressao1, void* Impressao2)
 
 bool TImpressao_Comparar2(void* Impressao1, void* Impressao2)
 {
-	time_t horaatual;
 	float nivelprior1;
 	float nivelprior2;
-	unsigned int tempoespera1;
-	unsigned int tempoespera2;
+	unsigned int tespera1;
+	unsigned int tespera2;
 	TImpressao* Imp1;
 	TImpressao* Imp2;
 	
@@ -86,11 +82,16 @@ bool TImpressao_Comparar2(void* Impressao1, void* Impressao2)
 	}
 	else
 	{
-		horaatual = time(&horaatual);
-		tempoespera1 = horaatual - Imp1->HorarioChegada;
-		tempoespera2 = horaatual - Imp1->HorarioChegada;
-		nivelprior1 = Imp1->Usuario->Prioridade * 0.2 + Imp1->Prioridade * 0.6 + tempoespera1 / Imp1->MaxEspera * 0.2;
-		nivelprior2 = Imp2->Usuario->Prioridade * 0.2 + Imp2->Prioridade * 0.6 + tempoespera2 / Imp2->MaxEspera * 0.2;
+		tespera1 = horaatual - Imp1->HorarioChegada;
+		tespera2 = horaatual - Imp2->HorarioChegada;
+		if (Imp1->MaxEspera > 0)
+			nivelprior1 = Imp1->Usuario->Prioridade * 0.2 + Imp1->Prioridade * 0.6 + tespera1 / Imp1->MaxEspera * 0.2;
+		else
+			nivelprior1 = Imp1->Usuario->Prioridade * 0.2 + Imp1->Prioridade * 0.6;
+		if (Imp2->MaxEspera > 0)
+			nivelprior2 = Imp2->Usuario->Prioridade * 0.2 + Imp2->Prioridade * 0.6 + tespera2 / Imp2->MaxEspera * 0.2;
+		else
+			nivelprior2 = Imp2->Usuario->Prioridade * 0.2 + Imp2->Prioridade * 0.6;
 		return (nivelprior1 < nivelprior2); 
 	}
 }

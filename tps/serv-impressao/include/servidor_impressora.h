@@ -23,6 +23,7 @@ typedef struct _TImpressao {
 	unsigned int MaxEspera;
 	unsigned int Paginas;
 	int Prioridade;
+	unsigned int TempEspera;
 	TUsuario* Usuario;
 } TImpressao;
 

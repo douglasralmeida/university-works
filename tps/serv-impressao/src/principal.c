@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "servidor.h"
+#include "hora.h"
 
 int main(int argc, char *argv[])
 {

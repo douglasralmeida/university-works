@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "hora.h"
 #include "list.h"
 #include "servidor_arquivo.h"
 #include "servidor_relatorio.h"
@@ -47,7 +48,7 @@ bool TServidor_Analisar(TServidor* Servidor)
 	bool encerraanalise;
 	
 	encerraanalise = false;
-	time(&Servidor->HoraAtual);	
+	time(&horaatual);	
 	/* Ler primeira linha com cadastro da impressora */
 	if ((fgets(buffer, BUFFER_TAMANHO, Servidor->ArquivoEntrada) != NULL) && (BufferImpressora(Servidor, buffer)))
 	{	
@@ -92,7 +93,7 @@ bool TServidor_ChecarImpressao(TServidor* Servidor, TImpressao* Impressao)
 		
 		TImpressao_Destruir((void**)&Impressao);
 		return false;
-	} else if (Impressao->HorarioLimite < Servidor->HoraAtual)
+	} else if (Impressao->HorarioLimite < horaatual)
 	{
 		Servidor->Relatorio->DadosPorTarefas->Perdas[Impressao->Prioridade]++;
 		Servidor->Relatorio->DadosPorUsuario->Perdas[Impressao->Usuario->Prioridade]++;
@@ -123,23 +124,23 @@ void TServidor_ProcessarImpressao(TServidor* Servidor)
 {
 	TImpressao* Impressao;
 	
-	if (Servidor->Impressora->ImpressaoRecebida->HorarioChegada < Servidor->HoraAtual)
+	if (Servidor->Impressora->ImpressaoRecebida->HorarioChegada < horaatual)
 	{
 		TFilaPrioridade_Enfileirar(Servidor->Impressora->FilaImpressao, Servidor->Impressora->ImpressaoRecebida);
 		Servidor->Impressora->ImpressaoRecebida = NULL;
 	}
 	else
 	{
-		while ((Servidor->Impressora->ImpressaoRecebida->HorarioChegada >= Servidor->HoraAtual) && (Servidor->Impressora->FilaImpressao->Tamanho > 0))
+		while ((Servidor->Impressora->ImpressaoRecebida->HorarioChegada >= horaatual) && (Servidor->Impressora->FilaImpressao->Tamanho > 0))
 		{
 			Impressao = (TImpressao*)TFilaPrioridade_Desenfileirar(Servidor->Impressora->FilaImpressao);
 			if (TServidor_ChecarImpressao(Servidor, Impressao))
 			{
-				Servidor->HoraAtual = Servidor->HoraAtual + Impressao->Paginas / Servidor->Impressora->Capacidade;
-				TImpressora_Imprimir(Servidor->HoraAtual, Impressao, Servidor->Relatorio);
+				horaatual =+ Impressao->Paginas / Servidor->Impressora->Capacidade;
+				TImpressora_Imprimir(horaatual, Impressao, Servidor->Relatorio);
 			}
 		}
-		if (Servidor->Impressora->ImpressaoRecebida->HorarioChegada < Servidor->HoraAtual)
+		if (Servidor->Impressora->ImpressaoRecebida->HorarioChegada < horaatual)
 		{
 			TFilaPrioridade_Enfileirar(Servidor->Impressora->FilaImpressao, Servidor->Impressora->ImpressaoRecebida);
 			Servidor->Impressora->ImpressaoRecebida = NULL;
@@ -149,8 +150,8 @@ void TServidor_ProcessarImpressao(TServidor* Servidor)
 			Impressao = Servidor->Impressora->ImpressaoRecebida;
 			if (TServidor_ChecarImpressao(Servidor, Impressao))
 			{
-				Servidor->HoraAtual = Impressao->HorarioChegada + Impressao->Paginas / Servidor->Impressora->Capacidade;
-				TImpressora_Imprimir(Servidor->HoraAtual, Impressao, Servidor->Relatorio);
+				horaatual = Impressao->HorarioChegada + Impressao->Paginas / Servidor->Impressora->Capacidade;
+				TImpressora_Imprimir(horaatual, Impressao, Servidor->Relatorio);
 			}
 			Servidor->Impressora->ImpressaoRecebida = NULL;
 		}

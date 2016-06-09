@@ -12,7 +12,7 @@ CFLAGS=-c -Wall -Wextra -Wpedantic $(DEFS) -Iinclude/
 DBGFLAGS=-ggdb -fno-inline -fno-omit-frame-pointer 
 BINDIR=bin
 OBJDIR=obj
-OBJFILES=list.o filaprior.o servidor.o servidor_arquivo.o servidor_usuario.o servidor_impressora.o servidor_relatorio.o principal.o
+OBJFILES=hora.o list.o filaprior.o servidor.o servidor_arquivo.o servidor_usuario.o servidor_impressora.o servidor_relatorio.o principal.o
 OBJECTS=$(addprefix $(OBJDIR)/, $(OBJFILES))
 SOURCEDIR=src
 ARGS=test/entrada.txt test/saida.txt
@@ -35,7 +35,7 @@ all:
 build:
 	@echo 
 	@echo Gerando arquivo compactado...
-	tar zcvf ../$(MATRICULA).tar.gz -C doc/documentacao.pdf -C src/* -C include/* --exclude-vcs
+	tar zcvf ../$(MATRICULA).tar.gz doc/documentacao.pdf src/* include/* --exclude-vcs
 
 clean:
 	@echo 

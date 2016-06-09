@@ -25,7 +25,6 @@
 typedef struct _TServidor {
 	FILE* ArquivoEntrada;
 	FILE* ArquivoSaida;
-	time_t HoraAtual;
 	TImpressora* Impressora;
 	TRelatorio* Relatorio;
 	TLista* Usuarios;

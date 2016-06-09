@@ -1,8 +1,8 @@
 /*
-**	TIPO ABASTRATO DE DADOS LISTA
+**	
 **	DOUGLAS RODRIGUES DE ALMEIDA
 **
-**	Cabecalho e estruturas de lista duplamente encadeada por ponteiros
+**	
 **	
 **/
 
