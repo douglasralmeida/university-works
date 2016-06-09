@@ -92,7 +92,7 @@ bool TServidor_ChecarImpressao(TServidor* Servidor, TImpressao* Impressao)
 		
 		TImpressao_Destruir((void**)&Impressao);
 		return false;
-	} else if (Impressao->HorarioLimite > Servidor->HoraAtual)
+	} else if (Impressao->HorarioLimite < Servidor->HoraAtual)
 	{
 		Servidor->Relatorio->DadosPorTarefas->Perdas[Impressao->Prioridade]++;
 		Servidor->Relatorio->DadosPorUsuario->Perdas[Impressao->Usuario->Prioridade]++;
