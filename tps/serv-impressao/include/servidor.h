@@ -40,6 +40,8 @@ bool TServidor_CadastrarImpressora(TServidor* Servidor, char* Impressora, const 
 
 bool TServidor_ChecarImpressao(TServidor* Servidor, TImpressao* Impressao);
 
+void TServidor_FinalizaFila(TServidor* Servidor);
+
 void TServidor_Finalizar(TServidor* Servidor);
 
 bool TServidor_Preparar(TServidor* Servidor, const char* NomeArquivoEntrada, const char* NomeArquivoSaida);

@@ -54,6 +54,6 @@ TImpressora* TImpressora_Criar(size_t Capacidade, size_t Escalonador, char* Nome
 
 void TImpressora_Destruir(TImpressora** PImpressora);
 
-void TImpressora_Imprimir(time_t HoraAtual, TImpressao* Impressao, TRelatorio* Relatorio);
+void TImpressora_Imprimir(TImpressao* Impressao, TRelatorio* Relatorio);
 
 #endif

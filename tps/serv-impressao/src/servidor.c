@@ -48,7 +48,7 @@ bool TServidor_Analisar(TServidor* Servidor)
 	bool encerraanalise;
 	
 	encerraanalise = false;
-	time(&horaatual);	
+	time(&horaatual);
 	/* Ler primeira linha com cadastro da impressora */
 	if ((fgets(buffer, BUFFER_TAMANHO, Servidor->ArquivoEntrada) != NULL) && (BufferImpressora(Servidor, buffer)))
 	{	
@@ -61,6 +61,7 @@ bool TServidor_Analisar(TServidor* Servidor)
 					TServidor_ProcessarImpressao(Servidor);
 			}
 		}
+		TServidor_FinalizaFila(Servidor);
 		TServidor_Relatorio(Servidor);
 	}
 	else	
@@ -87,23 +88,37 @@ bool TServidor_ChecarImpressao(TServidor* Servidor, TImpressao* Impressao)
 	TListaNo* No;
 	
 	No = TLista_Pesquisar(Servidor->Usuarios, Impressao->Usuario);
+	/* somente usuarios cadastrados podem imprimir */
 	if (No == NULL)
 	{
 		Servidor->Relatorio->TotalTarefasRejeitadas++;		
-		
 		TImpressao_Destruir((void**)&Impressao);
+		
 		return false;
+	/* prazo estourado, tarefa perdida :( */
 	} else if (Impressao->HorarioLimite < horaatual)
 	{
-		Servidor->Relatorio->DadosPorTarefas->Perdas[Impressao->Prioridade]++;
-		Servidor->Relatorio->DadosPorUsuario->Perdas[Impressao->Usuario->Prioridade]++;
-		Servidor->Relatorio->TotalPerdas++;
-		TImpressao_Destruir((void**)&Impressao);
+		TImpressora_Cancelar(Impressao, Servidor->Relatorio);
 		
 		return false;
 	}
 	
 	return true;
+}
+
+void TServidor_FinalizaFila(TServidor* Servidor)
+{
+	TImpressao* Impressao;
+	
+	while (Servidor->Impressora->FilaImpressao->Tamanho > 0)
+	{
+		Impressao = (TImpressao*)TFilaPrioridade_Desenfileirar(Servidor->Impressora->FilaImpressao);
+		if (TServidor_ChecarImpressao(Servidor, Impressao))
+		{
+			TImpressora_Imprimir(Impressao, Servidor->Relatorio);
+			horaatual += (Impressao->Paginas / Servidor->Impressora->Capacidade);
+		}
+	}
 }
 
 void TServidor_Finalizar(TServidor* Servidor)
@@ -124,6 +139,7 @@ void TServidor_ProcessarImpressao(TServidor* Servidor)
 {
 	TImpressao* Impressao;
 	
+	/* as tarefas que chegaram enquando a impressora estava ocupada sao enfileiradas */
 	if (Servidor->Impressora->ImpressaoRecebida->HorarioChegada < horaatual)
 	{
 		TFilaPrioridade_Enfileirar(Servidor->Impressora->FilaImpressao, Servidor->Impressora->ImpressaoRecebida);
@@ -131,15 +147,18 @@ void TServidor_ProcessarImpressao(TServidor* Servidor)
 	}
 	else
 	{
-		while ((Servidor->Impressora->ImpressaoRecebida->HorarioChegada >= horaatual) && (Servidor->Impressora->FilaImpressao->Tamanho > 0))
+		/* enquanto nao chega tarefa nova, vai desenfileirando a fila */
+		while ((Servidor->Impressora->ImpressaoRecebida->HorarioChegada > horaatual) && (Servidor->Impressora->FilaImpressao->Tamanho > 0))
 		{
 			Impressao = (TImpressao*)TFilaPrioridade_Desenfileirar(Servidor->Impressora->FilaImpressao);
 			if (TServidor_ChecarImpressao(Servidor, Impressao))
-			{
-				horaatual =+ Impressao->Paginas / Servidor->Impressora->Capacidade;
-				TImpressora_Imprimir(horaatual, Impressao, Servidor->Relatorio);
+			{				
+				TImpressora_Imprimir(Impressao, Servidor->Relatorio);
+				/* imprimiu, entao o tempo anda: tempo gasto para imprimir */
+				horaatual += (Impressao->Paginas / Servidor->Impressora->Capacidade);
 			}
 		}
+		/* tarefa que chegou enquanto a impressora estava ocupada sera enfileirada */
 		if (Servidor->Impressora->ImpressaoRecebida->HorarioChegada < horaatual)
 		{
 			TFilaPrioridade_Enfileirar(Servidor->Impressora->FilaImpressao, Servidor->Impressora->ImpressaoRecebida);
@@ -147,11 +166,15 @@ void TServidor_ProcessarImpressao(TServidor* Servidor)
 		}
 		else
 		{
+			/* a fila estava vazia, entao a impresssora ficara ociosa ate chegar nova tarefa */
 			Impressao = Servidor->Impressora->ImpressaoRecebida;
 			if (TServidor_ChecarImpressao(Servidor, Impressao))
 			{
-				horaatual = Impressao->HorarioChegada + Impressao->Paginas / Servidor->Impressora->Capacidade;
-				TImpressora_Imprimir(horaatual, Impressao, Servidor->Relatorio);
+				/* chegou uma tarefa, hora atual sera a hora da chegada da tarefa */
+				horaatual = Impressao->HorarioChegada;
+				TImpressora_Imprimir(Impressao, Servidor->Relatorio);
+				/* imprimiu, entao o tempo anda: tempo gasto para imprimir */
+				horaatual += (Impressao->Paginas / Servidor->Impressora->Capacidade);
 			}
 			Servidor->Impressora->ImpressaoRecebida = NULL;
 		}

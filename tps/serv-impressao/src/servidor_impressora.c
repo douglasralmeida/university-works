@@ -149,31 +149,61 @@ void TImpressora_Destruir(TImpressora** PImpressora)
 	PImpressora = NULL;	
 }
 
-void TImpressora_Imprimir(time_t HoraAtual, TImpressao* Impressao, TRelatorio* Relatorio)
+void TImpressora_Cancelar(TImpressao* Impressao, TRelatorio* Relatorio)
 {
 	time_t tempoespera;
 	
-	tempoespera = HoraAtual - Impressao->HorarioChegada;
+	tempoespera = horaatual - Impressao->HorarioChegada;
 	Relatorio->DadosPorTarefas->Documentos[Impressao->Prioridade]++;
-	Relatorio->DadosPorTarefas->PaginasImpressas[Impressao->Prioridade] =+ Impressao->Paginas;
 	if (tempoespera < Relatorio->DadosPorTarefas->TempoMinimoEspera[Impressao->Prioridade])
 		Relatorio->DadosPorTarefas->TempoMinimoEspera[Impressao->Prioridade] = tempoespera;
-	else if (tempoespera > Relatorio->DadosPorTarefas->TempoMaximoEspera[Impressao->Prioridade])
+	if (tempoespera > Relatorio->DadosPorTarefas->TempoMaximoEspera[Impressao->Prioridade])
 		Relatorio->DadosPorTarefas->TempoMaximoEspera[Impressao->Prioridade] = tempoespera;
 	Relatorio->DadosPorUsuario->Documentos[Impressao->Usuario->Prioridade]++;
-	Relatorio->DadosPorUsuario->PaginasImpressas[Impressao->Usuario->Prioridade] =+ Impressao->Paginas;
 	if (tempoespera < Relatorio->DadosPorUsuario->TempoMinimoEspera[Impressao->Usuario->Prioridade])
 		Relatorio->DadosPorUsuario->TempoMinimoEspera[Impressao->Usuario->Prioridade] = tempoespera;
 	else if (tempoespera > Relatorio->DadosPorUsuario->TempoMaximoEspera[Impressao->Usuario->Prioridade])
 		Relatorio->DadosPorUsuario->TempoMaximoEspera[Impressao->Usuario->Prioridade] = tempoespera;	
-	Relatorio->DadosPorTarefas->TempoTotalEspera[Impressao->Prioridade] =+ tempoespera;
-	Relatorio->DadosPorUsuario->TempoTotalEspera[Impressao->Usuario->Prioridade] =+ tempoespera;
+	Relatorio->DadosPorTarefas->TempoTotalEspera[Impressao->Prioridade] += tempoespera;
+	Relatorio->DadosPorUsuario->TempoTotalEspera[Impressao->Usuario->Prioridade] += tempoespera;
+	Relatorio->DadosPorTarefas->Perdas[Impressao->Prioridade]++;
+	Relatorio->DadosPorUsuario->Perdas[Impressao->Usuario->Prioridade]++;
+	Relatorio->Documentos++;	
+	if (tempoespera < Relatorio->TempoMinimoEspera)
+		Relatorio->TempoMinimoEspera = tempoespera;
+	if (tempoespera > Relatorio->TempoMaximoEspera)
+		Relatorio->TempoMaximoEspera = tempoespera;
+	Relatorio->TempoTotalEspera = Relatorio->TempoTotalEspera + tempoespera;
+	Relatorio->TotalPerdas++;
+	
+	TImpressao_Destruir((void**)&Impressao);	
+}
+
+void TImpressora_Imprimir(TImpressao* Impressao, TRelatorio* Relatorio)
+{
+	time_t tempoespera;
+	
+	tempoespera = horaatual - Impressao->HorarioChegada;
+	Relatorio->DadosPorTarefas->Documentos[Impressao->Prioridade]++;
+	Relatorio->DadosPorTarefas->PaginasImpressas[Impressao->Prioridade] += Impressao->Paginas;
+	if (tempoespera < Relatorio->DadosPorTarefas->TempoMinimoEspera[Impressao->Prioridade])
+		Relatorio->DadosPorTarefas->TempoMinimoEspera[Impressao->Prioridade] = tempoespera;
+	if (tempoespera > Relatorio->DadosPorTarefas->TempoMaximoEspera[Impressao->Prioridade])
+		Relatorio->DadosPorTarefas->TempoMaximoEspera[Impressao->Prioridade] = tempoespera;
+	Relatorio->DadosPorUsuario->Documentos[Impressao->Usuario->Prioridade]++;
+	Relatorio->DadosPorUsuario->PaginasImpressas[Impressao->Usuario->Prioridade] += Impressao->Paginas;
+	if (tempoespera < Relatorio->DadosPorUsuario->TempoMinimoEspera[Impressao->Usuario->Prioridade])
+		Relatorio->DadosPorUsuario->TempoMinimoEspera[Impressao->Usuario->Prioridade] = tempoespera;
+	else if (tempoespera > Relatorio->DadosPorUsuario->TempoMaximoEspera[Impressao->Usuario->Prioridade])
+		Relatorio->DadosPorUsuario->TempoMaximoEspera[Impressao->Usuario->Prioridade] = tempoespera;	
+	Relatorio->DadosPorTarefas->TempoTotalEspera[Impressao->Prioridade] += tempoespera;
+	Relatorio->DadosPorUsuario->TempoTotalEspera[Impressao->Usuario->Prioridade] += tempoespera;
 	Relatorio->Documentos++;
 	if (tempoespera < Relatorio->TempoMinimoEspera)
 		Relatorio->TempoMinimoEspera = tempoespera;
-	else if (tempoespera > Relatorio->TempoMaximoEspera)
+	if (tempoespera > Relatorio->TempoMaximoEspera)
 		Relatorio->TempoMaximoEspera = tempoespera;
-	Relatorio->TempoTotalEspera += tempoespera;
+	Relatorio->TempoTotalEspera = Relatorio->TempoTotalEspera + tempoespera;
 	Relatorio->TotalPaginasImpressas += Impressao->Paginas;
 	TImpressao_Destruir((void**)&Impressao);
 }
