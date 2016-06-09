@@ -1,12 +1,12 @@
-	/*
-**	TIPO ABSTRATO DE DADOS USUARIO
+/*
+**	SERVIDOR DE IMPRESSSAO
 **	DOUGLAS RODRIGUES DE ALMEIDA
 **
-**	Cadastro dos usuarios do sistemas
+**	TAD Auxiliar para manipulacao da impressora e das impressoes
 */
 
-#ifndef IMPRESSORA_H
-#define IMPRESSORA_H
+#ifndef SERVIDOR_IMPRESSORA_H
+#define SERVIDOR_IMPRESSORA_H
 
 #include <string.h>
 #include <time.h>

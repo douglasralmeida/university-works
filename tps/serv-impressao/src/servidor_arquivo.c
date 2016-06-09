@@ -1,3 +1,10 @@
+/*
+**	SERVIDOR DE IMPRESSSAO
+**	DOUGLAS RODRIGUES DE ALMEIDA
+**
+**	Implementacao de TAD auxiliar para manipulacao do arquivo de entradas
+*/
+
 #include <stdio.h>
 #include "servidor.h"
 #include "servidor_arquivo.h"

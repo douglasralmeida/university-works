@@ -1,3 +1,10 @@
+/*
+**	SERVIDOR DE IMPRESSSAO
+**	DOUGLAS RODRIGUES DE ALMEIDA
+**
+**	Aplicativo principal
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "servidor.h"

@@ -1,8 +1,8 @@
 /*
-**	SERVIDOR 
+**	SERVIDOR DE IMPRESSSAO
 **	DOUGLAS RODRIGUES DE ALMEIDA
 **
-**	Implementacao do servidor
+**	Implementacao do TAD Principal do Servidor de Impressao
 */
 
 #include <stdlib.h>

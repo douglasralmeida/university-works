@@ -1,8 +1,8 @@
 /*
-**	TIPO ABSTRATO DE DADOS USUARIO
+**	SERVIDOR DE IMPRESSSAO
 **	DOUGLAS RODRIGUES DE ALMEIDA
 **
-**	Cadastro dos usuarios do sistemas
+**	TAD auxiliar para cadastro de usuarios no sistema
 */
 
 #ifndef USUARIO_H

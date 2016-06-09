@@ -55,7 +55,7 @@ int main(void){
  
         }else if(n_operacao == 2 && n_usuarios_vetor != 0 && n_impressoes != 0){
             int tempo_temp = rand()%5;
-            int paginas = rand()%10000;
+            int paginas = rand()%100;
  
             while(paginas%capacidade != 0){
                 paginas++;

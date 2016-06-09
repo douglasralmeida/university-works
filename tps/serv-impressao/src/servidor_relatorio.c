@@ -1,3 +1,11 @@
+/*
+**	SERVIDOR DE IMPRESSSAO
+**	DOUGLAS RODRIGUES DE ALMEIDA
+**
+**	Implementacao de TAD auxiliar para geracao de relatorios estatisticos
+*/
+
+
 #include <stdlib.h>
 #include "servidor_relatorio.h"
 

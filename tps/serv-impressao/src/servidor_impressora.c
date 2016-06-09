@@ -1,3 +1,10 @@
+/*
+**	SERVIDOR DE IMPRESSSAO
+**	DOUGLAS RODRIGUES DE ALMEIDA
+**
+**	Implementacao do TAD auxiliar para manipulacao da impressora e das impressoes
+*/
+
 #include <stdlib.h>
 #include <string.h>
 #include "hora.h"

@@ -1,8 +1,8 @@
 /*
-**	TIPO ABSTRATO DE DADOS USUARIO
+**	SERVIDOR DE IMPRESSSAO
 **	DOUGLAS RODRIGUES DE ALMEIDA
 **
-**	Relatorios do sistema
+**	TAD auxiliar para geracao de relatorios estatisticos
 */
 
 #ifndef SERVIDOR_RELATORIO_H

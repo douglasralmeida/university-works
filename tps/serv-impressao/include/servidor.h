@@ -2,7 +2,7 @@
 **	SERVIDOR DE IMPRESSSAO
 **	DOUGLAS RODRIGUES DE ALMEIDA
 **
-**	info.
+**	TAD Principal do Servidor de Impressao
 */
 
 #ifndef SERVIDOR_H

@@ -1,3 +1,11 @@
+/*
+**	SERVIDOR DE IMPRESSSAO
+**	DOUGLAS RODRIGUES DE ALMEIDA
+**
+**	Implementacao de TAD auxiliar para cadastro de usuarios no sistema
+*/
+
+
 #include <stdlib.h>
 #include <string.h>
 #include "servidor_usuario.h"

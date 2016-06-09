@@ -1,3 +1,10 @@
+/*
+**	SERVIDOR DE IMPRESSSAO
+**	DOUGLAS RODRIGUES DE ALMEIDA
+**
+**	TAD auxiliar para manipulacao do arquivo de entradas
+*/
+
 #ifndef SERVIDOR_ARQUIVO_H
 #define SERVIDOR_ARQUIVO_H
 
