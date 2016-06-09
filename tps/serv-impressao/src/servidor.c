@@ -83,7 +83,10 @@ bool TServidor_CadastrarImpressora(TServidor* Servidor, char* Impressora, int Ca
 
 bool TServidor_ChecarImpressao(TServidor* Servidor, TImpressao* Impressao)
 {
-	if (Impressao->Usuario == NULL)
+	TListaNo* No;
+	
+	No = TLista_Pesquisar(Servidor->Usuarios, Impressao->Usuario);
+	if (No == NULL)
 	{
 		Servidor->Relatorio->TotalTarefasRejeitadas++;		
 		
