@@ -24,6 +24,7 @@ TImpressao* TImpressao_Criar(TUsuario* Usuario, time_t Horario, unsigned int Max
 
 void TImpressao_Destruir(void** PImpressao)
 {
+	TUsuario_Destruir(&(NovaImpressao->Usuario));
 	free(*PImpressao);
 	PImpressao = NULL;
 }

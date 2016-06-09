@@ -8,6 +8,8 @@ int BufferAnalisar(TServidor* Servidor, char* Buffer)
 	int encerrar = 0;
 	int paginas, prioridade, tempo, inteiro;
 	char texto[21];
+	TImpressao* Impressao;
+	TUsuario* Usuario;
 
 	/* primeiro item da linha: comando */
 	comando = Buffer[0] - '0';
@@ -27,7 +29,9 @@ int BufferAnalisar(TServidor* Servidor, char* Buffer)
 		break;
 		case	CMD_IMPRIMIR:
 			sscanf(Buffer, "%*d %d %20s %d %d %d", &inteiro, &texto[0], &prioridade, &paginas, &tempo);
-			TServidor_Imprimir(Servidor, texto, inteiro, prioridade, paginas, tempo);
+			Usuario = TUsuario_Criar(texto, 0);
+			Impressao = TImpressao_Criar(Usuario, inteiro, prioridade, paginas, tempo);
+			TServidor_RecebeImpressao(Servidor, Impressao);
 		break;
 		case	CMD_SAIR:
 			encerrar = 1;

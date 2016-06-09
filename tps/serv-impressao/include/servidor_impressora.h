@@ -1,4 +1,4 @@
-/*
+	/*
 **	TIPO ABSTRATO DE DADOS USUARIO
 **	DOUGLAS RODRIGUES DE ALMEIDA
 **
@@ -15,6 +15,8 @@
 #include "filaprior.h"
 #include "servidor.h"
 #include "servidor_usuario.h"
+
+typedef struct _TServidor TServidor;
 
 typedef struct _TImpressao {
 	time_t HorarioChegada;

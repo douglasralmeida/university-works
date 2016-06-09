@@ -29,7 +29,7 @@ typedef struct _TServidor {
 	TImpressora* Impressora;
 	TRelatorio* Relatorio;
 	TLista* Usuarios;
-} TServidor;
+};
 
 TServidor* TServidor_Criar(void);
 
@@ -46,6 +46,8 @@ void TServidor_Finalizar(TServidor* Servidor);
 bool TServidor_Preparar(TServidor* Servidor, const char* NomeArquivoEntrada, const char* NomeArquivoSaida);
 
 void TServidor_ProcessarImpressao(TServidor* Servidor);
+
+void TServidor_RecebeImpressao(TServidor* Servidor, TImpressao* Impressao);
 
 void TServidor_Relatorio(TServidor* Servidor);
 

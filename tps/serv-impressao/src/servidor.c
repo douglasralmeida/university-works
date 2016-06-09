@@ -171,6 +171,11 @@ void TServidor_ProcessarImpressao(TServidor* Servidor)
 	}	
 }
 
+void TServidor_RecebeImpressao(TServidor* Servidor, TImpressao* Impressao)
+{
+	Servidor->Impressora->ImpressaoRecebida = Impressao;
+}
+
 void TServidor_Relatorio(TServidor* Servidor)
 {
 	TRelatorio_Emitir(Servidor->Relatorio, Servidor->ArquivoSaida);		
