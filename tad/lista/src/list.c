@@ -132,6 +132,20 @@ void TLista_Limpar(TLista* Lista)
 	Lista->Ultimo = NULL;
 }
 
+TListaNo* TLista_Pesquisar(TLista* Lista, void* Item)
+{
+	TListaNo* NoTemp;
+	
+	NoTemp = Lista->Primeiro;
+	while (NoTemp != NULL)
+	{
+		if (Lista->FuncaoIguais(NoTemp->Item, Item))
+			return NoTemp;
+		NoTemp = NoTemp->Proximo;
+	}
+	return NULL;	
+}
+
 size_t TLista_Posicao(TLista* Lista, void* Item)
 {
 	size_t resultado;
@@ -162,6 +176,7 @@ void TLista_Remover(TLista* Lista, TListaNo* No)
 		No->Anterior->Proximo = No->Proximo;
 	else
 		Lista->Primeiro = No->Proximo;
+	Lista->FuncaoDestruir(&(No->Item));
 	free(NoTemp);
 	Lista->Tamanho--;
 }
