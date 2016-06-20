@@ -19,7 +19,7 @@ typedef size_t TGrafoVertice;
 typedef int TGrafoPeso;
 
 /* Estrutura das arestas do grafo */
-typedf struct _TGrafoAresta {
+typedef struct _TGrafoAresta {
 	TGrafoVertice Destino;
 	TGrafoPeso Peso;
 } TGrafoAresta;

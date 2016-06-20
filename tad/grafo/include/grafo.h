@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "boolutils.h"
-#include "lista.h"
+#include "list.h"
 #include "grafo_item.h"
 
 /* Estrutura da grafo */
@@ -20,7 +20,6 @@ typedef struct _TGrafo {
 	TLista** Adjacencias;
 	size_t NumVertices;
 	TListaNo PesquisaProxNo;
-	TGrafoVertice PesquisaVertice;
 } TGrafo;
 
 /* ----------------------------------------------------------------------------

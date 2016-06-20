@@ -24,7 +24,9 @@ typedef struct _TLista {
 	int Capacidade;
 	int Expansao;
 	void** Itens;
+	TListaNo Primeiro;
 	int Tamanho;
+	TListaNo Ultimo;
 } TLista;
 
 /* ----------------------------------------------------------------------------

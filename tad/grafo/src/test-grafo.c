@@ -15,8 +15,9 @@ int main(void)
 	int i;
 	int NVertices;
 	int NArestas;
-	int vertice1, vertice2, peso);
+	int vertice1, vertice2, peso;
 	TGrafo* Grafo;
+	TGrafoAresta* Aux;
 	
 	printf("TESTE GRAFO\n");
 	printf("===========\n");
@@ -42,9 +43,37 @@ int main(void)
 	}
 	printf("OK.\n");
 	
-	printf("Exibindo grafo...");
+	printf("Exibindo grafo...\n");
 	TGrafo_Imprimir(Grafo);
 	printf("OK.\n");
+	
+	printf("Exibindo lista adjacentes de: ");
+	scanf("%d", &vertice1);
+	if (!TGrafo_ListaAdjVazia(Grafo, vertice1))
+ 	{
+ 		Aux = TGrafo_ListaAdjPrimeiro(Grafo, vertice1);
+    	while (Aux) 
+		{
+			TGrafoAresta_Imprimir((void*)Aux);
+			Aux = TGrafo_ListaAdjProximo(Grafo, vertice1);
+		}
+	}
+	printf("OK.\n");
+
+	printf("Removendo aresta...");
+	printf("Vertices (vertice1, vertice2):");
+	scanf("%d %d", &vertice1, &vertice2);
+	if (TGrafo_ArestaExiste(Grafo, vertice1, vertice2)) 
+	{
+	    TGrafo_ArestaRemover(Grafo, vertice1, vertice2);
+	    printf(" OK.\n");
+	}
+	else
+		printf("Aresta nao existe\n");
+		
+	printf("Exibindo grafo...\n");
+	TGrafo_Imprimir(Grafo);
+	printf("OK.\n");		
 
 	printf("Destruindo grafo...");
 	TGrafo_Destruir(&Grafo);

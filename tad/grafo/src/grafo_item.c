@@ -22,7 +22,7 @@ TGrafoAresta* TGrafoAresta_Criar(TGrafoVertice Vertice, TGrafoPeso Peso)
 		printf("Erro (0x53). Erro ao alocar memoria.\n");
 		return NULL;
 	}
-	NovaAresta->Vertice = Vertice;
+	NovaAresta->Destino = Vertice;
 	NovaAresta->Peso = Peso;
 	
 	return NovaAresta;
@@ -49,6 +49,5 @@ void TGrafoAresta_Imprimir(void* Dado)
 	TGrafoAresta* Aresta;
 	
 	Aresta = (TGrafoAresta*)Dado;
-	printf(" %2d [%12ld]", Aresta->Destino, Aresta->Peso);
+	printf(" %2d [%d]", (int)Aresta->Destino, (int)Aresta->Peso);
 }
-
