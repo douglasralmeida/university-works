@@ -52,7 +52,7 @@ int main(void)
 	printf("===========\n");
 	
 	printf("Criando lista...");
-	Lista = TLista_Criar(10)
+	Lista = TLista_Criar(10);
 	if (Lista != NULL)
 		printf("OK.\n");
 	else

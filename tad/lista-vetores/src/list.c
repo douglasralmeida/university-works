@@ -5,6 +5,7 @@
 **	Implementacao de lista como um vetor
 */
 
+#include "core.h"
 #include "list.h"
 
 TLista* TLista_Criar(size_t Capacidade)
@@ -47,7 +48,7 @@ bool TLista_Adicionar(TLista* Lista, void* Item)
 	size_t novacapacidade;
 	void** NovoItens;
 	
-	if (Fila->Tamanho >= Fila->Capacidade)
+	if (Lista->Tamanho >= Lista->Capacidade)
 	{
 		novacapacidade = Lista->Capacidade + Lista->Expansao;
 		NovoItens = realloc(Lista->Itens, novacapacidade * sizeof(void*));
@@ -70,7 +71,7 @@ void TLista_Imprimir(TLista* Lista, TFuncaoImprimir FuncaoImprimir)
 	int i;
 	
 	for (i = 0; i < Lista->Tamanho; i++)
-		FuncaoImprimir(NoTemp->Item[i]);
+		FuncaoImprimir(Lista->Itens[i]);
 }
 
 void* TLista_Item(TLista* Lista, const size_t Posicao)
@@ -78,7 +79,7 @@ void* TLista_Item(TLista* Lista, const size_t Posicao)
 	if (Posicao == 0)
 		return NULL;
 	
-	return Lista->Item[Posicao-1];
+	return (Lista->Itens[Posicao-1]);
 }
 
 void TLista_Limpar(TLista* Lista, TFuncaoDestruir FuncaoDestruir)
@@ -86,11 +87,11 @@ void TLista_Limpar(TLista* Lista, TFuncaoDestruir FuncaoDestruir)
 	size_t i;
 	
 	for (i = 0; i < Lista->Tamanho; i++)
-		FuncaoDestruir(&(Fila->Itens[i]));
+		FuncaoDestruir(&(Lista->Itens[i]));
 	Lista->Tamanho = 0;
 }
 
-void TLista_Ordenar(TLista* Lista, TListaOrdem Ordem, TFuncaoComparar FuncaoComparar)
+void TLista_Ordenar(TLista* Lista, TOrdem Ordem, TFuncaoComparar FuncaoComparar)
 {
 	
 }
@@ -120,11 +121,11 @@ void TLista_Remover(TLista* Lista, TListaNo No, TFuncaoDestruir FuncaoDestruir)
 	TListaNo i;
 	
 	if (No >= Lista->Tamanho)
-		return
+		return;
 	
-	FuncaoDestruir(&(No->Item));
+	FuncaoDestruir(&(Lista->Itens[No]));
 	for (i = No; i < Lista->Tamanho - 1; i++)
-		Lista->Item[No]->Item = Lista->Item[No+1]->Item;
+		Lista->Itens[No] = Lista->Itens[No+1];
 	Lista->Tamanho--;
 }
 
@@ -133,11 +134,11 @@ size_t TLista_Tamanho(TLista* Lista)
 	return Lista->Tamanho;
 }
 
-void TLista_Trocar(TLista Lista, TListaNo NoA, TListaNo NoB)
+void TLista_Trocar(TLista* Lista, TListaNo NoA, TListaNo NoB)
 {
 	void* Item;
 	
-	Item = Lista->Item[NoA];
-	Lista->Item[NoA] = Lista->Item[NoB];
-	Lista->->Item[NoB] = Item;
+	Item = Lista->Itens[NoA];
+	Lista->Itens[NoA] = Lista->Itens[NoB];
+	Lista->Itens[NoB] = Item;
 }

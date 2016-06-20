@@ -117,7 +117,7 @@ size_t TLista_Posicao(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais);
  * @param:		Ponteiro para uma funcao que desaloca um item da memoria
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/
-void TLista_Remover(TLista* Lista, TListaNo* No, TFuncaoDestruir FuncaoDestruir);
+void TLista_Remover(TLista* Lista, TListaNo No, TFuncaoDestruir FuncaoDestruir);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TLista_Tamanho
@@ -134,5 +134,5 @@ size_t TLista_Tamanho(TLista* Lista);
  * @param:		Outro no a ser trocado 
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/
-void TLista_Trocar(TListaNo NoA, TListaNo NoB);
+void TLista_Trocar(TLista* Lista, TListaNo NoA, TListaNo NoB);
 #endif

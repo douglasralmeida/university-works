@@ -11,6 +11,8 @@
 
 #include "boolutils.h"
 
+typedef enum {ordCrescente, ordDecrescente} TOrdem;
+
 /* Funcao para comparar valor dos dados */
 typedef bool (*TFuncaoComparar)(void* Dado1, void* Dado2);
 

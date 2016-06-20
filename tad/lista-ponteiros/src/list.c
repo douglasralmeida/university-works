@@ -129,7 +129,7 @@ void TLista_Limpar(TLista* Lista, TFuncaoDestruir FuncaoDestruir)
 	Lista->Ultimo = NULL;
 }
 
-TListaNo* TLista_Pesquisar(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
+TListaNo TLista_Pesquisar(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
 {
 	TListaNo NoTemp;
 	
@@ -183,7 +183,7 @@ size_t TLista_Tamanho(TLista* Lista)
 	return Lista->Tamanho;
 }
 
-void TLista_Trocar(TListaNo* NoA, TListaNo* NoB)
+void TLista_Trocar(TListaNo NoA, TListaNo NoB)
 {
 	void* Item;
 	
