@@ -15,19 +15,19 @@
 #include "core.h"
 
 /* Estrutura do no da lista */
-typedef struct _TListaNo TListaNo;
+typedef struct _TListaNo* TListaNo;
 
 struct _TListaNo {
 	void* Item;
-	TListaNo* Anterior;
-	TListaNo* Proximo;
+	TListaNo Anterior;
+	TListaNo Proximo;
 };
 
 /* Estrutura da lista */
 typedef struct _TLista {
 	size_t Tamanho;
-	TListaNo* Primeiro;
-	TListaNo* Ultimo;
+	TListaNo Primeiro;
+	TListaNo Ultimo;
 } TLista;
 
 /* ----------------------------------------------------------------------------
@@ -73,7 +73,7 @@ void TLista_Imprimir(TLista* Lista, TFuncaoImprimir FuncaoImprimir);
  * @param:		No que antecedera o item a ser adicionado
  * @retorna:	True em caso de adicao com sucesso, ou false em caso de falha
  *---------------------------------------------------------------------------*/
-bool TLista_Inserir(TLista* Lista, void* Item, TListaNo* No);
+bool TLista_Inserir(TLista* Lista, void* Item, TListaNo No);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TLista_Item
@@ -101,7 +101,7 @@ void TLista_Limpar(TLista* Lista, TFuncaoDestruir FuncaoDestruir);
  * @param:		Ponteiro para uma funcao de comparacao do conteudo dos itens
  * @retorna:	No da lista que armazena o item
  *---------------------------------------------------------------------------*/
-TListaNo* TLista_Pesquisar(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais);
+TListaNo TLista_Pesquisar(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TLista_Posicao
@@ -121,7 +121,7 @@ size_t TLista_Posicao(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais);
  * @param:		Ponteiro para uma funcao que desaloca um item da memoria
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/
-void TLista_Remover(TLista* Lista, TListaNo* No, TFuncaoDestruir FuncaoDestruir);
+void TLista_Remover(TLista* Lista, TListaNo No, TFuncaoDestruir FuncaoDestruir);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TLista_Tamanho
@@ -138,5 +138,5 @@ size_t TLista_Tamanho(TLista* Lista);
  * @param:		Outro no a ser trocado 
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/
-void TLista_Trocar(TListaNo* NoA, TListaNo* NoB);
+void TLista_Trocar(TListaNo NoA, TListaNo NoB);
 #endif

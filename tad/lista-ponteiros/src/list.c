@@ -46,7 +46,7 @@ bool TLista_EstaVazia(TLista* Lista)
 
 void TLista_Imprimir(TLista* Lista, TFuncaoImprimir FuncaoImprimir)
 {
-	TListaNo* NoTemp;
+	TListaNo NoTemp;
 
 	NoTemp = Lista->Primeiro;
 	while (NoTemp != NULL)
@@ -56,11 +56,11 @@ void TLista_Imprimir(TLista* Lista, TFuncaoImprimir FuncaoImprimir)
 	}
 }
 
-bool TLista_Inserir(TLista* Lista, void* Item, TListaNo* No)
+bool TLista_Inserir(TLista* Lista, void* Item, TListaNo No)
 {
-	TListaNo* NoNovo;
+	TListaNo NoNovo;
 	
-	NoNovo = (TListaNo*)malloc(sizeof(TListaNo));
+	NoNovo = (TListaNo)malloc(sizeof(struct _TListaNo));
 	if (NoNovo == NULL)
 	{
 		printf("Erro (0x12): Erro durante alocacao de memoria.\n");
@@ -99,7 +99,7 @@ bool TLista_Inserir(TLista* Lista, void* Item, TListaNo* No)
 void* TLista_Item(TLista* Lista, const size_t Posicao)
 {
 	size_t i;
-	TListaNo* NoTemp;
+	TListaNo NoTemp;
 	
 	if (Posicao == 0)
 		return NULL;
@@ -113,8 +113,8 @@ void* TLista_Item(TLista* Lista, const size_t Posicao)
 
 void TLista_Limpar(TLista* Lista, TFuncaoDestruir FuncaoDestruir)
 {
-	TListaNo* NoAnterior; 
-	TListaNo* NoTemp;
+	TListaNo NoAnterior; 
+	TListaNo NoTemp;
 	
 	NoTemp = Lista->Ultimo;
 	while (NoTemp != NULL)
@@ -131,7 +131,7 @@ void TLista_Limpar(TLista* Lista, TFuncaoDestruir FuncaoDestruir)
 
 TListaNo* TLista_Pesquisar(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
 {
-	TListaNo* NoTemp;
+	TListaNo NoTemp;
 	
 	NoTemp = Lista->Primeiro;
 	while (NoTemp != NULL)
@@ -146,7 +146,7 @@ TListaNo* TLista_Pesquisar(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais
 size_t TLista_Posicao(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
 {
 	size_t resultado;
-	TListaNo* NoTemp;
+	TListaNo NoTemp;
 	
 	resultado = 0;
 	NoTemp = Lista->Primeiro;
@@ -160,9 +160,9 @@ size_t TLista_Posicao(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
 	return 0;
 }
 
-void TLista_Remover(TLista* Lista, TListaNo* No, TFuncaoDestruir FuncaoDestruir)
+void TLista_Remover(TLista* Lista, TListaNo No, TFuncaoDestruir FuncaoDestruir)
 {
-	TListaNo* NoTemp;
+	TListaNo NoTemp;
 	
 	NoTemp = No;
 	if (No->Proximo != NULL)

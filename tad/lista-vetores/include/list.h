@@ -87,7 +87,7 @@ void TLista_Limpar(TLista* Lista, TFuncaoDestruir FuncaoDestruir);
  * @param:		Ordem crescente ou decrescente
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/
-void TLista_Ordenar(TLista* Lista, TListaOrdem Ordem);
+void TLista_Ordenar(TLista* Lista, TOrdem Ordem, TFuncaoComparar FuncaoComparar);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TLista_Pesquisar

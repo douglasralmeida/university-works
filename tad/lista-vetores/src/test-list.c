@@ -42,19 +42,17 @@ int main(void)
 	int i;
 	int* dado;
 	TFuncaoDestruir FuncaoDestruir;
-	TFuncaoIguais FuncaoIguais;
 	TFuncaoImprimir FuncaoImprimir;
 	TLista* Lista;
 	
 	FuncaoDestruir = &DestruirInt;
-	FuncaoIguais = &IguaisInt;
 	FuncaoImprimir = &ImprimirInt;
 	
 	printf("TESTE LISTA\n");
 	printf("===========\n");
 	
 	printf("Criando lista...");
-	Lista = TLista_Criar(FuncaoDestruir, FuncaoIguais, FuncaoImprimir);
+	Lista = TLista_Criar(10)
 	if (Lista != NULL)
 		printf("OK.\n");
 	else
@@ -70,11 +68,11 @@ int main(void)
 	printf("OK.\n");
 	
 	printf("Exibindo lista...");
-	TLista_Imprimir(Lista);
+	TLista_Imprimir(Lista, FuncaoImprimir);
 	printf("OK.\n");
 	
 	printf("Limpando lista...");
-	TLista_Limpar(Lista);
+	TLista_Limpar(Lista, FuncaoDestruir);
 	printf("OK.\n");
 	
 	printf("Preenchendo lista...");
@@ -87,11 +85,11 @@ int main(void)
 	printf("OK.\n");
 
 	printf("Exibindo lista...");
-	TLista_Imprimir(Lista);
+	TLista_Imprimir(Lista, FuncaoImprimir);
 	printf("OK.\n");
 
 	printf("Destruindo lista...");
-	TLista_Destruir(&Lista);
+	TLista_Destruir(&Lista, FuncaoDestruir);
 	printf("OK.\n");
 	
 	exit(EXIT_SUCCESS);
