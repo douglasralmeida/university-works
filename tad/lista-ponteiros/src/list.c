@@ -7,7 +7,7 @@
 
 #include "list.h"
 
-TLista* TLista_Criar(TFuncaoDestruir FuncaoDestruir, TFuncaoIguais FuncaoIguais, TFuncaoImprimir FuncaoImprimir)
+TLista* TLista_Criar(void)
 {
 	TLista* NovaLista;
 	
@@ -17,21 +17,18 @@ TLista* TLista_Criar(TFuncaoDestruir FuncaoDestruir, TFuncaoIguais FuncaoIguais,
 		printf("Erro (0x11): Erro durante alocacao de memoria.\n");
 		return NULL;
 	}
-	NovaLista->FuncaoDestruir = FuncaoDestruir;
-	NovaLista->FuncaoIguais = FuncaoIguais;
-	NovaLista->FuncaoImprimir = FuncaoImprimir;
- 	NovaLista->Tamanho = 0;
+	NovaLista->Tamanho = 0;
   	NovaLista->Primeiro = NULL;
 	NovaLista->Ultimo = NULL;
   
 	return NovaLista;
 }
 
-void TLista_Destruir(TLista** PLista)
+void TLista_Destruir(TLista** PLista, TFuncaoDestruir FuncaoDestruir)
 {
 	if (PLista != NULL)
 	{
-		TLista_Limpar(*PLista);
+		TLista_Limpar(*PLista, FuncaoDestruir);
 		free(*PLista);
 		PLista = NULL;
 	}
@@ -47,14 +44,14 @@ bool TLista_EstaVazia(TLista* Lista)
 	return (Lista->Primeiro == NULL);
 }
 
-void TLista_Imprimir(TLista* Lista)
+void TLista_Imprimir(TLista* Lista, TFuncaoImprimir FuncaoImprimir)
 {
 	TListaNo* NoTemp;
 
 	NoTemp = Lista->Primeiro;
 	while (NoTemp != NULL)
 	{
-		Lista->FuncaoImprimir(NoTemp->Item);
+		FuncaoImprimir(NoTemp->Item);
 		NoTemp = NoTemp->Proximo;
 	}
 }
@@ -114,7 +111,7 @@ void* TLista_Item(TLista* Lista, const size_t Posicao)
 	return NoTemp->Item;
 }
 
-void TLista_Limpar(TLista* Lista)
+void TLista_Limpar(TLista* Lista, TFuncaoDestruir FuncaoDestruir)
 {
 	TListaNo* NoAnterior; 
 	TListaNo* NoTemp;
@@ -123,7 +120,7 @@ void TLista_Limpar(TLista* Lista)
 	while (NoTemp != NULL)
 	{
 		NoAnterior = NoTemp->Anterior;
-		Lista->FuncaoDestruir(&(NoTemp->Item));
+		FuncaoDestruir(&(NoTemp->Item));
 		free(NoTemp);
 		NoTemp = NoAnterior;
 	}
@@ -132,21 +129,21 @@ void TLista_Limpar(TLista* Lista)
 	Lista->Ultimo = NULL;
 }
 
-TListaNo* TLista_Pesquisar(TLista* Lista, void* Item)
+TListaNo* TLista_Pesquisar(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
 {
 	TListaNo* NoTemp;
 	
 	NoTemp = Lista->Primeiro;
 	while (NoTemp != NULL)
 	{
-		if (Lista->FuncaoIguais(NoTemp->Item, Item))
+		if (FuncaoIguais(NoTemp->Item, Item))
 			return NoTemp;
 		NoTemp = NoTemp->Proximo;
 	}
 	return NULL;	
 }
 
-size_t TLista_Posicao(TLista* Lista, void* Item)
+size_t TLista_Posicao(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
 {
 	size_t resultado;
 	TListaNo* NoTemp;
@@ -156,14 +153,14 @@ size_t TLista_Posicao(TLista* Lista, void* Item)
 	while (NoTemp != NULL)
 	{
 		resultado++;
-		if (Lista->FuncaoIguais(NoTemp->Item, Item))
+		if (FuncaoIguais(NoTemp->Item, Item))
 			return resultado;
 		NoTemp = NoTemp->Proximo;
 	}
 	return 0;
 }
 
-void TLista_Remover(TLista* Lista, TListaNo* No)
+void TLista_Remover(TLista* Lista, TListaNo* No, TFuncaoDestruir FuncaoDestruir)
 {
 	TListaNo* NoTemp;
 	
@@ -176,7 +173,7 @@ void TLista_Remover(TLista* Lista, TListaNo* No)
 		No->Anterior->Proximo = No->Proximo;
 	else
 		Lista->Primeiro = No->Proximo;
-	Lista->FuncaoDestruir(&(No->Item));
+	FuncaoDestruir(&(No->Item));
 	free(NoTemp);
 	Lista->Tamanho--;
 }

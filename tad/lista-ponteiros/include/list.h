@@ -25,9 +25,6 @@ struct _TListaNo {
 
 /* Estrutura da lista */
 typedef struct _TLista {
-	TFuncaoDestruir FuncaoDestruir;
-	TFuncaoIguais FuncaoIguais;
-	TFuncaoImprimir FuncaoImprimir;
 	size_t Tamanho;
 	TListaNo* Primeiro;
 	TListaNo* Ultimo;
@@ -36,20 +33,19 @@ typedef struct _TLista {
 /* ----------------------------------------------------------------------------
  * funcao:		TLista_Criar
  * 				Cria uma lista vazia
- * @param:		Ponteiro para uma funcao que desaloca um item da memoria
- * @param:		Ponteiro para uma funcao de comparacao do conteudo de itens
- * @param:		Ponteiro para uma funcao que imprime um item
+ * @param:		(vazio)
  * @retorna:	A lista alocada
  *---------------------------------------------------------------------------*/
-TLista* TLista_Criar(TFuncaoDestruir FuncaoDestruir, TFuncaoIguais FuncaoIguais, TFuncaoImprimir FuncaoImprimir);
+TLista* TLista_Criar(void);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TLista_Destruir
  * 				Destroi a lista
  * @param:		Ponteiro para lista
+ * @param:		Ponteiro para uma funcao que desaloca um item da memoria
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/
-void TLista_Destruir(TLista** PLista);
+void TLista_Destruir(TLista** PLista, TFuncaoDestruir FuncaoDestruir);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TLista_Adicionar
@@ -64,9 +60,10 @@ bool TLista_Adicionar(TLista* Lista, void* Item);
  * funcao:		TLista_Imprimir
  * 				Imprime uma lista na tela
  * @param:		Lista
+ * @param:		Ponteiro para uma funcao que imprime um item
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/
-void TLista_Imprimir(TLista* Lista);
+void TLista_Imprimir(TLista* Lista, TFuncaoImprimir FuncaoImprimir);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TLista_Inserir
@@ -91,27 +88,40 @@ void* TLista_Item(TLista* Lista, const size_t Posicao);
  * funcao:		TLista_Limpar
  * 				Remove todos os itens da lista
  * @param:		Lista
+ * @param:		Ponteiro para uma funcao que desaloca um item da memoria
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/
-void TLista_Limpar(TLista* Lista);
+void TLista_Limpar(TLista* Lista, TFuncaoDestruir FuncaoDestruir);
+
+/* ----------------------------------------------------------------------------
+ * funcao:		TLista_Pesquisar
+ * 				Pesquisa um item na lista
+ * @param:		Lista
+ * @param:		Item a ser pesquisado
+ * @param:		Ponteiro para uma funcao de comparacao do conteudo dos itens
+ * @retorna:	No da lista que armazena o item
+ *---------------------------------------------------------------------------*/
+TListaNo* TLista_Pesquisar(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TLista_Posicao
  * 				Retorna a posicao de um item da lista
  * @param:		Lista
  * @param:		Item a ser pesquisado
+ * @param:		Ponteiro para uma funcao de comparacao do conteudo dos itens
  * @retorna:	Posicao do item. Retorna zero em caso de inexistencia
  *---------------------------------------------------------------------------*/
-size_t TLista_Posicao(TLista* Lista, void* Item);
+size_t TLista_Posicao(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TLista_Remover
  * 				Remove o no da lista
  * @param:		Lista
  * @param:		No a ser removido
+ * @param:		Ponteiro para uma funcao que desaloca um item da memoria
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/
-void TLista_Remover(TLista* Lista, TListaNo* No);
+void TLista_Remover(TLista* Lista, TListaNo* No, TFuncaoDestruir FuncaoDestruir);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TLista_Tamanho
