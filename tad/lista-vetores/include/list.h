@@ -21,10 +21,10 @@ typedef int TListaNo;
 
 /* Estrutura da lista */
 typedef struct _TLista {
-	size_t Capacidade;
-	size_t Expansao;
+	int Capacidade;
+	int Expansao;
 	void** Itens;
-	size_t Tamanho;
+	int Tamanho;
 } TLista;
 
 /* ----------------------------------------------------------------------------
@@ -33,7 +33,7 @@ typedef struct _TLista {
  * @param:		Capacidade de armazenamento inicial da lista
  * @retorna:	A lista alocada
  *---------------------------------------------------------------------------*/
-TLista* TLista_Criar(size_t Capacidade);
+TLista* TLista_Criar(int Capacidade);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TLista_Destruir
@@ -69,7 +69,7 @@ void TLista_Imprimir(TLista* Lista, TFuncaoImprimir FuncaoImprimir);
  * @param:		Posicao do item
  * @retorna:	O item solicitado
  *---------------------------------------------------------------------------*/
-void* TLista_Item(TLista* Lista, const size_t Posicao);
+void* TLista_Item(TLista* Lista, const TListaNo Posicao);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TLista_Limpar
@@ -107,7 +107,7 @@ TListaNo TLista_Pesquisar(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
  * @param:		Ponteiro para uma funcao de comparacao do conteudo dos itens
  * @retorna:	Posicao do item. Retorna zero em caso de inexistencia
  *---------------------------------------------------------------------------*/
-size_t TLista_Posicao(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais);
+int TLista_Posicao(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TLista_Remover
@@ -125,7 +125,7 @@ void TLista_Remover(TLista* Lista, TListaNo No, TFuncaoDestruir FuncaoDestruir);
  * @param:		Lista
  * @retorna:	O tamanho
  *---------------------------------------------------------------------------*/
-size_t TLista_Tamanho(TLista* Lista);
+int TLista_Tamanho(TLista* Lista);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TLista_Trocar

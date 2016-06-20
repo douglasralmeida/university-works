@@ -2,7 +2,7 @@
 **	TIPO ABASTRATO DE DADOS LISTA
 **	DOUGLAS RODRIGUES DE ALMEIDA
 **
-**	NONONO
+**	Tipos basicos
 **	
 **/
 
@@ -11,6 +11,7 @@
 
 #include "boolutils.h"
 
+/* Enumerador para ordenacao de listas */
 typedef enum {ordCrescente, ordDecresente} TOrdem;
 
 /* Funcao para comparar valor dos dados */

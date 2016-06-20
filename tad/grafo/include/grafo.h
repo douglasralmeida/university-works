@@ -19,7 +19,7 @@
 typedef struct _TGrafo {
 	TLista** Adjacencias;
 	size_t NumVertices;
-	TListaNo* PesquisaProxNo;
+	TListaNo PesquisaProxNo;
 	TGrafoVertice PesquisaVertice;
 } TGrafo;
 

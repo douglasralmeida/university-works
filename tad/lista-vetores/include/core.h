@@ -2,7 +2,7 @@
 **	TIPO ABASTRATO DE DADOS LISTA
 **	DOUGLAS RODRIGUES DE ALMEIDA
 **
-**	Cabecalho e estruturas de lista duplamente encadeada por ponteiros
+**	Tipos basicos
 **	
 **/
 
@@ -11,7 +11,8 @@
 
 #include "boolutils.h"
 
-typedef enum {ordCrescente, ordDecrescente} TOrdem;
+/* Enumerador para ordenacao de listas */
+typedef enum {ordCrescente, ordDecresente} TOrdem;
 
 /* Funcao para comparar valor dos dados */
 typedef bool (*TFuncaoComparar)(void* Dado1, void* Dado2);

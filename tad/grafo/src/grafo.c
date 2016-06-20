@@ -9,16 +9,10 @@
 
 TGrafo* TGrafo_Criar(size_t NumVertices)
 {
-	int i, j;
-	TFuncaoDestruir FuncaoDestruir;
-	TFuncaoIguais FuncaoIguais;
-	TFuncaoImprimir FuncaoImprimir;
+	int i, j;	
 	TGrafo* NovoGrafo;
 	TLista* NovaLista;
-	
-	FuncaoDestruir = &TGrafoAresta_Destruir;
-	FuncaoIguais = &TGrafoAresta_Igual;
-	FuncaoImprimir = &TGrafoAresta_Imprimir;
+		
 	NovoGrafo = (TGrafo*)malloc(sizeof(TGrafo));
 	if (NovoGrafo == NULL)
 	{
@@ -34,7 +28,7 @@ TGrafo* TGrafo_Criar(size_t NumVertices)
 	}
 	for (i = 0; i < NumVertices; i++)
 	{
-		NovaLista = TLista_Criar(FuncaoDestruir, FuncaoIguais, FuncaoImprimir);
+		NovaLista = TLista_Criar();
 		if (NovaLista == NULL)
 		{
 			printf("Erro (0x52). Erro ao alocar memoria.\n");
@@ -56,9 +50,11 @@ TGrafo* TGrafo_Criar(size_t NumVertices)
 void TGrafo_Destruir(TGrafo** PGrafo)
 {
 	int i;
+	TFuncaoDestruir FuncaoDestruir;
 	
+	FuncaoDestruir = &TGrafoAresta_Destruir;
 	for (i = 0; i < (*PGrafo)->NumVertices, i++)
-		TLista_Destruir(&((*PGrafo)->Adjacencias[i]));
+		TLista_Destruir(&((*PGrafo)->Adjacencias[i]), FuncaoDestruir);
 	free((*PGrafo)->Adjacencias);
 	free(*PGrafo);
 	PGrafo = NULL;
@@ -81,10 +77,12 @@ bool TGrafo_ArestaInserir(TGrafo* Grafo, TGrafoVertice VOrigem, TGrafoVertice VD
 bool TGrafo_ArestaExiste(TGrafo* Grafo, TGrafoVertice VOrigem, TGrafoVertice VDestino)
 {
 	bool existe;
+	TFuncaoIguais FuncaoIguais;
 	TGrafoAresta* Aresta;
 	
+	FuncaoIguais = &TGrafoAresta_Igual;
 	Aresta = TGrafoAresta_Criar(VDestino, 0);
-	existe = (TLista_Posicao(Grafo->Adjacencias[VOrigem], Aresta) > 0);
+	existe = (TLista_Posicao(Grafo->Adjacencias[VOrigem], Aresta, FuncaoIguais) > 0);
 	free(Aresta);
 	
 	return existe;
@@ -93,17 +91,19 @@ bool TGrafo_ArestaExiste(TGrafo* Grafo, TGrafoVertice VOrigem, TGrafoVertice VDe
 void TGrafo_ArestaRemover(TGrafo* Grafo, TGrafoVertice VOrigem, TGrafoVertice VDestino)
 {
 	bool arestaencontrada;
-	TLista* No;
+	TFuncaoDestruir FuncaoDestruir;
 	TGrafoAresta* Aresta;
+	TListaNo No;
 	
 	arestaencontrada = false;
+	FuncaoDestruir = &TGrafoAresta_Destruir;		
 	No = Grafo->Adjacencias[VOrigem]->Primeiro;
 	while ((No != NULL) || (arestaencontrada))
 	{
 		Aresta = (TGrafoAresta*)(No->Item);
 		if (Aresta->Destino == VDestino)
 		{
-			TLista_Remover(Grafo->Adjacencias[VOrigem], No);
+			TLista_Remover(Grafo->Adjacencias[VOrigem], No, FuncaoDestruir);
 			arestaencontrada == true;
 		}
 		No = No->Prox;
@@ -113,12 +113,14 @@ void TGrafo_ArestaRemover(TGrafo* Grafo, TGrafoVertice VOrigem, TGrafoVertice VD
 void TGrafo_Imprimir(TGrafo* Grafo)
 {
 	int i;
+	TFuncaoImprimir FuncaoImprimir;
 	
+	FuncaoImprimir = &TGrafoAresta_Imprimir;
 	for (i = 0; i < Grafo->NumVertices; i++)
 	{
 		printf("Vertice %2ld:", i);
 		if (!TGrafo_ListaAdjVazia(Grafo, i))
-			TLista_Imprimir(Grafo->Adjacencias[i]);
+			TLista_Imprimir(Grafo->Adjacencias[i], FuncaoImprimir);
 		printf("\n");
 	}
 }

@@ -2,12 +2,13 @@
 **	TIPO ABSTRATO DE DADOS LISTA
 **	DOUGLAS RODRIGUES DE ALMEIDA
 **
-**	Implementacao de lista duplamente encadeada por ponteiros
+**	Implementacao de lista como um vetor
 */
 
+#include "core.h"
 #include "list.h"
 
-TLista* TLista_Criar(TFuncaoDestruir FuncaoDestruir, TFuncaoIguais FuncaoIguais, TFuncaoImprimir FuncaoImprimir)
+TLista* TLista_Criar(int Capacidade)
 {
 	TLista* NovaLista;
 	
@@ -17,21 +18,26 @@ TLista* TLista_Criar(TFuncaoDestruir FuncaoDestruir, TFuncaoIguais FuncaoIguais,
 		printf("Erro (0x11): Erro durante alocacao de memoria.\n");
 		return NULL;
 	}
-	NovaLista->FuncaoDestruir = FuncaoDestruir;
-	NovaLista->FuncaoIguais = FuncaoIguais;
-	NovaLista->FuncaoImprimir = FuncaoImprimir;
- 	NovaLista->Tamanho = 0;
-  	NovaLista->Primeiro = NULL;
-	NovaLista->Ultimo = NULL;
+	NovaLista->Itens = malloc(Capacidade * sizeof(void*));
+	if (NovaLista->Itens == NULL)
+	{
+		printf("Erro(0x12): Erro durante alocacao de memoria.\n");
+		free(NovaLista);
+		return NULL;
+	}
+	NovaLista->Capacidade = Capacidade;
+	NovaLista->Expansao = LISTA_EXPANSAO;
+	NovaLista->Tamanho = 0;
   
 	return NovaLista;
 }
 
-void TLista_Destruir(TLista** PLista)
+void TLista_Destruir(TLista** PLista, TFuncaoDestruir FuncaoDestruir)
 {
 	if (PLista != NULL)
 	{
-		TLista_Limpar(*PLista);
+		TLista_Limpar(*PLista, FuncaoDestruir);
+		free((*PLista)->Itens);
 		free(*PLista);
 		PLista = NULL;
 	}
@@ -39,145 +45,84 @@ void TLista_Destruir(TLista** PLista)
 
 bool TLista_Adicionar(TLista* Lista, void* Item)
 {
-	return TLista_Inserir(Lista, Item, Lista->Ultimo);
-}
-
-bool TLista_EstaVazia(TLista* Lista)
-{
-	return (Lista->Primeiro == NULL);
-}
-
-void TLista_Imprimir(TLista* Lista)
-{
-	TListaNo* NoTemp;
-
-	NoTemp = Lista->Primeiro;
-	while (NoTemp != NULL)
-	{
-		Lista->FuncaoImprimir(NoTemp->Item);
-		NoTemp = NoTemp->Proximo;
-	}
-}
-
-bool TLista_Inserir(TLista* Lista, void* Item, TListaNo* No)
-{
-	TListaNo* NoNovo;
+	int novacapacidade;
+	void** NovoItens;
 	
-	NoNovo = (TListaNo*)malloc(sizeof(TListaNo));
-	if (NoNovo == NULL)
+	if (Lista->Tamanho >= Lista->Capacidade)
 	{
-		printf("Erro (0x12): Erro durante alocacao de memoria.\n");
-		return false;
-	}
-	NoNovo->Item = Item;
-	if (No == NULL)
-	{
-		if (TLista_EstaVazia(Lista))
+		novacapacidade = Lista->Capacidade + Lista->Expansao;
+		NovoItens = realloc(Lista->Itens, novacapacidade * sizeof(void*));
+		if (NovoItens == NULL)
 		{
-			Lista->Ultimo = NoNovo;
-			NoNovo->Proximo = NULL;			
+			printf("Erro (0x14): Erro durante alocacao de memoria.\n");
+			return false;
 		}
-		else
-		{
-			NoNovo->Proximo = Lista->Primeiro;
-			Lista->Primeiro->Anterior = NoNovo;			
-		}
-		Lista->Primeiro = NoNovo;
-		NoNovo->Anterior = NULL;
+		Lista->Itens = NovoItens;
+		Lista->Capacidade = novacapacidade;
 	}
-	else
-	{		
-		NoNovo->Proximo = No->Proximo;
-		NoNovo->Anterior = No;
-		No->Proximo = NoNovo;
-		if (NoNovo->Proximo != NULL)
-			NoNovo->Proximo->Anterior = NoNovo;
-		else
-			Lista->Ultimo = NoNovo;
-	}
+	Lista->Itens[Lista->Tamanho] = Item;
 	Lista->Tamanho++;
+	
 	return true;
 }
 
-void* TLista_Item(TLista* Lista, const size_t Posicao)
+void TLista_Imprimir(TLista* Lista, TFuncaoImprimir FuncaoImprimir)
 {
-	size_t i;
-	TListaNo* NoTemp;
+	TListaNo i;
 	
-	if (Posicao == 0)
-		return NULL;
-	
-	NoTemp = Lista->Primeiro;
-	for (i = 0; i < Posicao - 1; i++)
-		NoTemp = NoTemp->Proximo;
-
-	return NoTemp->Item;
+	for (i = 0; i < Lista->Tamanho; i++)
+		FuncaoImprimir(Lista->Itens[i]);
 }
 
-void TLista_Limpar(TLista* Lista)
+void* TLista_Item(TLista* Lista, const TListaNo Posicao)
+{		
+	return (Lista->Itens[Posicao]);
+}
+
+void TLista_Limpar(TLista* Lista, TFuncaoDestruir FuncaoDestruir)
 {
-	TListaNo* NoAnterior; 
-	TListaNo* NoTemp;
+	TListaNo i;
 	
-	NoTemp = Lista->Ultimo;
-	while (NoTemp != NULL)
-	{
-		NoAnterior = NoTemp->Anterior;
-		Lista->FuncaoDestruir(&(NoTemp->Item));
-		free(NoTemp);
-		NoTemp = NoAnterior;
-	}
+	for (i = 0; i < Lista->Tamanho; i++)
+		FuncaoDestruir(&(Lista->Itens[i]));
 	Lista->Tamanho = 0;
-	Lista->Primeiro = NULL;
-	Lista->Ultimo = NULL;
 }
 
-TListaNo* TLista_Pesquisar(TLista* Lista, void* Item)
+void TLista_Ordenar(TLista* Lista, TOrdem Ordem, TFuncaoComparar FuncaoComparar)
 {
-	TListaNo* NoTemp;
 	
-	NoTemp = Lista->Primeiro;
-	while (NoTemp != NULL)
+}
+
+TListaNo TLista_Pesquisar(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
+{
+	TListaNo i;
+	
+	i = 0;
+	while (i < Lista->Tamanho)
 	{
-		if (Lista->FuncaoIguais(NoTemp->Item, Item))
-			return NoTemp;
-		NoTemp = NoTemp->Proximo;
+		if (FuncaoIguais(Lista->Itens[i], Item))
+			return i;
+		i++;
 	}
-	return NULL;	
+	
+	return -1;
 }
 
-size_t TLista_Posicao(TLista* Lista, void* Item)
+size_t TLista_Posicao(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
 {
-	size_t resultado;
-	TListaNo* NoTemp;
-	
-	resultado = 0;
-	NoTemp = Lista->Primeiro;
-	while (NoTemp != NULL)
-	{
-		resultado++;
-		if (Lista->FuncaoIguais(NoTemp->Item, Item))
-			return resultado;
-		NoTemp = NoTemp->Proximo;
-	}
-	return 0;
+	return (TLista_Posicao(Lista, Item, FuncaoIguais) + 1);
 }
 
-void TLista_Remover(TLista* Lista, TListaNo* No)
+void TLista_Remover(TLista* Lista, TListaNo No, TFuncaoDestruir FuncaoDestruir)
 {
-	TListaNo* NoTemp;
+	TListaNo i;
 	
-	NoTemp = No;
-	if (No->Proximo != NULL)
-		No->Proximo->Anterior = No->Anterior;
-	else
-		Lista->Ultimo = No->Anterior;
-	if (No->Anterior != NULL)
-		No->Anterior->Proximo = No->Proximo;
-	else
-		Lista->Primeiro = No->Proximo;
-	Lista->FuncaoDestruir(&(No->Item));
-	free(NoTemp);
+	if (No >= Lista->Tamanho)
+		return;
+	
+	FuncaoDestruir(&(Lista->Itens[No]));
+	for (i = No; i < Lista->Tamanho - 1; i++)
+		Lista->Itens[No] = Lista->Itens[No+1];
 	Lista->Tamanho--;
 }
 
@@ -186,11 +131,11 @@ size_t TLista_Tamanho(TLista* Lista)
 	return Lista->Tamanho;
 }
 
-void TLista_Trocar(TListaNo* NoA, TListaNo* NoB)
+void TLista_Trocar(TLista* Lista, TListaNo NoA, TListaNo NoB)
 {
 	void* Item;
 	
-	Item = NoA->Item;
-	NoA->Item = NoB->Item;
-	NoB->Item = Item;
+	Item = Lista->Itens[NoA];
+	Lista->Itens[NoA] = Lista->Itens[NoB];
+	Lista->Itens[NoB] = Item;
 }

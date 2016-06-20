@@ -8,7 +8,7 @@
 #include "core.h"
 #include "list.h"
 
-TLista* TLista_Criar(size_t Capacidade)
+TLista* TLista_Criar(int Capacidade)
 {
 	TLista* NovaLista;
 	
@@ -45,7 +45,7 @@ void TLista_Destruir(TLista** PLista, TFuncaoDestruir FuncaoDestruir)
 
 bool TLista_Adicionar(TLista* Lista, void* Item)
 {
-	size_t novacapacidade;
+	int novacapacidade;
 	void** NovoItens;
 	
 	if (Lista->Tamanho >= Lista->Capacidade)
@@ -68,23 +68,20 @@ bool TLista_Adicionar(TLista* Lista, void* Item)
 
 void TLista_Imprimir(TLista* Lista, TFuncaoImprimir FuncaoImprimir)
 {
-	int i;
+	TListaNo i;
 	
 	for (i = 0; i < Lista->Tamanho; i++)
 		FuncaoImprimir(Lista->Itens[i]);
 }
 
-void* TLista_Item(TLista* Lista, const size_t Posicao)
-{	
-	if (Posicao == 0)
-		return NULL;
-	
-	return (Lista->Itens[Posicao-1]);
+void* TLista_Item(TLista* Lista, const TListaNo Posicao)
+{		
+	return (Lista->Itens[Posicao]);
 }
 
 void TLista_Limpar(TLista* Lista, TFuncaoDestruir FuncaoDestruir)
 {
-	size_t i;
+	TListaNo i;
 	
 	for (i = 0; i < Lista->Tamanho; i++)
 		FuncaoDestruir(&(Lista->Itens[i]));
