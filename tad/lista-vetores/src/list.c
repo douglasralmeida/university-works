@@ -108,7 +108,7 @@ TListaNo TLista_Pesquisar(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
 	return -1;
 }
 
-size_t TLista_Posicao(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
+int TLista_Posicao(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
 {
 	return (TLista_Posicao(Lista, Item, FuncaoIguais) + 1);
 }
@@ -126,7 +126,7 @@ void TLista_Remover(TLista* Lista, TListaNo No, TFuncaoDestruir FuncaoDestruir)
 	Lista->Tamanho--;
 }
 
-size_t TLista_Tamanho(TLista* Lista)
+int TLista_Tamanho(TLista* Lista)
 {
 	return Lista->Tamanho;
 }
