@@ -6,12 +6,10 @@
 **	
 **/
 
-#ifndef GRAFO_ITEM_H
-#define GRAFO_ITEM_H
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "core.h"
+#include "grafo_item.h"
 
 /* Estrutura das vertice do grafo */
 TGrafoAresta* TGrafoAresta_Criar(TGrafoVertice Vertice, TGrafoPeso Peso)
@@ -54,4 +52,3 @@ void TGrafoAresta_Imprimir(void* Dado)
 	printf(" %2d [%12ld]", Aresta->Destino, Aresta->Peso);
 }
 
-#endif

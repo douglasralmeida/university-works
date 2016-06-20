@@ -30,6 +30,6 @@ void TGrafoAresta_Destruir(void** PAresta);
 
 bool TGrafoAresta_Igual(void* Dado1, void* Dado2);
 
-void TGrafoAresta_Imprimir(void* Aresta);
+void TGrafoAresta_Imprimir(void* Dado);
 
 #endif
