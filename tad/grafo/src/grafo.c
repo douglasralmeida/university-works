@@ -158,8 +158,13 @@ TGrafoAresta* TGrafo_ListaAdjProximo(TGrafo* Grafo, TGrafoVertice Vertice)
 	
 	if (Grafo->PesquisaProxNo != -1)
 	{
-			Aresta = (TGrafoAresta*)TLista_Item(Grafo->Adjacencias[Vertice-1], Grafo->PesquisaProxNo);
-			Grafo->PesquisaProxNo++;
+			if (Grafo->PesquisaProxNo < Grafo->Adjacencias[Vertice-1]->Tamanho)
+			{
+				Aresta = (TGrafoAresta*)TLista_Item(Grafo->Adjacencias[Vertice-1], Grafo->PesquisaProxNo);
+				Grafo->PesquisaProxNo++;
+			}
+			else
+				Aresta = NULL;
 			return Aresta;
 	} 
 	else
