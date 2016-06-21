@@ -11,11 +11,7 @@
 
 #include "boolutils.h"
 
-/* Enumerador para ordenacao de listas */
-typedef enum {ordCrescente, ordDecresente} TOrdem;
-
 /* Funcao para comparar valor dos dados */
-/* Se Dado1 vale mais, retorna 1. Caso contrario, retorna 0. */
 typedef bool (*TFuncaoComparar)(void* Dado1, void* Dado2);
 
 /* Funcao para destruir dado */

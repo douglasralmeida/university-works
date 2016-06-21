@@ -11,4 +11,6 @@ typedef struct TRua_ {
 TRua* TRua_Criar(int Origem, int Destino, int TempoMedio);
 
 void TRua_Destruir(void** PRua);
+
+TRua* TRua_Carregar(FILE* Arquivo);
 #endif

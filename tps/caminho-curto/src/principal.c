@@ -12,9 +12,12 @@
 
 int main(int argc, char *argv[])
 {
-	if (argc > 2)
+	TProcessador* Processador;
+	
+	if (argc > 1)
 	{
-		
+		Processador = TProcessador_Criar();
+		TProcessador_Destruir(&Processador);
 	}
 	else
 	{
