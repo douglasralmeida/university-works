@@ -62,7 +62,7 @@ int main(void)
 
 	printf("Removendo aresta...");
 	printf("Vertices (vertice1, vertice2):");
-	scanf("%d %d", &vertice1, &vertice2);
+	scanf("%d, %d", &vertice1, &vertice2);
 	if (TGrafo_ArestaExiste(Grafo, vertice1, vertice2)) 
 	{
 	    TGrafo_ArestaRemover(Grafo, vertice1, vertice2);
