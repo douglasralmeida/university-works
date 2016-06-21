@@ -5,6 +5,7 @@
 **	Implementacao de lista como um vetor
 */
 
+#include <stdlib.h>
 #include "core.h"
 #include "list.h"
 
@@ -101,8 +102,8 @@ static void troca(void** vetor, int* i, int* j)
 	void* item;
 	
 	item = vetor[*i];
-	vetor[*j] = vetor[*i];
-	vetor[*i] = item;
+	vetor[*i] = vetor[*j];
+	vetor[*j] = item;
 }
 
 static void particiona(void** vetor, int e, int d, int* i, int* j, TFuncaoComparar FuncaoComparar)
@@ -114,9 +115,9 @@ static void particiona(void** vetor, int e, int d, int* i, int* j, TFuncaoCompar
 	x = vetor[(*i + *j) / 2]; /* pivo do quicksort */
 	do 
 	{
-		while (FuncaoComparar(x, vetor[*i]))
+		while (FuncaoComparar(vetor[*i], x))
 			(*i)++;
-		while (FuncaoComparar(vetor[*j], x))
+		while (FuncaoComparar(x, vetor[*j]))
 			(*j)--;	
 		if (*i <= *j)
 		{
@@ -161,7 +162,7 @@ TListaNo TLista_Pesquisar(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
 
 int TLista_Posicao(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
 {
-	return (TLista_Posicao(Lista, Item, FuncaoIguais) + 1);
+	return (TLista_Pesquisar(Lista, Item, FuncaoIguais) + 1);
 }
 
 void TLista_Remover(TLista* Lista, TListaNo No, TFuncaoDestruir FuncaoDestruir)
@@ -173,7 +174,7 @@ void TLista_Remover(TLista* Lista, TListaNo No, TFuncaoDestruir FuncaoDestruir)
 	
 	FuncaoDestruir(&(Lista->Itens[No]));
 	for (i = No; i < Lista->Ultimo; i++)
-		Lista->Itens[No] = Lista->Itens[No+1];
+		Lista->Itens[i] = Lista->Itens[i+1];
 	Lista->Tamanho--;
 	if (Lista->Tamanho == 0)
 	{
@@ -181,7 +182,7 @@ void TLista_Remover(TLista* Lista, TListaNo No, TFuncaoDestruir FuncaoDestruir)
 		Lista->Ultimo = -1;
 	}
 	else
-		Lista->Ultimo = Lista->Tamanho -1;
+		Lista->Ultimo = Lista->Tamanho - 1;
 }
 
 int TLista_Tamanho(TLista* Lista)

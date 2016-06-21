@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "core.h"
 #include "list.h"
 
@@ -92,13 +93,13 @@ int main(void)
 	dado = (int*)malloc(sizeof(int));
 	*dado = 5;
 	printf(" item %d ", *dado);
-	if (TLista_Pesquisar(Lista, (void*)dado, FuncaoIguais))
+	if (TLista_Pesquisar(Lista, (void*)dado, FuncaoIguais) > 0)
 		printf(" = encontrado -");
 	else
 		printf(" = nao encontrado -");
 	*dado = 11;
 	printf(" item %d ", *dado);
-	if (TLista_Pesquisar(Lista, (void*)dado, FuncaoIguais))
+	if (TLista_Pesquisar(Lista, (void*)dado, FuncaoIguais) > 0)
 		printf(" = encontrado. ");
 	else
 		printf(" = nao encontrado. ");
@@ -140,11 +141,12 @@ int main(void)
 	printf("OK.\n");
 	
 	/* ordenacao */
+	srand(time(NULL));
 	printf("Preenchendo lista...");
 	for (i = 0; i < 10; i++)
 	{
 		dado = (int*)malloc(sizeof(int));
-		*dado = i;
+		*dado = rand() % 100;
 		TLista_Adicionar(Lista, dado);
 	}
 	printf("OK.\n");
