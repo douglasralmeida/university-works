@@ -8,7 +8,18 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "core.h"
 #include "list.h"
+
+bool CompararInt(void* PInt1, void* PInt2)
+{
+	int* Int1;
+	int* Int2;
+	
+	Int1 = (int*)PInt1;
+	Int2 = (int*)PInt2;
+	return (*Int1 < *Int2);
+}
 
 void DestruirInt(void** PInt)
 {
@@ -41,10 +52,13 @@ int main(void)
 {	
 	int i;
 	int* dado;
+	TFuncaoCompara FuncaoComparar;
 	TFuncaoDestruir FuncaoDestruir;
 	TFuncaoImprimir FuncaoImprimir;
+	
 	TLista* Lista;
 	
+	FuncaoComparar = &CompararInt;
 	FuncaoDestruir = &DestruirInt;
 	FuncaoImprimir = &ImprimirInt;
 	
@@ -71,6 +85,36 @@ int main(void)
 	TLista_Imprimir(Lista, FuncaoImprimir);
 	printf("OK.\n");
 	
+	printf("Pesquisando na lista...");
+	dado = (int*)malloc(sizeof(int));
+	*dado = 5;
+	printf(" item %d ", *dado);
+	if (TLista_Pesquisar(Lista, (void*)dado, FuncaoIguais))
+		printf(" = encontrado -");
+	else
+		printf(" = nao encontrado -");
+	*dado = 11;
+	printf(" item %d ", *dado);
+	if (TLista_Pesquisar(Lista, (void*)dado, FuncaoIguais))
+		printf(" = encontrado. ");
+	else
+		printf(" = nao encontrado. ");
+	free(dado);
+	printf("OK.\n");
+
+	printf("Removendo da lista...");
+	dado = (int*)malloc(sizeof(int));
+	*dado = 6;
+	printf(" item %d ", *dado);
+	No = TLista_Pesquisar(Lista, (void*)dado, FuncaoIguais);
+	TLista_Remover(Lista, No, FuncaoDestruir);
+	free(dado);
+	printf("OK.\n");
+	
+	printf("Exibindo lista...");
+	TLista_Imprimir(Lista, FuncaoImprimir);
+	printf("OK.\n");
+	
 	printf("Limpando lista...");
 	TLista_Limpar(Lista, FuncaoDestruir);
 	printf("OK.\n");
@@ -88,6 +132,40 @@ int main(void)
 	TLista_Imprimir(Lista, FuncaoImprimir);
 	printf("OK.\n");
 
+	printf("Limpando lista...");
+	TLista_Limpar(Lista, FuncaoDestruir);
+	printf("OK.\n");
+	
+	//Ordenacao
+	printf("Preenchendo lista...");
+	for (i = 0; i < 10; i++)
+	{
+		dado = (int*)malloc(sizeof(int));
+		*dado = i;
+		TLista_Adicionar(Lista, dado);
+	}
+	printf("OK.\n");
+
+	printf("Exibindo lista...");
+	TLista_Imprimir(Lista, FuncaoImprimir);
+	printf("OK.\n");
+
+	printf("Ordenando lista...");
+	TLista_Ordenar(Lista, ordCrescente, FuncaoComparar);
+	printf("OK.\n");
+
+	printf("Exibindo lista...");
+	TLista_Imprimir(Lista, FuncaoImprimir);
+	printf("OK.\n");
+
+	printf("Invertendo ordem da lista...");
+	TLista_Ordenar(Lista, ordDecrescente, FuncaoComparar);
+	printf("OK.\n");
+
+	printf("Exibindo lista...");
+	TLista_Imprimir(Lista, FuncaoImprimir);
+	printf("OK.\n");
+	
 	printf("Destruindo lista...");
 	TLista_Destruir(&Lista, FuncaoDestruir);
 	printf("OK.\n");

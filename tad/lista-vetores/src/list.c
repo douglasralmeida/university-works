@@ -95,9 +95,53 @@ void TLista_Limpar(TLista* Lista, TFuncaoDestruir FuncaoDestruir)
 	Lista->Ultimo = -1;
 }
 
+/*--- funcoes utilizadadas pelo algoritmo de ordenacao ---*/
+static void troca(void** vetor, int i, int j);
+{
+	void* item;
+	
+	item = vetor[i];
+	vetor[j] = vetor[i];
+	vetor[i] = item;
+}
+
+static void particiona(void** vetor, int e, int d, int* i, int* j, TFuncaoComparar FuncaoComparar)
+{
+	void* x;
+	
+	*i = e;
+	*j = d;
+	x = vetor[(*i + *j) / 2]; /* pivo do quicksort */
+	do 
+	{
+		while (FuncaoCompara(x, vetor[*i]))
+			(*i)++;
+		while (FuncaoCompara(vetor[*j], x))
+			(*j)--;	
+		if (*i <= *j)
+		{
+			troca(vetor, i, j);
+			(*i)++;
+			(*j)--;
+		}
+	} while (*i <= *j);
+}
+
+static void ordena(void** vetor, int e, int d, TFuncaoComparar FuncaoComparar)
+{
+	int i;
+	int j;
+	
+	particiona(vetor, e, d, &i, &j, FuncaoComparar);
+	if (e < j)
+		ordena(e, j, FuncaoComparar);
+	if (i < d)
+		ordena(i, d, FuncaoComparar);
+}
+
 void TLista_Ordenar(TLista* Lista, TOrdem Ordem, TFuncaoComparar FuncaoComparar)
 {
-	
+	ordena(Lista->Itens, 0, Lista->Tamanho - 1, FuncaoComparar);
 }
 
 TListaNo TLista_Pesquisar(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
@@ -123,7 +167,7 @@ int TLista_Posicao(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
 void TLista_Remover(TLista* Lista, TListaNo No, TFuncaoDestruir FuncaoDestruir)
 {
 	TListaNo i;
-	
+
 	if (No > Lista->Ultimo)
 		return;
 	
