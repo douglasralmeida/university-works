@@ -96,13 +96,13 @@ void TLista_Limpar(TLista* Lista, TFuncaoDestruir FuncaoDestruir)
 }
 
 /*--- funcoes utilizadadas pelo algoritmo de ordenacao ---*/
-static void troca(void** vetor, int i, int j);
+static void troca(void** vetor, int* i, int* j)
 {
 	void* item;
 	
-	item = vetor[i];
-	vetor[j] = vetor[i];
-	vetor[i] = item;
+	item = vetor[*i];
+	vetor[*j] = vetor[*i];
+	vetor[*i] = item;
 }
 
 static void particiona(void** vetor, int e, int d, int* i, int* j, TFuncaoComparar FuncaoComparar)
@@ -114,9 +114,9 @@ static void particiona(void** vetor, int e, int d, int* i, int* j, TFuncaoCompar
 	x = vetor[(*i + *j) / 2]; /* pivo do quicksort */
 	do 
 	{
-		while (FuncaoCompara(x, vetor[*i]))
+		while (FuncaoComparar(x, vetor[*i]))
 			(*i)++;
-		while (FuncaoCompara(vetor[*j], x))
+		while (FuncaoComparar(vetor[*j], x))
 			(*j)--;	
 		if (*i <= *j)
 		{
@@ -134,12 +134,12 @@ static void ordena(void** vetor, int e, int d, TFuncaoComparar FuncaoComparar)
 	
 	particiona(vetor, e, d, &i, &j, FuncaoComparar);
 	if (e < j)
-		ordena(e, j, FuncaoComparar);
+		ordena(vetor, e, j, FuncaoComparar);
 	if (i < d)
-		ordena(i, d, FuncaoComparar);
+		ordena(vetor, i, d, FuncaoComparar);
 }
 
-void TLista_Ordenar(TLista* Lista, TOrdem Ordem, TFuncaoComparar FuncaoComparar)
+void TLista_Ordenar(TLista* Lista, TFuncaoComparar FuncaoComparar)
 {
 	ordena(Lista->Itens, 0, Lista->Tamanho - 1, FuncaoComparar);
 }

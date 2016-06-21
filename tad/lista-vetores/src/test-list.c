@@ -52,14 +52,17 @@ int main(void)
 {	
 	int i;
 	int* dado;
-	TFuncaoCompara FuncaoComparar;
+	TFuncaoComparar FuncaoComparar;
 	TFuncaoDestruir FuncaoDestruir;
+	TFuncaoIguais FuncaoIguais;
 	TFuncaoImprimir FuncaoImprimir;
 	
 	TLista* Lista;
+	TListaNo No;
 	
 	FuncaoComparar = &CompararInt;
 	FuncaoDestruir = &DestruirInt;
+	FuncaoIguais = &IguaisInt;
 	FuncaoImprimir = &ImprimirInt;
 	
 	printf("TESTE LISTA\n");
@@ -136,7 +139,7 @@ int main(void)
 	TLista_Limpar(Lista, FuncaoDestruir);
 	printf("OK.\n");
 	
-	//Ordenacao
+	/* ordenacao */
 	printf("Preenchendo lista...");
 	for (i = 0; i < 10; i++)
 	{
@@ -151,15 +154,7 @@ int main(void)
 	printf("OK.\n");
 
 	printf("Ordenando lista...");
-	TLista_Ordenar(Lista, ordCrescente, FuncaoComparar);
-	printf("OK.\n");
-
-	printf("Exibindo lista...");
-	TLista_Imprimir(Lista, FuncaoImprimir);
-	printf("OK.\n");
-
-	printf("Invertendo ordem da lista...");
-	TLista_Ordenar(Lista, ordDecrescente, FuncaoComparar);
+	TLista_Ordenar(Lista, FuncaoComparar);
 	printf("OK.\n");
 
 	printf("Exibindo lista...");

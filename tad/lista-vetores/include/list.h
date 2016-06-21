@@ -86,10 +86,10 @@ void TLista_Limpar(TLista* Lista, TFuncaoDestruir FuncaoDestruir);
  * funcao:		TLista_Ordenar
  * 				Ordena os itens da lista usando o metodo de Quicksort
  * @param:		Lista
- * @param:		Ordem crescente ou decrescente
+ * @param:		Funcao de comparacao
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/
-void TLista_Ordenar(TLista* Lista, TOrdem Ordem, TFuncaoComparar FuncaoComparar);
+void TLista_Ordenar(TLista* Lista, TFuncaoComparar FuncaoComparar);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TLista_Pesquisar
