@@ -6,7 +6,7 @@
 #include "grafo.h"
 
 typedef struct TProcessador_ {
-	
+	TGrafo* Caminhos;
 } TProcessador;
 
 TProcessador* TProcessador_Criar();
