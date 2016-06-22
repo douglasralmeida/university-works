@@ -7,8 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "servidor.h"
-#include "hora.h"
+#include "processador.h"
 
 int main(int argc, char *argv[])
 {
@@ -19,8 +18,7 @@ int main(int argc, char *argv[])
 		Processador = TProcessador_Criar();
 		if (Processador == NULL)
 			exit(EXIT_FAILURE);
-		if (TProcessador_CarregarDados(Processador, argv[1]))
-			TProcessador_AnalisarDados(Processador);
+		TProcessador_AnalisarDados(Processador, argv[1]);
 		TProcessador_Destruir(&Processador);
 	}
 	else

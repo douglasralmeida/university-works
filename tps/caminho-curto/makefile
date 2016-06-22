@@ -1,4 +1,4 @@
-#Makefile do TP2 - SemNome
+#Makefile do TP2 - Caminho Mais Rapido
 #
 #Douglas Rodrigue de Almeida
 #
@@ -12,10 +12,10 @@ CFLAGS=-c -Wall -Wextra -Wpedantic $(DEFS) -Iinclude/
 DBGFLAGS=-ggdb -fno-inline -fno-omit-frame-pointer 
 BINDIR=bin
 OBJDIR=obj
-OBJFILES=principal.o
+OBJFILES=list.o grafo_item.o grafo.o caminho.o processador.o principal.o
 OBJECTS=$(addprefix $(OBJDIR)/, $(OBJFILES))
 SOURCEDIR=src
-ARGS=test/entrada.txt test/saida.txt
+ARGS=test/tp2.in
 
 $(OBJDIR)/%.o: $(SOURCEDIR)/%.c
 	@echo 

@@ -4,7 +4,7 @@
 #include "grafo.h"
 #include "processador.h"
 
-TProcessador* TTProcessador_Criar(void)
+TProcessador* TProcessador_Criar(void)
 {
 	TProcessador* NovoProcessador;
 
@@ -14,38 +14,41 @@ TProcessador* TTProcessador_Criar(void)
 		printf("Erro ao alocar memoria.\n");
 		return NULL;
 	}
-	Processador->Caminhos = NULL:
+	NovoProcessador->Caminhos = NULL;
+	NovoProcessador->MelhorCaminho = -1;
+	NovoProcessador->Resultado = NULL;
 	
 	return NovoProcessador;
 }
 
 void TProcessador_Destruir(TProcessador** PProcessador)
 {
-	if ((*PProcessador)->Grafos != NULL)
+	TFuncaoDestruir FuncaoDestruir;
+	
+	FuncaoDestruir = &TCaminho_Destruir;
+	if ((*PProcessador)->Caminhos != NULL)
 		TGrafo_Destruir(&(*PProcessador)->Caminhos);
+	if ((*PProcessador)->Resultado != NULL)
+		TLista_Destruir(&(*PProcessador)->Resultado, FuncaoDestruir);
 	free(*PProcessador);
 	PProcessador = NULL;
 }
 
-void TProcessador_AnalisarDados(TProcessador* Processador);
-{
-	TProcessador_MelhorCaminho(Processador);
-	/*-- salvar o vetor de resultados (somente o peso) --*/
-	TProcessador_OrdenarResultado(Processador);
-	/*-- salvar o vetor de resultados ordenado(tad completo) --*/
-}
-
-bool TProcessador_CarregarDados(TProcessador* Processador, char* NomeArquivo)
+void TProcessador_AnalisarDados(TProcessador* Processador, char* NomeArquivo)
 {
 	int i;
 	int ruas, caminhos;
 	int rua, caminho, tempo;
-	int origiem, destino;
 	FILE* ArquivoEntrada;
+	FILE* ArquivoSaida;
+	TFuncaoDestruir FuncaoDestruir;
 	
+	FuncaoDestruir = &TCaminho_Destruir;
 	ArquivoEntrada = fopen(NomeArquivo, "rt");
-	if (ArquivoEntrada != NULL)
+	ArquivoSaida = fopen("tp2.out", "wt");
+	if ((ArquivoEntrada != NULL) && (ArquivoSaida != NULL))
 	{
+		Processador->Resultado = TLista_Criar(1024);
 		fscanf(ArquivoEntrada, "%d %d", &ruas, &caminhos);
 		while ((caminhos > 0) && (ruas > 0))
 		{
@@ -55,37 +58,38 @@ bool TProcessador_CarregarDados(TProcessador* Processador, char* NomeArquivo)
 				for (i = 0; i < caminhos; i++)
 				{
 					fscanf(ArquivoEntrada, "%d %d %d", &rua, &caminho, &tempo);
-					TGrafo_ArestaAdicionar(Processador->Caminhos, rua, caminho, tempo);
+					TGrafo_ArestaInserir(Processador->Caminhos, rua, caminho, tempo);
 				}
-				fscanf("%d %d", &origem, &destino);
-				
-				/*-- chamar algo. melhor caminho --*/
-				/*-- chamar algo. salvar resultado --*/
-								
+				fscanf(ArquivoEntrada, "%d %d", &Processador->Origem, &Processador->Destino);
+				TProcessador_MelhorCaminho(Processador);
+				fprintf(ArquivoSaida, "%d\n", Processador->MelhorCaminho);
 				TGrafo_Destruir(&Processador->Caminhos);
 			}
-		}		
+			fscanf(ArquivoEntrada, "%d %d", &ruas, &caminhos);
+		}
 		fclose(ArquivoEntrada);
+		fclose(ArquivoSaida);
+		TProcessador_OrdenarResultado(Processador);
+		TProcessador_SalvarVetor(Processador, "xtp2.out");
+		TLista_Destruir(&Processador->Resultado, FuncaoDestruir);
 	}
 	else
-	{
 		printf("Erro ao abrir arquivo de entrada '%s'.\n", NomeArquivo);
-	}
-	
-	return (ArquivoEntrada != NULL);
 }
 
 bool TProcessador_MelhorCaminho(TProcessador* Processador)
 {
-	/*-- encontrar o melhor caminho --*/
+	Processador->MelhorCaminho = -1;
+	return true;
 }
 
 void TProcessador_OrdenarResultado(TProcessador* Processador)
 {
-	/*-- ordenar vetor de resultados --*/
+	if (TLista_Tamanho(Processador->Resultado) > 0)
+		Processador->Resultado->Tamanho = 0;
 }
 
-bool TProcessador_SalvarResultado(TProcessador* Processador, char* NomeArquivo)
+void TProcessador_SalvarVetor(TProcessador* Processador, char* NomeArquivo)
 {
 	FILE* ArquivoSaida;
 	
@@ -93,10 +97,8 @@ bool TProcessador_SalvarResultado(TProcessador* Processador, char* NomeArquivo)
 	if (ArquivoSaida == NULL)
 	{
 		printf("Erro. Erro ao criar arquivo de saida '%s'.\n", NomeArquivo);
-		return false;
+		return;
 	}
-	/*-- salvar os dados aqui --*/
+	Processador->Resultado->Tamanho = 0;
 	fclose(ArquivoSaida);
-	
-	return true;
 }

@@ -59,7 +59,7 @@ void TGrafo_Destruir(TGrafo** PGrafo)
 		TLista_Destruir(&((*PGrafo)->Adjacencias[i]), FuncaoDestruir);
 	free((*PGrafo)->Adjacencias);
 	free(*PGrafo);
-	PGrafo = NULL;
+	*PGrafo = NULL;
 }
 
 bool TGrafo_ArestaInserir(TGrafo* Grafo, TGrafoVertice VOrigem, TGrafoVertice VDestino, TGrafoPeso Peso)
