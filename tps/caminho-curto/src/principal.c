@@ -17,6 +17,10 @@ int main(int argc, char *argv[])
 	if (argc > 1)
 	{
 		Processador = TProcessador_Criar();
+		if (Processador == NULL)
+			exit(EXIT_FAILURE);
+		if (TProcessador_CarregarDados(Processador, argv[1]))
+			TProcessador_AnalisarDados(Processador);
 		TProcessador_Destruir(&Processador);
 	}
 	else
