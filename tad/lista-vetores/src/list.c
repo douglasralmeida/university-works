@@ -37,13 +37,10 @@ TLista* TLista_Criar(int Capacidade)
 
 void TLista_Destruir(TLista** PLista, TFuncaoDestruir FuncaoDestruir)
 {
-	if (PLista != NULL)
-	{
-		TLista_Limpar(*PLista, FuncaoDestruir);
-		free((*PLista)->Itens);
-		free(*PLista);
-		PLista = NULL;
-	}
+	TLista_Limpar(*PLista, FuncaoDestruir);
+	free((*PLista)->Itens);
+	free(*PLista);
+	*PLista = NULL;
 }
 
 bool TLista_Adicionar(TLista* Lista, void* Item)
