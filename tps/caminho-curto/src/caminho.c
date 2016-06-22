@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "boolutils.h"
 #include "caminho.h"
 
 TCaminho* TCaminho_Criar(int Origem, int Destino, int TempoMedio)
@@ -21,3 +22,14 @@ void TCaminho_Destruir(void** PCaminho)
 	free(*PCaminho);
 	PCaminho = NULL;
 }
+
+bool TCaminho_Comparar(void* PCaminho1, void* PCaminho2)
+{
+	TCaminho* Caminho1;
+	TCaminho* Caminho2;
+	
+	Caminho1 = (TCaminho*)PCaminho1;
+	Caminho2 = (TCaminho*)PCaminho2;
+	return (Caminho1->TempoMedio > Caminho2->TempoMedio);
+}
+

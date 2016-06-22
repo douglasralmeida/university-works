@@ -162,6 +162,14 @@ int TLista_Posicao(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
 	return (TLista_Pesquisar(Lista, Item, FuncaoIguais) + 1);
 }
 
+TListaNo TLista_Proximo(TLista* Lista, TListaNo No)
+{
+	if (No < Lista->Ultimo)
+		return No + 1;
+	else
+		return -1;
+}
+
 void TLista_Remover(TLista* Lista, TListaNo No, TFuncaoDestruir FuncaoDestruir)
 {
 	TListaNo i;

@@ -112,6 +112,15 @@ TListaNo TLista_Pesquisar(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
 int TLista_Posicao(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais);
 
 /* ----------------------------------------------------------------------------
+ * funcao:		TLista_Proximo
+ * 				Retorna o proximo no da lista
+ * @param:		Lista
+ * @param:		No
+ * @retorna:	O proximo no, caso ele exista. -1 caso contrario
+ *---------------------------------------------------------------------------*/
+TListaNo TLista_Proximo(TLista* Lista, TListaNo No);
+
+/* ----------------------------------------------------------------------------
  * funcao:		TLista_Remover
  * 				Remove o no da lista
  * @param:		Lista

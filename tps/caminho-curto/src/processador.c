@@ -85,13 +85,18 @@ bool TProcessador_MelhorCaminho(TProcessador* Processador)
 
 void TProcessador_OrdenarResultado(TProcessador* Processador)
 {
-	if (TLista_Tamanho(Processador->Resultado) > 0)
-		Processador->Resultado->Tamanho = 0;
+	TFuncaoComparar FuncaoComparar;
+	
+	FuncaoComparar = &TCaminho_Comparar;
+	if (TLista_Tamanho(Processador->Resultado) > 1)
+		TLista_Ordenar(Processador->Resultado, FuncaoComparar);
 }
 
 void TProcessador_SalvarVetor(TProcessador* Processador, char* NomeArquivo)
 {
 	FILE* ArquivoSaida;
+	TCaminho* Caminho;
+	TListaNo No;
 	
 	ArquivoSaida = fopen(NomeArquivo, "wt");
 	if (ArquivoSaida == NULL)
@@ -99,6 +104,17 @@ void TProcessador_SalvarVetor(TProcessador* Processador, char* NomeArquivo)
 		printf("Erro. Erro ao criar arquivo de saida '%s'.\n", NomeArquivo);
 		return;
 	}
-	Processador->Resultado->Tamanho = 0;
+	if (Processador->Resultado->Tamanho > 0)
+	{
+		No = Processador->Resultado->Primeiro;
+		while (No != Processador->Resultado->Ultimo)
+		{
+			Caminho = (TCaminho*)TLista_Item(Processador->Resultado, No);
+			fprintf(ArquivoSaida, "%d\n", Caminho->TempoMedio);
+			No = TLista_Proximo(Processador->Resultado, No);
+		}
+		Caminho = (TCaminho*)TLista_Item(Processador->Resultado, No);
+		fprintf(ArquivoSaida, "%d\n", Caminho->TempoMedio);
+	}
 	fclose(ArquivoSaida);
 }
