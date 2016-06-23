@@ -80,18 +80,21 @@ void TProcessador_AnalisarDados(TProcessador* Processador, char* NomeArquivo)
 
 bool TProcessador_MelhorCaminho(TProcessador* Processador)
 {
+	TCaminho* Caminho;
 	TFilaPrioridade* Fila;
+	TFuncaoComparar FuncaoComparar;
 	TGrafoVertice i;
 	Set R;
 	
-	Fila = TFilaPrioridade_Criar(Procesador->Caminhos->NumVertices);
+	FuncaoComparar = &TGrafoAresta_CompararPeso;
+	Fila = TFilaPrioridade_Criar(Procesador->Caminhos->NumVertices, FuncaoComparar);
 	Caminho = TCaminho_Criar(Processador->Origem, Processador->Origem, 0);
 	TFilaPrioridade_Enfileirar(Fila, (void*)Caminho);
 	for (i = 1; i <= Procesador->Caminhos->NumVertices; i++)
 	{
 		if (i != Procesador->Origem)
 		{
-			Caminho = TCaminho_Criar(Processador->Origem, i, INFINITY);
+			Caminho = TCaminho_Criar(Processador->Origem, i, INFINITO);
 			TFilaPrioridade_Enfileirar(Fila, (void*)Caminho);
 		}
 	}
@@ -111,6 +114,34 @@ bool TProcessador_MelhorCaminho(TProcessador* Processador)
 	
 	TFilaPrioridade_Destruir(&Fila);
 	return true;
+	
+	/* pseudocodigo
+	void relax(u, v) {
+  if (u.dist + w(u,v) < v.dist) {
+    v.dist = u.dist + w(u,v);
+    v.pred = u;
+  }
+}
+
+Whenever a vertex's dist value decreases, the min-priority queue must be adjusted accordingly.
+
+Here is pseudocode for Dijkstra's algorithm, assuming that the source vertex is s:
+void dijkstra(s) {
+  queue = new PriorityQueue<Vertex>();
+  for (each vertex v) {
+    v.dist = infinity;  // can use Integer.MAX_VALUE or Double.POSITIVE_INFINITY
+    queue.enqueue(v);
+    v.pred = null;
+  }   
+  s.dist = 0;
+
+  while (!queue.isEmpty()) {
+    u = queue.extractMin();
+    for (each vertex v adjacent to u)
+      relax(u, v);
+  }
+}
+*/
 }
 
 void TProcessador_OrdenarResultado(TProcessador* Processador)

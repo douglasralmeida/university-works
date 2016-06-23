@@ -1,10 +1,13 @@
 #ifndef CAMINHO_H
 #define CAMINHO_H
 
+#define "boolutils.h"
+
 typedef struct TCaminho_ {
 	int Origem;
 	int Destino;
 	int TempoMedio;
+	bool Visitado;
 } TCaminho;
 
 

@@ -34,6 +34,16 @@ void TGrafoAresta_Destruir(void** PAresta)
 	PAresta = NULL;
 }
 
+bool TGrafoAresta_CompararPeso(void* Dado1, void* Dado2)
+{
+	TGrafoAresta* Aresta1;
+	TGrafoAresta* Aresta2;
+	
+	Aresta1 = (TGrafoAresta*)Dado1;
+	Aresta2 = (TGrafoAresta*)Dado2;
+	return (Aresta1->Peso < Aresta2->Peso);
+}
+
 bool TGrafoAresta_Igual(void* Dado1, void* Dado2)
 {
 	TGrafoAresta* Aresta1;

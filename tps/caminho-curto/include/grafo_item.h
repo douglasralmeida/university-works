@@ -16,7 +16,7 @@
 /* Estrutura das vertice do grafo */
 typedef size_t TGrafoVertice;
 
-typedef int TGrafoPeso;
+typedef unsigned int TGrafoPeso;
 
 /* Estrutura das arestas do grafo */
 typedef struct _TGrafoAresta {
@@ -27,6 +27,8 @@ typedef struct _TGrafoAresta {
 TGrafoAresta* TGrafoAresta_Criar(TGrafoVertice Vertice, TGrafoPeso Peso);
 
 void TGrafoAresta_Destruir(void** PAresta);
+
+bool TGrafoAresta_CompararPeso(void* Dado1, void* Dado2);
 
 bool TGrafoAresta_Igual(void* Dado1, void* Dado2);
 
