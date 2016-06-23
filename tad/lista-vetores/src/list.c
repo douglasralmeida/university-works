@@ -28,9 +28,9 @@ TLista* TLista_Criar(int Capacidade)
 	}
 	NovaLista->Capacidade = Capacidade;
 	NovaLista->Expansao = LISTA_EXPANSAO;
-	NovaLista->Primeiro = -1;
+	NovaLista->Primeiro = NO_NULO;
 	NovaLista->Tamanho = 0;
-	NovaLista->Ultimo = -1;
+	NovaLista->Ultimo = NO_NULO;
   
 	return NovaLista;
 }
@@ -88,9 +88,9 @@ void TLista_Limpar(TLista* Lista, TFuncaoDestruir FuncaoDestruir)
 	
 	for (i = 0; i < Lista->Tamanho; i++)
 		FuncaoDestruir(&(Lista->Itens[i]));
-	Lista->Primeiro = -1;
+	Lista->Primeiro = NO_NULO;
 	Lista->Tamanho = 0;
-	Lista->Ultimo = -1;
+	Lista->Ultimo = NO_NULO;
 }
 
 /*--- funcoes utilizadadas pelo algoritmo de ordenacao ---*/
@@ -154,7 +154,7 @@ TListaNo TLista_Pesquisar(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
 		i++;
 	}
 	
-	return -1;
+	return NO_NULO;
 }
 
 int TLista_Posicao(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
@@ -167,7 +167,7 @@ TListaNo TLista_Proximo(TLista* Lista, TListaNo No)
 	if (No < Lista->Ultimo)
 		return No + 1;
 	else
-		return -1;
+		return NO_NULO;
 }
 
 void TLista_Remover(TLista* Lista, TListaNo No, TFuncaoDestruir FuncaoDestruir)
@@ -183,8 +183,8 @@ void TLista_Remover(TLista* Lista, TListaNo No, TFuncaoDestruir FuncaoDestruir)
 	Lista->Tamanho--;
 	if (Lista->Tamanho == 0)
 	{
-		Lista->Primeiro = -1;
-		Lista->Ultimo = -1;
+		Lista->Primeiro = NO_NULO;
+		Lista->Ultimo = NO_NULO;
 	}
 	else
 		Lista->Ultimo = Lista->Tamanho - 1;
