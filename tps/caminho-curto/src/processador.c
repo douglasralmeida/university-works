@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
+#include "filaprior.h"
 #include "grafo.h"
 #include "processador.h"
 
@@ -83,14 +84,20 @@ bool TProcessador_MelhorCaminho(TProcessador* Processador)
 	TGrafoVertice i;
 	Set R;
 	
-	Fila = TFilaPrioridade_Criar();
+	Fila = TFilaPrioridade_Criar(Procesador->Caminhos->NumVertices);
+	Caminho = TCaminho_Criar(Processador->Origem, Processador->Origem, 0);
+	TFilaPrioridade_Enfileirar(Fila, (void*)Caminho);
 	for (i = 1; i <= Procesador->Caminhos->NumVertices; i++)
 	{
 		if (i != Procesador->Origem)
 		{
-			Caminho = TCaminho_Criar(Processador->Origem, i, INFINITE);
-			TFilaPrioridade_Enfileirar(Fila, Caminho);
+			Caminho = TCaminho_Criar(Processador->Origem, i, INFINITY);
+			TFilaPrioridade_Enfileirar(Fila, (void*)Caminho);
 		}
+	}
+	while (TFilaPrioridade_Tamanho(Fila) > 0)
+	{
+		
 	}
 	
 	Processador->MelhorCaminho = -1;
