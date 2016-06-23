@@ -15,6 +15,7 @@
 #include "core.h"
 
 #define LISTA_EXPANSAO 1024
+#define NO_NULO -1
 
 /* No da lista */
 typedef int TListaNo;
@@ -110,6 +111,15 @@ TListaNo TLista_Pesquisar(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
  * @retorna:	Posicao do item. Retorna zero em caso de inexistencia
  *---------------------------------------------------------------------------*/
 int TLista_Posicao(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais);
+
+/* ----------------------------------------------------------------------------
+ * funcao:		TLista_Proximo
+ * 				Retorna o proximo no da lista
+ * @param:		Lista
+ * @param:		No
+ * @retorna:	O proximo no, caso ele exista. -1 caso contrario
+ *---------------------------------------------------------------------------*/
+TListaNo TLista_Proximo(TLista* Lista, TListaNo No);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TLista_Remover

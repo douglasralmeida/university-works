@@ -44,7 +44,7 @@ TGrafo* TGrafo_Criar(size_t NumVertices)
 			NovoGrafo->Adjacencias[i] =	NovaLista;
 	}
 	NovoGrafo->NumVertices = NumVertices;
-	NovoGrafo->PesquisaProxNo = NO_NULO;
+	NovoGrafo->PesquisaProxNo = -1;
 	
 	return NovoGrafo;
 }
@@ -95,22 +95,23 @@ bool TGrafo_ArestaExiste(TGrafo* Grafo, TGrafoVertice VOrigem, TGrafoVertice VDe
 
 void TGrafo_ArestaRemover(TGrafo* Grafo, TGrafoVertice VOrigem, TGrafoVertice VDestino)
 {
-	int i;
+	bool arestaencontrada;
 	TFuncaoDestruir FuncaoDestruir;
 	TGrafoAresta* Aresta;
 	TListaNo No;
 	
-	FuncaoDestruir = &TGrafoAresta_Destruir;
+	arestaencontrada = false;
+	FuncaoDestruir = &TGrafoAresta_Destruir;		
 	No = Grafo->Adjacencias[VOrigem-1]->Primeiro;
-	for (i = 0; i < TLista_Tamanho(Grafo->Adjacencias[VOrigem-1]); i++)
+	while ((No <= Grafo->Adjacencias[VOrigem-1]->Ultimo) && (!arestaencontrada))
 	{
 		Aresta = (TGrafoAresta*)TLista_Item(Grafo->Adjacencias[VOrigem-1], No);
 		if (Aresta->Destino == VDestino)
 		{
 			TLista_Remover(Grafo->Adjacencias[VOrigem-1], No, FuncaoDestruir);
-			break;
+			arestaencontrada = true;
 		}
-		No = TLista_Proximo(Grafo->Adjacencias[VOrigem-1], No);
+		No++;
 	}
 }
 
@@ -141,12 +142,12 @@ TGrafoAresta* TGrafo_ListaAdjPrimeiro(TGrafo* Grafo, TGrafoVertice Vertice)
 	if (Grafo->Adjacencias[Vertice-1]->Tamanho > 0)
 	{
 		Aresta = (TGrafoAresta*)TLista_Item(Grafo->Adjacencias[Vertice-1], Grafo->Adjacencias[Vertice-1]->Primeiro);
-		Grafo->PesquisaProxNo = TLista_Proximo(Grafo->Adjacencias[Vertice-1]->Primeiro, No);
+		Grafo->PesquisaProxNo = Grafo->Adjacencias[Vertice-1]->Primeiro + 1;
 		return Aresta;
 	}
 	else
 	{
-		Grafo->PesquisaProxNo = NO_NULO;
+		Grafo->PesquisaProxNo = -1;
 		return NULL;
 	}
 }
@@ -155,10 +156,15 @@ TGrafoAresta* TGrafo_ListaAdjProximo(TGrafo* Grafo, TGrafoVertice Vertice)
 {
 	TGrafoAresta* Aresta;
 	
-	if (Grafo->PesquisaProxNo != NO_NULO)
+	if (Grafo->PesquisaProxNo != -1)
 	{
-			Aresta = (TGrafoAresta*)TLista_Item(Grafo->Adjacencias[Vertice-1], Grafo->PesquisaProxNo);
-			Grafo->PesquisaProxNo = TLista_Proximo(Grafo->Adjacencias[Vertice-1], Grafo->PesquisaProxNo);
+			if (Grafo->PesquisaProxNo < Grafo->Adjacencias[Vertice-1]->Tamanho)
+			{
+				Aresta = (TGrafoAresta*)TLista_Item(Grafo->Adjacencias[Vertice-1], Grafo->PesquisaProxNo);
+				Grafo->PesquisaProxNo++;
+			}
+			else
+				Aresta = NULL;
 			return Aresta;
 	} 
 	else
