@@ -120,11 +120,11 @@ void TGrafo_Imprimir(TGrafo* Grafo)
 	TFuncaoImprimir FuncaoImprimir;
 	
 	FuncaoImprimir = &TGrafoAresta_Imprimir;
-	for (i = 0; i < Grafo->NumVertices; i++)
+	for (i = 1; i <= Grafo->NumVertices; i++)
 	{
-		printf("Vertice %2d:", (int)i+1);
+		printf("Vertice %2d:", (int)i);
 		if (!TGrafo_ListaAdjVazia(Grafo, i))
-			TLista_Imprimir(Grafo->Adjacencias[i], FuncaoImprimir);
+			TLista_Imprimir(Grafo->Adjacencias[i-1], FuncaoImprimir);
 		printf("\n");
 	}
 }
