@@ -79,7 +79,30 @@ void TProcessador_AnalisarDados(TProcessador* Processador, char* NomeArquivo)
 
 bool TProcessador_MelhorCaminho(TProcessador* Processador)
 {
+	TFilaPrioridade* Fila;
+	TGrafoVertice i;
+	Set R;
+	
+	Fila = TFilaPrioridade_Criar();
+	for (i = 1; i <= Procesador->Caminhos->NumVertices; i++)
+	{
+		if (i != Procesador->Origem)
+		{
+			Caminho = TCaminho_Criar(Processador->Origem, i, INFINITE);
+			TFilaPrioridade_Enfileirar(Fila, Caminho);
+		}
+	}
+	
 	Processador->MelhorCaminho = -1;
+
+	
+	
+	if (Processador->MelhorCaminho > -1)
+	{
+					
+	}
+	
+	TFilaPrioridade_Destruir(&Fila);
 	return true;
 }
 
