@@ -44,7 +44,7 @@ int main(void)
 	printf("=========================\n");
 	
 	printf("Criando fila com prioridade...");
-	Fila = TFilaPrioridade_Criar(1024, FuncaoComparar, FuncaoDestruir);
+	Fila = TFilaPrioridade_Criar(1024, FuncaoComparar);
 	if (Fila != NULL)
 		printf("OK.\n");
 	else
@@ -100,7 +100,7 @@ int main(void)
 	printf("OK.\n");
 
 	printf("Destruindo fila...");
-	TFilaPrioridade_Destruir(&Fila);
+	TFilaPrioridade_Destruir(&Fila, FuncaoDestruir);
 	printf("OK.\n");
 	
 	exit(EXIT_SUCCESS);

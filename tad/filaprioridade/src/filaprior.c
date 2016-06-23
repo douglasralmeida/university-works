@@ -53,11 +53,11 @@ void DescerHeap(TFilaPrioridade* Fila)
 	Fila->Heap[i] = tempitem;
 }
 
-TFilaPrioridade* TFilaPrioridade_Criar(size_t Capacidade, TFuncaoComparar FuncaoComparar, TFuncaoDestruir FuncaoDestruir)
+TFilaPrioridade* TFilaPrioridade_Criar(size_t Capacidade, TFuncaoComparar FuncaoComparar)
 {
 	TFilaPrioridade* NovaFila;
 	
-	NovaFila = (TFilaPrioridade*)malloc(sizeof(TFilaPrioridade));
+	NNovaFila->FuncaoDestruir = FuncaoDestruir;ovaFila = (TFilaPrioridade*)malloc(sizeof(TFilaPrioridade));
 	if (NovaFila == NULL)
 	{
 		printf("Erro (0x41): Erro durante alocacao de memoria.\n");
@@ -73,20 +73,19 @@ TFilaPrioridade* TFilaPrioridade_Criar(size_t Capacidade, TFuncaoComparar Funcao
 	NovaFila->Capacidade = Capacidade;
 	NovaFila->Expansao = 1024;
 	NovaFila->FuncaoComparar = FuncaoComparar;
-	NovaFila->FuncaoDestruir = FuncaoDestruir;
 	NovaFila->Tamanho = 0;
   
 	return NovaFila;
 }
 
-void TFilaPrioridade_Destruir(TFilaPrioridade** PFila)
+void TFilaPrioridade_Destruir(TFilaPrioridade** PFila, TFuncaoDestruir FuncaoDestruir)
 {
 	if (PFila != NULL)
 	{
-		TFilaPrioridade_Limpar(*PFila);
+		TFilaPrioridade_Limpar(*PFila, FuncaoDestruir);
 		free((*PFila)->Heap);
 		free(*PFila);
-		PFila = NULL;
+		*PFila = NULL;
 	}
 }
 
@@ -136,12 +135,12 @@ bool TFilaPrioridade_Enfileirar(TFilaPrioridade* Fila, void* Item)
 	return true;
 }
 
-void TFilaPrioridade_Limpar(TFilaPrioridade* Fila)
+void TFilaPrioridade_Limpar(TFilaPrioridade* Fila, TFuncaoDestruir FuncaoDestruir)
 {
 	size_t i;
 	
 	for(i = 1; i <= Fila->Tamanho; i++)
-		Fila->FuncaoDestruir(&(Fila->Heap[i]));
+		FuncaoDestruir(&(Fila->Heap[i]));
 	Fila->Tamanho = 0;
 }
 
