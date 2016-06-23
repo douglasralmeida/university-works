@@ -131,7 +131,7 @@ void TGrafo_Imprimir(TGrafo* Grafo)
 
 bool TGrafo_ListaAdjVazia(TGrafo* Grafo, TGrafoVertice Vertice)
 {
-	return (TLista_Tamanho(Grafo->Adjacencias[Vertice]) == 0);
+	return (TLista_Tamanho(Grafo->Adjacencias[Vertice-1]) == 0);
 }
 
 TGrafoAresta* TGrafo_ListaAdjPrimeiro(TGrafo* Grafo, TGrafoVertice Vertice)
