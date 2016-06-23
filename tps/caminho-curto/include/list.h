@@ -15,6 +15,7 @@
 #include "core.h"
 
 #define LISTA_EXPANSAO 1024
+#define NO_NULO -1
 
 /* No da lista */
 typedef int TListaNo;
