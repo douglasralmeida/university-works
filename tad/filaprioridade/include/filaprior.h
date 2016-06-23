@@ -66,7 +66,7 @@ bool TFilaPrioridade_Enfileirar(TFilaPrioridade* Fila, void* Item);
  * @param:		Ponteiro para a fila
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/ 
-void TFilaPrioridade_Limpar(TFilaPrioridade* Fila);
+void TFilaPrioridade_Limpar(TFilaPrioridade* Fila, TFuncaoDestruir FuncaoDestruir);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TFilaPrioridade_Tamanho

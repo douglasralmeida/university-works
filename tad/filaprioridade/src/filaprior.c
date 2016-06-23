@@ -57,7 +57,7 @@ TFilaPrioridade* TFilaPrioridade_Criar(size_t Capacidade, TFuncaoComparar Funcao
 {
 	TFilaPrioridade* NovaFila;
 	
-	NNovaFila->FuncaoDestruir = FuncaoDestruir;ovaFila = (TFilaPrioridade*)malloc(sizeof(TFilaPrioridade));
+	NovaFila = (TFilaPrioridade*)malloc(sizeof(TFilaPrioridade));
 	if (NovaFila == NULL)
 	{
 		printf("Erro (0x41): Erro durante alocacao de memoria.\n");
