@@ -12,7 +12,6 @@ TCaminho* TCaminho_Criar(unsigned int Origem, unsigned int Destino, unsigned int
 		NovoCaminho->Origem = Origem;
 		NovoCaminho->Destino = Destino;
 		NovoCaminho->TempoMedio = TempoMedio;
-		NovoCaminho->Visitado = false;
 	}
 
 	return NovoCaminho;
