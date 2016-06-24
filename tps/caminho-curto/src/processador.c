@@ -111,11 +111,11 @@ bool TProcessador_MelhorCaminho(TProcessador* Processador)
 	{
 					
 	}
-	
+		
 	TFilaPrioridade_Destruir(&Fila);
 	return true;
 	
-	/* pseudocodigo
+/* pseudocodigo
 	void relax(u, v) {
   if (u.dist + w(u,v) < v.dist) {
     v.dist = u.dist + w(u,v);

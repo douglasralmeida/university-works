@@ -24,6 +24,12 @@ typedef struct _TGrafoAresta {
 	TGrafoPeso Peso;
 } TGrafoAresta;
 
+/* Estrutura do item de um caminho */
+typedef struct _TGrafoCaminhoItem {
+	unsigned int Distancia; //distancia de um vertice determinado ate o vertice atual
+	TGrafoVertice Antecessor; //vertice antecessor do caminho
+} TGrafoCaminhoItem;
+
 TGrafoAresta* TGrafoAresta_Criar(TGrafoVertice Vertice, TGrafoPeso Peso);
 
 void TGrafoAresta_Destruir(void** PAresta);

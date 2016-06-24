@@ -70,6 +70,16 @@ bool TGrafo_ArestaExiste(TGrafo* Grafo, TGrafoVertice VOrigem, TGrafoVertice VDe
 void TGrafo_ArestaRemover(TGrafo* Grafo, TGrafoVertice VOrigem, TGrafoVertice VDestino);
 
 /* ----------------------------------------------------------------------------
+ * funcao:		TGrafo_DistanciaMinima
+ * 				Retorna o valor da distancia minima entre dois vertices do grafo
+ * @param:		Grafo
+ * @param:		Vertice de origem
+ * @param:		Vertice de destino
+ * @retorna:	Valor da distancia
+ *---------------------------------------------------------------------------*/
+unsigned int TGrafo_DistanciaMinima(TGrafo* Grafo, TGrafoVertice Vertice1, TGrafoVertice Vertice2);
+
+/* ----------------------------------------------------------------------------
  * funcao:		TGrafo_Imprimir
  * 				Imprime um grafo na tela
  * @param:		Grafo
