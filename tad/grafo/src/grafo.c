@@ -5,6 +5,9 @@
 **	Implementacao de grafo com listas de adjacencias usando ponteiros
 */
 
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "list.h"
 #include "filaprior.h"
 #include "grafo.h"
@@ -140,7 +143,7 @@ int TGrafo_DistanciaMinima(TGrafo* Grafo, TGrafoVertice Origem, TGrafoVertice De
 		CaminhoItemAtual->Antecessor = 0;
 		CaminhoItemAtual>Vertice = i + 1;
 		if (i != Origem -1)
-			CaminhoItemAtual->Distancia = INFINITO;
+			CaminhoItemAtual->Distancia = INT_MAX;
 		else
 			CaminhoItemAtual->Distancia = 0;
 		TFilaPrioridade_Enfileirar(Fila, (void*)CaminhoItemAtual);

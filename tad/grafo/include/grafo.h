@@ -9,14 +9,11 @@
 #ifndef GRAFO_H
 #define GRAFO_H
 
-#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "boolutils.h"
 #include "list.h"
 #include "grafo_item.h"
-
-#define INFINITO INT_MAX
 
 /* Estrutura da grafo */
 typedef struct _TGrafo {
