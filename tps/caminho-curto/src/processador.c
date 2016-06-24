@@ -85,7 +85,7 @@ void TProcessador_MelhorCaminho(TProcessador* Processador)
 	Processador->MelhorCaminho = TGrafo_DistanciaMinima(Processador->Caminhos, Processador->Origem, Processador->Destino);
 	if (Processador->MelhorCaminho > -1)
 	{
-		Caminho = TCaminho_Criar((unsigned int)Processador->MelhorCaminho, Processador->Origem, Processador->Destino);
+		Caminho = TCaminho_Criar(Processador->Origem, Processador->Destino, (unsigned int)Processador->MelhorCaminho);
 		TLista_Adicionar(Processador->Resultado, (void*)Caminho);
 	}
 }
