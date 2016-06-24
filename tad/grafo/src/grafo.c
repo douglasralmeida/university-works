@@ -163,7 +163,7 @@ int TGrafo_DistanciaMinima(TGrafo* Grafo, TGrafoVertice Origem, TGrafoVertice De
 			while (Aresta) 
 			{
 				/*-- oba!! achei um caminho melhor! --*/
-				if (Caminho[CaminhoItemAtual->Vertice-1].Distancia + Aresta->Peso < Caminho[Aresta->Destino-1].Distancia)
+				if (Caminho[CaminhoItemAtual->Vertice-1].Distancia + (int)Aresta->Peso < Caminho[Aresta->Destino-1].Distancia)
 				{
 					Caminho[Aresta->Destino-1].Distancia = Caminho[CaminhoItemAtual->Vertice-1].Distancia + Aresta->Peso;
 					Caminho[Aresta->Destino-1].Antecessor = Aresta->Destino;
