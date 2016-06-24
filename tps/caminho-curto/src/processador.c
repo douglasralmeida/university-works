@@ -80,7 +80,7 @@ void TProcessador_AnalisarDados(TProcessador* Processador, char* NomeArquivo)
 
 void TProcessador_MelhorCaminho(TProcessador* Processador)
 {
-	TCaminho Caminho;
+	TCaminho* Caminho;
 	
 	Processador->MelhorCaminho = TGrafo_DistanciaMinima(Processador->Caminhos, Processador->Origem, Processador->Destino);
 	if (Processador->MelhorCaminho > -1)
