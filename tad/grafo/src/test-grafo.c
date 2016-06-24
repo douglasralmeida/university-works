@@ -59,7 +59,16 @@ int main(void)
 		}
 	}
 	printf("OK.\n");
-
+	
+	printf("Calculando distancia minima...");
+	printf("Vertices (vertice1, vertice2):");
+	scanf("%d, %d", &vertice1, &vertice2);
+	i = TGrafo_DistanciaMinima(Grafo, vertice1, vertice2);
+	if (i > -1)
+		printf("Distancia = %d.\n", i);
+	else
+		printf("Caminho nao existe.\n");
+	
 	printf("Removendo aresta...");
 	printf("Vertices (vertice1, vertice2):");
 	scanf("%d, %d", &vertice1, &vertice2);

@@ -13,16 +13,24 @@
 #include <stdlib.h>
 #include "core.h"
 
-/* Estrutura das vertice do grafo */
+/* Estrutura dos vertices do grafo */
 typedef size_t TGrafoVertice;
 
-typedef int TGrafoPeso;
+/* Estrutura do peso dos vertices do grafo */
+typedef unsigned int TGrafoPeso;
 
 /* Estrutura das arestas do grafo */
 typedef struct _TGrafoAresta {
 	TGrafoVertice Destino;
 	TGrafoPeso Peso;
 } TGrafoAresta;
+
+/* Estrutura do item de um caminho */
+typedef struct _TGrafoCaminhoItem {
+	TGrafoVertice Antecessor; /*vertice antecessor do caminho*/
+	int Distancia; /*distancia de um vertice determinado ate o vertice atual*/
+	TGrafoVertice Vertice; /*vertice do item*/
+} TGrafoCaminhoItem;
 
 TGrafoAresta* TGrafoAresta_Criar(TGrafoVertice Vertice, TGrafoPeso Peso);
 
@@ -31,5 +39,11 @@ void TGrafoAresta_Destruir(void** PAresta);
 bool TGrafoAresta_Igual(void* Dado1, void* Dado2);
 
 void TGrafoAresta_Imprimir(void* Dado);
+
+TGrafoCaminhoItem* TGrafoCaminhoItem_Criar(TGrafoVertice Vertice);
+
+void TGrafoCaminhoItem_Destruir(void** PCaminhoItem);
+
+bool TGrafoCaminhoItem_Comparar(void* Dado1, void* Dado2);
 
 #endif

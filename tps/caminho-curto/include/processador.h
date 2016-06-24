@@ -1,13 +1,10 @@
 #ifndef PROCESSADOR_H
 #define PROCESSADOR_H
 
-#include <limits.h>
 #include "boolutils.h"
 #include "caminho.h"
 #include "list.h"
 #include "grafo.h"
-
-#define INFINITO UINT_MAX
 
 typedef struct TProcessador_ {
 	int Destino;
