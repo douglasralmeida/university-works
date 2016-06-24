@@ -29,6 +29,7 @@ typedef struct _TGrafoAresta {
 typedef struct _TGrafoCaminhoItem {
 	TGrafoVertice Antecessor; /*vertice antecessor do caminho*/
 	int Distancia; /*distancia de um vertice determinado ate o vertice atual*/
+	bool JaVisitado; /*grava a visita durante o caminhamento*/
 	TGrafoVertice Vertice; /*vertice do item*/
 } TGrafoCaminhoItem;
 

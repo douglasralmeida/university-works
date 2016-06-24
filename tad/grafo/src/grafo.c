@@ -134,25 +134,34 @@ int TGrafo_DistanciaMinima(TGrafo* Grafo, TGrafoVertice Origem, TGrafoVertice De
 	/*-- fila de prioridades para comparar as distancias --*/
 	FuncaoComparar = &TGrafoCaminhoItem_Comparar;
 	Fila = TFilaPrioridade_Criar(Grafo->NumVertices, FuncaoComparar);
-	/*-- adiciona todos os vertices do grafo na fila
-	     as distancias sao marcadas como infinito
+	/*-- todas as distancias da origem ao vertice sao marcadas como infinito
 		 exceto o vertice de partida que tem distancia igual a 0 --*/
 	for (i = 0; i < Grafo->NumVertices; i++)
 	{
-		CaminhoItemAtual = Caminho + i;
-		CaminhoItemAtual->Antecessor = 0;
-		CaminhoItemAtual->Vertice = i + 1;
-		if (i != Origem -1)
-			CaminhoItemAtual->Distancia = INT_MAX;
-		else
-			CaminhoItemAtual->Distancia = 0;
-		TFilaPrioridade_Enfileirar(Fila, (void*)CaminhoItemAtual);
+		Caminho[i].Antecessor = 0;
+		Caminho[i].Vertice = i + 1;
+		Caminho[i].Distancia = INT_MAX;
+		Caminho[i].JaVisitado = false;
 	}
+	Caminho[Origem-1].Distancia = 0;
+	/*-- adiciona o vertice de origem na fila --*/
+	TFilaPrioridade_Enfileirar(Fila, (void*)(Caminho + Origem));
 	/*-- le todos os vertices da fila de prioridade --*/
 	while (TFilaPrioridade_Tamanho(Fila) > 0)
 	{
 		/*-- pega o vertice da fila com a menor distancia para a origem no momento --*/
 		CaminhoItemAtual = TFilaPrioridade_Desenfileirar(Fila);
+		/*-- se cheguei ao destino... --*/
+		if (CaminhoItemAtual->Vertice == Destino)
+		{
+			resultado = Caminho[CaminhoItemAtual->Vertice-1].Distancia;
+			break;
+		}		
+		/*-- hmm...ja passei por aqui entao nao faz nada e pula pro proximo --*/
+		if (CaminhoItemAtual->JaVisitado)
+			continue;
+		/*-- estou passando pela primeira vez, marcar para nao passar de novo --*/
+		CaminhoItemAtual->JaVisitado = true;
 		/*-- pesquisa a lista de adjacencias do vertice
 			 e atualiza a fila de prioridades com as novas 
 			 melhores distancias para a origem caso sejam
@@ -163,19 +172,15 @@ int TGrafo_DistanciaMinima(TGrafo* Grafo, TGrafoVertice Origem, TGrafoVertice De
 			while (Aresta) 
 			{
 				/*-- oba!! achei um caminho melhor! --*/
-				if (Caminho[CaminhoItemAtual->Vertice-1].Distancia + (int)Aresta->Peso < Caminho[Aresta->Destino-1].Distancia)
+				if ((!Caminho[Aresta->Destino-1].JaVisitado) && (Caminho[CaminhoItemAtual->Vertice-1].Distancia + (int)Aresta->Peso < Caminho[Aresta->Destino-1].Distancia))
 				{
 					Caminho[Aresta->Destino-1].Distancia = Caminho[CaminhoItemAtual->Vertice-1].Distancia + Aresta->Peso;
 					Caminho[Aresta->Destino-1].Antecessor = Aresta->Destino;
+					/*-- reprocessa as prioridaes da fila --*/
+					TFilaPrioridade_Enfileirar(Fila, (void*)(Caminho + Aresta->Destino - 1));
 				}
 				Aresta = TGrafo_ListaAdjProximo(Grafo, CaminhoItemAtual->Vertice);
 			}
-		}
-		/*-- se cheguei ao destino... --*/
-		if (CaminhoItemAtual->Vertice == Destino)
-		{
-			resultado = Caminho[CaminhoItemAtual->Vertice-1].Distancia;
-			break;
 		}
 	}
 	/*-- limpando a bagunca --*/

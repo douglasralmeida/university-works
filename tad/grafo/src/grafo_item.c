@@ -66,6 +66,7 @@ TGrafoCaminhoItem* TGrafoCaminhoItem_Criar(TGrafoVertice Vertice)
 	}
 	NovoCaminhoItem->Antecessor = 0;
 	NovoCaminhoItem->Distancia = INT_MAX;
+	NovoCaminhoItem->JaVisitado = false;
 	NovoCaminhoItem->Vertice = Vertice;
 	
 	return NovoCaminhoItem;
