@@ -85,5 +85,5 @@ bool TGrafoCaminhoItem_Comparar(void* Dado1, void* Dado2)
 	
 	Item1 = (TGrafoCaminhoItem*)Dado1;
 	Item2 = (TGrafoCaminhoItem*)Dado2;
-	return (Item1->Distancia < Item2->Distancia);
+	return (Item1->Distancia > Item2->Distancia);
 }
