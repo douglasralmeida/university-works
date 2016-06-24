@@ -118,7 +118,7 @@ void TGrafo_ArestaRemover(TGrafo* Grafo, TGrafoVertice VOrigem, TGrafoVertice VD
 /*-- algoritmo de Dijsktra --*/
 int TGrafo_DistanciaMinima(TGrafo* Grafo, TGrafoVertice Origem, TGrafoVertice Destino)
 {
-	int i;
+	unsigned int i;
 	int resultado = -1;
 	TFilaPrioridade* Fila;
 	TFuncaoComparar FuncaoComparar;
@@ -130,7 +130,7 @@ int TGrafo_DistanciaMinima(TGrafo* Grafo, TGrafoVertice Origem, TGrafoVertice De
 	Caminho = (TGrafoCaminhoItem*)malloc(Grafo->NumVertices * sizeof(TGrafoCaminhoItem));
 	/*-- fila de prioridades para comparar as distancias --*/
 	FuncaoComparar = &TGrafoCaminhoItem_Comparar;
-	Fila = TFilaPrioridade_Criar(Procesador->Caminhos->NumVertices, FuncaoComparar);
+	Fila = TFilaPrioridade_Criar(Grafo->NumVertices, FuncaoComparar);
 	/*-- adiciona todos os vertices do grafo na fila
 	     as distancias sao marcadas como infinito
 		 exceto o vertice de partida que tem distancia igual a 0 --*/
@@ -138,7 +138,7 @@ int TGrafo_DistanciaMinima(TGrafo* Grafo, TGrafoVertice Origem, TGrafoVertice De
 	{
 		CaminhoItemAtual = Caminho + i;
 		CaminhoItemAtual->Antecessor = 0;
-		CaminhoItemAtual>Atual = (unsigned int)i+1;
+		CaminhoItemAtual>Vertice = i + 1;
 		if (i != Origem -1)
 			CaminhoItemAtual->Distancia = INFINITO;
 		else
@@ -165,13 +165,13 @@ int TGrafo_DistanciaMinima(TGrafo* Grafo, TGrafoVertice Origem, TGrafoVertice De
 					Caminho[Aresta->Destino-1].Distancia = Caminho[CaminhoItemAtual->Vertice-1].Distancia + Aresta->Peso;
 					Caminho[Aresta->Destino-1].Antecessor = Aresta->Destino;
 				}
-				Aux = TGrafo_ListaAdjProximo(Grafo, CaminhoItemAtual->Vertice);
+				Aresta = TGrafo_ListaAdjProximo(Grafo, CaminhoItemAtual->Vertice);
 			}
 		}
 		/*-- se cheguei ao destino... --*/
 		if (CaminhoItemAtual->Vertice == Destino)
 		{
-			resultado = Caminho[CaminhoItemAtual-Vertice-1].Distancia;
+			resultado = Caminho[CaminhoItemAtual->Vertice-1].Distancia;
 			break;
 		}
 	}

@@ -6,13 +6,10 @@
 **	
 **/
 
-#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "core.h"
 #include "grafo_item.h"
-
-#define INFINITO INT_MAX
 
 /* Estrutura das vertice do grafo */
 TGrafoAresta* TGrafoAresta_Criar(TGrafoVertice Vertice, TGrafoPeso Peso)
