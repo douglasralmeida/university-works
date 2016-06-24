@@ -2,7 +2,7 @@
 #include "boolutils.h"
 #include "caminho.h"
 
-TCaminho* TCaminho_Criar(int Origem, int Destino, int TempoMedio)
+TCaminho* TCaminho_Criar(unsigned int Origem, unsigned int Destino, unsigned int TempoMedio)
 {
 	TCaminho* NovoCaminho;
 
@@ -33,4 +33,3 @@ bool TCaminho_Comparar(void* PCaminho1, void* PCaminho2)
 	Caminho2 = (TCaminho*)PCaminho2;
 	return (Caminho1->TempoMedio > Caminho2->TempoMedio);
 }
-

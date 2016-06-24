@@ -7,11 +7,11 @@
 #include "grafo.h"
 
 typedef struct TProcessador_ {
-	int Destino;
+	unsigned int Destino;
 	TGrafo* Caminhos;
 	int MelhorCaminho;
 	TLista* Resultado;
-	int Origem;
+	unsigned int Origem;
 } TProcessador;
 
 TProcessador* TProcessador_Criar();
@@ -20,7 +20,7 @@ void TProcessador_Destruir(TProcessador** PProcessador);
 
 void TProcessador_AnalisarDados(TProcessador* Processador, char* NomeArquivo);
 
-bool TProcessador_MelhorCaminho(TProcessador* Processador);
+void TProcessador_MelhorCaminho(TProcessador* Processador);
 
 void TProcessador_OrdenarResultado(TProcessador* Processador);
 

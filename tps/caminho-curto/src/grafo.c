@@ -5,7 +5,11 @@
 **	Implementacao de grafo com listas de adjacencias usando ponteiros
 */
 
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "list.h"
+#include "filaprior.h"
 #include "grafo.h"
 
 TGrafo* TGrafo_Criar(size_t NumVertices)
@@ -112,6 +116,79 @@ void TGrafo_ArestaRemover(TGrafo* Grafo, TGrafoVertice VOrigem, TGrafoVertice VD
 		}		
 		No = TLista_Proximo(Grafo->Adjacencias[VOrigem-1], No);
 	}
+}
+
+/*-- algoritmo de Dijsktra --*/
+int TGrafo_DistanciaMinima(TGrafo* Grafo, TGrafoVertice Origem, TGrafoVertice Destino)
+{
+	unsigned int i;
+	int resultado = -1;
+	TFilaPrioridade* Fila;
+	TFuncaoComparar FuncaoComparar;
+	TGrafoAresta* Aresta;
+	TGrafoCaminhoItem* Caminho;
+	TGrafoCaminhoItem* CaminhoItemAtual;
+	
+	/*-- caminho pelo grafo --*/
+	Caminho = (TGrafoCaminhoItem*)malloc(Grafo->NumVertices * sizeof(TGrafoCaminhoItem));
+	/*-- fila de prioridades para comparar as distancias --*/
+	FuncaoComparar = &TGrafoCaminhoItem_Comparar;
+	Fila = TFilaPrioridade_Criar(Grafo->NumVertices, FuncaoComparar);
+	/*-- todas as distancias da origem ao vertice sao marcadas como infinito
+		 exceto o vertice de partida que tem distancia igual a 0 --*/
+	for (i = 0; i < Grafo->NumVertices; i++)
+	{
+		Caminho[i].Antecessor = 0;
+		Caminho[i].Vertice = i + 1;
+		Caminho[i].Distancia = INT_MAX;
+		Caminho[i].JaVisitado = false;
+	}
+	Caminho[Origem-1].Distancia = 0;
+	/*-- adiciona o vertice de origem na fila --*/
+	TFilaPrioridade_Enfileirar(Fila, (void*)(Caminho + Origem - 1));
+	/*-- le todos os vertices da fila de prioridade --*/
+	while (TFilaPrioridade_Tamanho(Fila) > 0)
+	{
+		/*-- pega o vertice da fila com a menor distancia para a origem no momento --*/
+		CaminhoItemAtual = TFilaPrioridade_Desenfileirar(Fila);
+		/*-- hmm...ja passei por aqui entao nao faz nada e pula pro proximo --*/
+		if (CaminhoItemAtual->JaVisitado)
+			continue;
+		/*-- estou passando pela primeira vez, marcar para nao passar de novo --*/
+		CaminhoItemAtual->JaVisitado = true;
+		/*-- pesquisa a lista de adjacencias do vertice
+			 e atualiza a fila de prioridades com as novas 
+			 melhores distancias para a origem caso sejam
+			 encontradas --*/
+		if (!TGrafo_ListaAdjVazia(Grafo, CaminhoItemAtual->Vertice))
+		{
+			Aresta = TGrafo_ListaAdjPrimeiro(Grafo, CaminhoItemAtual->Vertice);
+			while (Aresta) 
+			{
+				/*-- oba!! achei um caminho melhor! --*/
+				if ((!Caminho[Aresta->Destino-1].JaVisitado) && (Caminho[CaminhoItemAtual->Vertice-1].Distancia + (int)Aresta->Peso < Caminho[Aresta->Destino-1].Distancia))
+				{
+					Caminho[Aresta->Destino-1].Distancia = Caminho[CaminhoItemAtual->Vertice-1].Distancia + Aresta->Peso;
+					Caminho[Aresta->Destino-1].Antecessor = CaminhoItemAtual->Vertice;
+					/*-- enfileira o vertice encontrado --*/
+					TFilaPrioridade_Enfileirar(Fila, (void*)(Caminho + Aresta->Destino - 1));
+				}
+				Aresta = TGrafo_ListaAdjProximo(Grafo, CaminhoItemAtual->Vertice);
+			}
+		}
+		/*-- se cheguei ao destino... --*/
+		if (CaminhoItemAtual->Vertice == Destino)
+		{
+			resultado = Caminho[CaminhoItemAtual->Vertice-1].Distancia;
+			break;
+		}				
+	}
+	/*-- limpando a bagunca --*/
+	free(Caminho);
+	free(Fila->Heap);
+	free(Fila);
+	
+	return resultado;
 }
 
 void TGrafo_Imprimir(TGrafo* Grafo)

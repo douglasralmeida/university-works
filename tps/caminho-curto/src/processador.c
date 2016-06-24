@@ -37,9 +37,9 @@ void TProcessador_Destruir(TProcessador** PProcessador)
 
 void TProcessador_AnalisarDados(TProcessador* Processador, char* NomeArquivo)
 {
-	int i;
-	int ruas, caminhos;
-	int rua, caminho, tempo;
+	unsigned int i;
+	unsigned int ruas, caminhos;
+	unsigned int rua, caminho, tempo;
 	FILE* ArquivoEntrada;
 	FILE* ArquivoSaida;
 	TFuncaoDestruir FuncaoDestruir;
@@ -50,7 +50,7 @@ void TProcessador_AnalisarDados(TProcessador* Processador, char* NomeArquivo)
 	if ((ArquivoEntrada != NULL) && (ArquivoSaida != NULL))
 	{
 		Processador->Resultado = TLista_Criar(1024);
-		fscanf(ArquivoEntrada, "%d %d", &ruas, &caminhos);
+		fscanf(ArquivoEntrada, "%ud %ud", &ruas, &caminhos);
 		while ((caminhos > 0) && (ruas > 0))
 		{
 			Processador->Caminhos = TGrafo_Criar(ruas);
@@ -58,15 +58,15 @@ void TProcessador_AnalisarDados(TProcessador* Processador, char* NomeArquivo)
 			{				
 				for (i = 0; i < caminhos; i++)
 				{
-					fscanf(ArquivoEntrada, "%d %d %d", &rua, &caminho, &tempo);
+					fscanf(ArquivoEntrada, "%ud %ud %ud", &rua, &caminho, &tempo);
 					TGrafo_ArestaInserir(Processador->Caminhos, rua, caminho, tempo);
 				}
-				fscanf(ArquivoEntrada, "%d %d", &Processador->Origem, &Processador->Destino);
+				fscanf(ArquivoEntrada, "%ud %ud", &Processador->Origem, &Processador->Destino);
 				TProcessador_MelhorCaminho(Processador);
 				fprintf(ArquivoSaida, "%d\n", Processador->MelhorCaminho);
 				TGrafo_Destruir(&Processador->Caminhos);
 			}
-			fscanf(ArquivoEntrada, "%d %d", &ruas, &caminhos);
+			fscanf(ArquivoEntrada, "%ud %ud", &ruas, &caminhos);
 		}
 		fclose(ArquivoEntrada);
 		fclose(ArquivoSaida);
@@ -78,70 +78,16 @@ void TProcessador_AnalisarDados(TProcessador* Processador, char* NomeArquivo)
 		printf("Erro ao abrir arquivo de entrada '%s'.\n", NomeArquivo);
 }
 
-bool TProcessador_MelhorCaminho(TProcessador* Processador)
+void TProcessador_MelhorCaminho(TProcessador* Processador)
 {
-	TCaminho* Caminho;
-	TFilaPrioridade* Fila;
-	TFuncaoComparar FuncaoComparar;
-	TGrafoVertice i;
-	Set R;
+	TCaminho Caminho;
 	
-	FuncaoComparar = &TGrafoAresta_CompararPeso;
-	Fila = TFilaPrioridade_Criar(Procesador->Caminhos->NumVertices, FuncaoComparar);
-	Caminho = TCaminho_Criar(Processador->Origem, Processador->Origem, 0);
-	TFilaPrioridade_Enfileirar(Fila, (void*)Caminho);
-	for (i = 1; i <= Procesador->Caminhos->NumVertices; i++)
-	{
-		if (i != Procesador->Origem)
-		{
-			Caminho = TCaminho_Criar(Processador->Origem, i, INFINITO);
-			TFilaPrioridade_Enfileirar(Fila, (void*)Caminho);
-		}
-	}
-	while (TFilaPrioridade_Tamanho(Fila) > 0)
-	{
-		
-	}
-	
-	Processador->MelhorCaminho = -1;
-
-	
-	
+	Processador->MelhorCaminho = TGrafo_DistanciaMinima(Processador->Caminhos, Processador->Origem, Processador->Destino);
 	if (Processador->MelhorCaminho > -1)
 	{
-					
+		Caminho = TCaminho_Criar((unsigned int)Processador->MelhorCaminho, Processador->Origem, Processador->Destino);
+		TLista_Adicionar(Processador->Resultado, (void*)Caminho);
 	}
-		
-	TFilaPrioridade_Destruir(&Fila);
-	return true;
-	
-/* pseudocodigo
-	void relax(u, v) {
-  if (u.dist + w(u,v) < v.dist) {
-    v.dist = u.dist + w(u,v);
-    v.pred = u;
-  }
-}
-
-Whenever a vertex's dist value decreases, the min-priority queue must be adjusted accordingly.
-
-Here is pseudocode for Dijkstra's algorithm, assuming that the source vertex is s:
-void dijkstra(s) {
-  queue = new PriorityQueue<Vertex>();
-  for (each vertex v) {
-    v.dist = infinity;  // can use Integer.MAX_VALUE or Double.POSITIVE_INFINITY
-    queue.enqueue(v);
-    v.pred = null;
-  }   
-  s.dist = 0;
-
-  while (!queue.isEmpty()) {
-    u = queue.extractMin();
-    for (each vertex v adjacent to u)
-      relax(u, v);
-  }
-}
-*/
 }
 
 void TProcessador_OrdenarResultado(TProcessador* Processador)
@@ -171,11 +117,13 @@ void TProcessador_SalvarVetor(TProcessador* Processador, char* NomeArquivo)
 		while (No != Processador->Resultado->Ultimo)
 		{
 			Caminho = (TCaminho*)TLista_Item(Processador->Resultado, No);
-			fprintf(ArquivoSaida, "%d\n", Caminho->TempoMedio);
+			fprintf(ArquivoSaida, "%ud\n", Caminho->TempoMedio);
+			fprintf(ArquivoSaida, "%ud %ud\n", Caminho->Origem, Caminho->Destino);
 			No = TLista_Proximo(Processador->Resultado, No);
 		}
 		Caminho = (TCaminho*)TLista_Item(Processador->Resultado, No);
-		fprintf(ArquivoSaida, "%d\n", Caminho->TempoMedio);
+		fprintf(ArquivoSaida, "%ud\n", Caminho->TempoMedio);
+		fprintf(ArquivoSaida, "%ud %ud\n", Caminho->Origem, Caminho->Destino);
 	}
 	fclose(ArquivoSaida);
 }

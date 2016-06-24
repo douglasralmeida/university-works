@@ -75,9 +75,9 @@ void TGrafo_ArestaRemover(TGrafo* Grafo, TGrafoVertice VOrigem, TGrafoVertice VD
  * @param:		Grafo
  * @param:		Vertice de origem
  * @param:		Vertice de destino
- * @retorna:	Valor da distancia
+ * @retorna:	Valor da distancia. Retorna -1 em caso de caminho inexistente
  *---------------------------------------------------------------------------*/
-unsigned int TGrafo_DistanciaMinima(TGrafo* Grafo, TGrafoVertice Vertice1, TGrafoVertice Vertice2);
+int TGrafo_DistanciaMinima(TGrafo* Grafo, TGrafoVertice Origem, TGrafoVertice Destino);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TGrafo_Imprimir

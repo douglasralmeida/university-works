@@ -4,14 +4,14 @@
 #define "boolutils.h"
 
 typedef struct TCaminho_ {
-	int Origem;
-	int Destino;
-	int TempoMedio;
+	unsigned int Origem;
+	unsigned int Destino;
+	unsigned int TempoMedio;
 	bool Visitado;
 } TCaminho;
 
 
-TCaminho* TCaminho_Criar(int Origem, int Destino, int TempoMedio);
+TCaminho* TCaminho_Criar(unsigned int Origem, unsigned int Destino, unsigned int TempoMedio);
 
 void TCaminho_Destruir(void** PCaminho);
 
