@@ -50,7 +50,7 @@ void TProcessador_AnalisarDados(TProcessador* Processador, char* NomeArquivo)
 	if ((ArquivoEntrada != NULL) && (ArquivoSaida != NULL))
 	{
 		Processador->Resultado = TLista_Criar(1024);
-		fscanf(ArquivoEntrada, "%ud %ud", &ruas, &caminhos);
+		fscanf(ArquivoEntrada, "%u %u", &ruas, &caminhos);
 		while ((caminhos > 0) && (ruas > 0))
 		{
 			Processador->Caminhos = TGrafo_Criar(ruas);
@@ -58,15 +58,15 @@ void TProcessador_AnalisarDados(TProcessador* Processador, char* NomeArquivo)
 			{				
 				for (i = 0; i < caminhos; i++)
 				{
-					fscanf(ArquivoEntrada, "%ud %ud %ud", &rua, &caminho, &tempo);
+					fscanf(ArquivoEntrada, "%u %u %u", &rua, &caminho, &tempo);
 					TGrafo_ArestaInserir(Processador->Caminhos, rua, caminho, tempo);
 				}
-				fscanf(ArquivoEntrada, "%ud %ud", &Processador->Origem, &Processador->Destino);
+				fscanf(ArquivoEntrada, "%u %u", &Processador->Origem, &Processador->Destino);
 				TProcessador_MelhorCaminho(Processador);
 				fprintf(ArquivoSaida, "%d\n", Processador->MelhorCaminho);
 				TGrafo_Destruir(&Processador->Caminhos);
 			}
-			fscanf(ArquivoEntrada, "%ud %ud", &ruas, &caminhos);
+			fscanf(ArquivoEntrada, "%u %u", &ruas, &caminhos);
 		}
 		fclose(ArquivoEntrada);
 		fclose(ArquivoSaida);
@@ -117,13 +117,13 @@ void TProcessador_SalvarVetor(TProcessador* Processador, char* NomeArquivo)
 		while (No != Processador->Resultado->Ultimo)
 		{
 			Caminho = (TCaminho*)TLista_Item(Processador->Resultado, No);
-			fprintf(ArquivoSaida, "%ud\n", Caminho->TempoMedio);
-			fprintf(ArquivoSaida, "%ud %ud\n", Caminho->Origem, Caminho->Destino);
+			fprintf(ArquivoSaida, "%u\n", Caminho->TempoMedio);
+			fprintf(ArquivoSaida, "%u %u\n", Caminho->Origem, Caminho->Destino);
 			No = TLista_Proximo(Processador->Resultado, No);
 		}
 		Caminho = (TCaminho*)TLista_Item(Processador->Resultado, No);
-		fprintf(ArquivoSaida, "%ud\n", Caminho->TempoMedio);
-		fprintf(ArquivoSaida, "%ud %ud\n", Caminho->Origem, Caminho->Destino);
+		fprintf(ArquivoSaida, "%u\n", Caminho->TempoMedio);
+		fprintf(ArquivoSaida, "%u %u\n", Caminho->Origem, Caminho->Destino);
 	}
 	fclose(ArquivoSaida);
 }
