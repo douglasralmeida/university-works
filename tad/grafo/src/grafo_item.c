@@ -6,6 +6,7 @@
 **	
 **/
 
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "core.h"
@@ -64,7 +65,7 @@ TGrafoCaminhoItem* TGrafoCaminhoItem_Criar(TGrafoVertice Vertice)
 		return NULL;
 	}
 	NovoCaminhoItem->Antecessor = 0;
-	NovoCaminhoItem->Distancia = INFINITO;
+	NovoCaminhoItem->Distancia = INT_MAX;
 	NovoCaminhoItem->Vertice = Vertice;
 	
 	return NovoCaminhoItem;
