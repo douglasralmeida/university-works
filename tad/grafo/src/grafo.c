@@ -145,7 +145,7 @@ int TGrafo_DistanciaMinima(TGrafo* Grafo, TGrafoVertice Origem, TGrafoVertice De
 	}
 	Caminho[Origem-1].Distancia = 0;
 	/*-- adiciona o vertice de origem na fila --*/
-	TFilaPrioridade_Enfileirar(Fila, (void*)(Caminho + Origem));
+	TFilaPrioridade_Enfileirar(Fila, (void*)(Caminho + Origem - 1));
 	/*-- le todos os vertices da fila de prioridade --*/
 	while (TFilaPrioridade_Tamanho(Fila) > 0)
 	{
@@ -175,8 +175,8 @@ int TGrafo_DistanciaMinima(TGrafo* Grafo, TGrafoVertice Origem, TGrafoVertice De
 				if ((!Caminho[Aresta->Destino-1].JaVisitado) && (Caminho[CaminhoItemAtual->Vertice-1].Distancia + (int)Aresta->Peso < Caminho[Aresta->Destino-1].Distancia))
 				{
 					Caminho[Aresta->Destino-1].Distancia = Caminho[CaminhoItemAtual->Vertice-1].Distancia + Aresta->Peso;
-					Caminho[Aresta->Destino-1].Antecessor = Aresta->Destino;
-					/*-- reprocessa as prioridaes da fila --*/
+					Caminho[Aresta->Destino-1].Antecessor = CaminhoItemAtual->Vertice;
+					/*-- enfileira o vertice encontrado --*/
 					TFilaPrioridade_Enfileirar(Fila, (void*)(Caminho + Aresta->Destino - 1));
 				}
 				Aresta = TGrafo_ListaAdjProximo(Grafo, CaminhoItemAtual->Vertice);
