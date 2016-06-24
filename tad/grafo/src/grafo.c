@@ -141,7 +141,7 @@ int TGrafo_DistanciaMinima(TGrafo* Grafo, TGrafoVertice Origem, TGrafoVertice De
 	{
 		CaminhoItemAtual = Caminho + i;
 		CaminhoItemAtual->Antecessor = 0;
-		CaminhoItemAtual>Vertice = i + 1;
+		CaminhoItemAtual->Vertice = i + 1;
 		if (i != Origem -1)
 			CaminhoItemAtual->Distancia = INT_MAX;
 		else
