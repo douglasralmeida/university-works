@@ -151,12 +151,6 @@ int TGrafo_DistanciaMinima(TGrafo* Grafo, TGrafoVertice Origem, TGrafoVertice De
 	{
 		/*-- pega o vertice da fila com a menor distancia para a origem no momento --*/
 		CaminhoItemAtual = TFilaPrioridade_Desenfileirar(Fila);
-		/*-- se cheguei ao destino... --*/
-		if (CaminhoItemAtual->Vertice == Destino)
-		{
-			resultado = Caminho[CaminhoItemAtual->Vertice-1].Distancia;
-			break;
-		}		
 		/*-- hmm...ja passei por aqui entao nao faz nada e pula pro proximo --*/
 		if (CaminhoItemAtual->JaVisitado)
 			continue;
@@ -182,6 +176,12 @@ int TGrafo_DistanciaMinima(TGrafo* Grafo, TGrafoVertice Origem, TGrafoVertice De
 				Aresta = TGrafo_ListaAdjProximo(Grafo, CaminhoItemAtual->Vertice);
 			}
 		}
+		/*-- se cheguei ao destino... --*/
+		if (CaminhoItemAtual->Vertice == Destino)
+		{
+			resultado = Caminho[CaminhoItemAtual->Vertice-1].Distancia;
+			break;
+		}				
 	}
 	/*-- limpando a bagunca --*/
 	free(Caminho);
