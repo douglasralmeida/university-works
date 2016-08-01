@@ -42,7 +42,7 @@ int main(void)
 	printf("==========\n");
 	
 	printf("Criando fila...");
-	Fila = TFila_Criar(FuncaoDestruir, FuncaoImprimir);
+	Fila = TFila_Criar();
 	if (Fila != NULL)
 		printf("OK.\n");
 	else
@@ -58,11 +58,11 @@ int main(void)
 	printf("OK.\n");
 	
 	printf("Exibindo fila...");
-	TFila_Imprimir(Fila);
+	TFila_Imprimir(Fila, FuncaoImprimir);
 	printf("OK.\n");
 	
 	printf("Limpando fila...");
-	TFila_Limpar(Fila);
+	TFila_Limpar(Fila, FuncaoDestruir);
 	printf("OK.\n");
 	
 	printf("Preenchendo fila...");
@@ -75,7 +75,7 @@ int main(void)
 	printf("OK.\n");
 
 	printf("Exibindo fila...");
-	TFila_Imprimir(Fila);
+	TFila_Imprimir(Fila, FuncaoImprimir);
 	printf("OK.\n");
 
 	printf("Desenfileirando fila...");
@@ -88,11 +88,11 @@ int main(void)
 	printf("OK.\n");
 
 	printf("Exibindo fila...");
-	TFila_Imprimir(Fila);
+	TFila_Imprimir(Fila, FuncaoImprimir);
 	printf("OK.\n");	
 
 	printf("Destruindo fila...");
-	TFila_Destruir(&Fila);
+	TFila_Destruir(&Fila, FuncaoDestruir);
 	printf("OK.\n");
 	
 	exit(EXIT_SUCCESS);
