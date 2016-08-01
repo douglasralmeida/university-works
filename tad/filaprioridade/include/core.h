@@ -1,5 +1,5 @@
 /*
-**	TIPO ABASTRATO DE DADOS LISTA
+**	TIPOS BASICOS
 **	DOUGLAS RODRIGUES DE ALMEIDA
 **
 **	Tipos basicos
@@ -11,16 +11,19 @@
 
 #include "boolutils.h"
 
-/* Funcao para comparar valor dos dados */
+/* Enumerador para ordenacao de listas */
+typedef enum {ordCrescente, ordDecresente} TOrdem;
+
+/* Funcao para comparar o valor de dois itens */
 typedef bool (*TFuncaoComparar)(void* Dado1, void* Dado2);
 
-/* Funcao para destruir dado */
+/* Funcao para destruir um item */
 typedef void (*TFuncaoDestruir)(void** Dado);
 
-/* Funcao para comparar conteudo dos dados */
+/* Funcao para comparar conteudo de dois itens */
 typedef bool (*TFuncaoIguais)(void* Dado1, void* Dado2);
 
-/* Funcao para destruir dado */
+/* Funcao para imprimir um item */
 typedef void (*TFuncaoImprimir)(void* Dado);
 
 #endif

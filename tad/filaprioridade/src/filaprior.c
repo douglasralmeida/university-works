@@ -5,8 +5,10 @@
 **	Implementacao de fila com prioridades usando heap
 */
 
+#include <stdio.h>
 #include "filaprior.h"
 
+/*-- comparea um item do heap com seu pai --*/
 void SubirHeap(TFilaPrioridade* Fila)
 {
 	size_t i;
@@ -25,6 +27,7 @@ void SubirHeap(TFilaPrioridade* Fila)
 	Fila->Heap[i] = tempitem;
 }
 
+/*-- comparea um item do heap com seus filhos --*/
 void DescerHeap(TFilaPrioridade* Fila)
 {
 	size_t i;
@@ -102,6 +105,7 @@ void* TFilaPrioridade_Desenfileirar(TFilaPrioridade* Fila)
 		Item = Fila->Heap[1];
 		Fila->Heap[1] = Fila->Heap[Fila->Tamanho];
 		Fila->Tamanho--;
+		/* refazendo o heap */
 		if (Fila->Tamanho > 1)
 			DescerHeap(Fila);
 		return Item;
