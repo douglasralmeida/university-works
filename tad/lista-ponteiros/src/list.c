@@ -2,9 +2,11 @@
 **	TIPO ABSTRATO DE DADOS LISTA
 **	DOUGLAS RODRIGUES DE ALMEIDA
 **
-**	Implementacao de lista duplamente encadeada por ponteiros
+**	Implementação de lista duplamente encadeada por ponteiros
 */
 
+#include <stdio.h>
+#include <stdlib.h>
 #include "list.h"
 
 TLista* TLista_Criar(void)
@@ -117,6 +119,7 @@ void TLista_Limpar(TLista* Lista, TFuncaoDestruir FuncaoDestruir)
 	TListaNo NoTemp;
 	
 	NoTemp = Lista->Ultimo;
+	/*-- varre a lista e destroi tudo --*/
 	while (NoTemp != NULL)
 	{
 		NoAnterior = NoTemp->Anterior;
@@ -145,10 +148,9 @@ TListaNo TLista_Pesquisar(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
 
 size_t TLista_Posicao(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)
 {
-	size_t resultado;
+	size_t resultado = 0;
 	TListaNo NoTemp;
 	
-	resultado = 0;
 	NoTemp = Lista->Primeiro;
 	while (NoTemp != NULL)
 	{

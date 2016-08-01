@@ -2,7 +2,7 @@
  *	TIPO ABSTRATO DE DADOS FILA
  *	DOUGLAS RODRIGUES DE ALMEIDA
  *
- *	Cabecalho e estruturas de uma fila
+ *	Cabeçalhos e estruturas de uma fila encadeada por ponteiros
  */
 
 #ifndef FILA_H
@@ -10,19 +10,19 @@
 
 #include "core.h"
 
-/* Estrutura do no da fila */
+/* Estrutura do nó da fila */
 typedef struct _TFilaNo TFilaNo;
 
 struct _TFilaNo {
 	void* Item;		/* Guarda o item da fila */
-	TFilaNo* Proximo;	/* Aponta para o prox. no da fila */
+	TFilaNo* Proximo;	/* Aponta para o próximo nó da fila */
 };
 
 /* Estrutura da fila */
 typedef struct _TFila {
-	TFilaNo* Frente;	/* Primeiro no da fila */
+	TFilaNo* Frente;	/* Primeiro nó da fila */
 	size_t Tamanho;		/* Tamanho da fila */
-	TFilaNo* Tras;		/* Ultimo no da fila */
+	TFilaNo* Tras;		/* Ultimo nó da fila */
 } TFila;
 
 /* ----------------------------------------------------------------------------
@@ -46,7 +46,7 @@ void TFila_Destruir(TFila** PFila, TFuncaoDestruir FuncaoDestruir);
  * funcao:		TFila_Desenfileirar
  * 			Remove e retorna o proximo item da fila
  * @param:		Fila
- * @retorna:		O item removido
+ * @retorna:		Item removido
  *---------------------------------------------------------------------------*/ 
 void* TFila_Desenfileirar(TFila* Fila);
 
