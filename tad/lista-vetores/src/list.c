@@ -2,10 +2,10 @@
 **	TIPO ABSTRATO DE DADOS LISTA
 **	DOUGLAS RODRIGUES DE ALMEIDA
 **
-**	Implementacao de lista como um vetor
+**	Implementação de lista com um vetor
 */
 
-#include <stdlib.h>
+#include <stdio.h>
 #include "core.h"
 #include "list.h"
 
@@ -94,7 +94,7 @@ void TLista_Limpar(TLista* Lista, TFuncaoDestruir FuncaoDestruir)
 }
 
 /*--- funcoes utilizadadas pelo algoritmo de ordenacao ---*/
-static void troca(void** vetor, int* i, int* j)
+static void troca(void** vetor, const int* i, const int* j)
 {
 	void* item;
 	
@@ -139,7 +139,7 @@ static void ordena(void** vetor, int e, int d, TFuncaoComparar FuncaoComparar)
 
 void TLista_Ordenar(TLista* Lista, TFuncaoComparar FuncaoComparar)
 {
-	ordena(Lista->Itens, 0, Lista->Tamanho - 1, FuncaoComparar);
+	ordena(Lista->Itens, 0, TLista_Tamanho(Lista) - 1, FuncaoComparar);
 }
 
 TListaNo TLista_Pesquisar(TLista* Lista, void* Item, TFuncaoIguais FuncaoIguais)

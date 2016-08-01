@@ -7,12 +7,12 @@ PROJECTNAME=test-lista
 ARGS=
 CC=gcc
 
-#Flags do compilador
+#Flags de compilação
 CFLAGS=-c -Wall -Wextra -Wpedantic $(DEFS) -Iinclude/
 DBGFLAGS=-ggdb -fno-inline -fno-omit-frame-pointer
 LDFLAGS=
 
-#Diretorios do proje
+#Diretorios do projeto
 BINDIR=bin
 OBJDIR=obj
 SOURCEDIR=src
