@@ -3,7 +3,7 @@
 #
 #Makefile do TAD Grafo
 
-PROJECTNAME=test
+PROJECTNAME=test-grafo
 CC=gcc
 ARGS=
 

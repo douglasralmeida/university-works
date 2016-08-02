@@ -5,6 +5,7 @@
 **	Implementacao de fila com prioridades usando heap
 */
 
+#include <stdio.h>
 #include "filaprior.h"
 
 void SubirHeap(TFilaPrioridade* Fila)

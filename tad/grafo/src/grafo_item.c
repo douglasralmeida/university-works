@@ -2,7 +2,7 @@
 **	TIPO ABASTRATO DE DADOS GRAFO
 **	DOUGLAS RODRIGUES DE ALMEIDA
 **
-**	Implementacao dos componentes do grafo
+**	Implementação dos componentes do grafo
 **	
 **/
 
@@ -12,7 +12,7 @@
 #include "core.h"
 #include "grafo_item.h"
 
-/* Estrutura das vertice do grafo */
+/* Estrutura de uma aresta do grafo */
 TGrafoAresta* TGrafoAresta_Criar(TGrafoVertice Vertice, TGrafoPeso Peso)
 {
 	TGrafoAresta* NovaAresta;
