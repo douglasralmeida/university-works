@@ -29,8 +29,8 @@ TFila* TFila_Criar(size_t Capacidade)
 	}
 	NovaFila->Capacidade = Capacidade;
 	NovaFila->Expansao = FILA_EXPANSAO;
-	NovaFila->Frente = 0;
-	NovaFila->Tras = 0;
+	NovaFila->Frente = 1;
+	NovaFila->Tras = 1;
 	NovaFila->Tamanho = 0;
   
 	return NovaFila;
@@ -50,17 +50,41 @@ void TFila_Destruir(TFila** PFila, TFuncaoDestruir FuncaoDestruir)
 
 void* TFila_Desenfileirar(TFila* Fila)
 {
-
+	void* Item;
+	
+	if (TFila_Tamanho(Fila) == 0)
+	{
+		printf("Erro (0x26): Erro ao desenfileirar. Fila vazia.\n");
+		return NULL;
+	}
+	else
+	{
+		Item = Fila->Item[Fila->Frente];
+		Fila->Frente = Fila->Frente % Fila->Capacidade + 1;
+	}
 }
 
 bool TFila_Enfileirar(TFila* Fila, void* Item)
 {
-
+	if (Fila->Tras % Fila->Capacidade + 1 == Fila->Frente)
+		printf("Erro: (0x25): Erro ao enfileirar em fila cheia.\n");
+	else 
+	{
+		Fila->Item[Fila->Tras] = Item;
+		Fila->Tras = Fila->Tras % Fila->Capacidade + 1;
+	}
 }
 
 void TFila_Imprimir(TFila* Fila, TFuncaoImprimir FuncaoImprimir)
 {
-
+	TFilaNo NoTemp;
+	
+	NoTemp = Fila->Frente;
+	while (NoTemp <= Fila->Tras)
+	{
+		FuncaoImprimir(Fila->Itens[NoTemp]);
+		NoTemp++;
+	}
 }
 
 void TFila_Limpar(TFila* Fila, TFuncaoDestruir FuncaoDestruir)
@@ -70,11 +94,11 @@ void TFila_Limpar(TFila* Fila, TFuncaoDestruir FuncaoDestruir)
 	for(i = 0; i <= Fila->Tamanho; i++)
 		FuncaoDestruir(&(Fila->Item[i]));
 	Fila->Tamanho = 0;
-	Fila->Frente = 0;
-	Fila->Tras = 0;
+	NovaFila->Frente = 1;
+	NovaFila->Tras = 1;
 }
 
 size_t TFila_Tamanho(TFila* Fila)
 {
-	return Fila->Tamanho;
+	return Fila->Tras % Fila->Capacidade - Fila->Frente % Fila->Capacidade;***(corrigir)
 }
