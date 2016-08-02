@@ -2,7 +2,7 @@
 **	TIPO ABASTRATO DE DADOS GRAFO
 **	DOUGLAS RODRIGUES DE ALMEIDA
 **
-**	Cabecalho e estruturas de para os componentes do grafo
+**	Cabeçalho e estruturas para os componentes do grafo
 **	
 **/
 
@@ -27,10 +27,10 @@ typedef struct _TGrafoAresta {
 
 /* Estrutura do item de um caminho */
 typedef struct _TGrafoCaminhoItem {
-	TGrafoVertice Antecessor; /*vertice antecessor do caminho*/
-	int Distancia; /*distancia de um vertice determinado ate o vertice atual*/
-	bool JaVisitado; /*grava a visita durante o caminhamento*/
-	TGrafoVertice Vertice; /*vertice do item*/
+	TGrafoVertice Antecessor; 	/*vertice antecessor do caminho*/
+	int Distancia; 				/*distancia de um vertice determinado ate o vertice atual*/
+	bool JaVisitado; 			/*grava a visita durante o caminhamento*/
+	TGrafoVertice Vertice; 		/*vertice do item*/
 } TGrafoCaminhoItem;
 
 TGrafoAresta* TGrafoAresta_Criar(TGrafoVertice Vertice, TGrafoPeso Peso);
