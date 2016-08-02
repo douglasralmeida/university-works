@@ -3,7 +3,7 @@
 #
 #Makefile do TAD Fila com Prioridades
 
-PROJECTNAME=test-filaprio
+PROJECTNAME=test-filaprior
 CC=gcc
 ARGS=
 
