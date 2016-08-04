@@ -39,7 +39,7 @@ void TFila_Destruir(TFila** PFila, TFuncaoDestruir FuncaoDestruir)
 
 void* TFila_Desenfileirar(TFila* Fila)
 {
-	TFilaNo* NoTemp;
+	TFilaNo NoTemp;
 	void* Item;
 
 	/*-- fila vazia? --*/		
@@ -62,9 +62,9 @@ void* TFila_Desenfileirar(TFila* Fila)
 
 bool TFila_Enfileirar(TFila* Fila, void* Item)
 {
-	TFilaNo* NoNovo;
+	TFilaNo NoNovo;
 	
-	NoNovo = (TFilaNo*)malloc(sizeof(TFilaNo));
+	NoNovo = (TFilaNo)malloc(sizeof(struct _TFilaNo));
 	if (NoNovo == NULL)
 	{
 		printf("Erro (0x23): Erro durante alocacao de memoria.\n");
@@ -85,7 +85,7 @@ bool TFila_Enfileirar(TFila* Fila, void* Item)
 
 void TFila_Imprimir(TFila* Fila, TFuncaoImprimir FuncaoImprimir)
 {
-	TFilaNo* NoTemp;
+	TFilaNo NoTemp;
 
 	NoTemp = Fila->Frente;
 	while (NoTemp != NULL)
@@ -97,8 +97,8 @@ void TFila_Imprimir(TFila* Fila, TFuncaoImprimir FuncaoImprimir)
 
 void TFila_Limpar(TFila* Fila, TFuncaoDestruir FuncaoDestruir)
 {
-	TFilaNo* NoProximo;
-	TFilaNo* NoTemp;
+	TFilaNo NoProximo;
+	TFilaNo NoTemp;
 	
 	NoTemp = Fila->Frente;
 	/*-- varre a fila e destroi tudo --*/

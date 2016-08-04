@@ -11,18 +11,18 @@
 #include "core.h"
 
 /* Estrutura do nó da fila */
-typedef struct _TFilaNo TFilaNo;
+typedef struct _TFilaNo* TFilaNo;
 
 struct _TFilaNo {
 	void* Item;		/* Guarda o item da fila */
-	TFilaNo* Proximo;	/* Aponta para o próximo nó da fila */
+	TFilaNo Proximo;	/* Aponta para o próximo nó da fila */
 };
 
 /* Estrutura da fila */
 typedef struct _TFila {
-	TFilaNo* Frente;	/* Primeiro nó da fila */
+	TFilaNo Frente;	/* Primeiro nó da fila */
 	size_t Tamanho;		/* Tamanho da fila */
-	TFilaNo* Tras;		/* Ultimo nó da fila */
+	TFilaNo Tras;		/* Ultimo nó da fila */
 } TFila;
 
 /* ----------------------------------------------------------------------------
