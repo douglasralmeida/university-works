@@ -5,8 +5,8 @@
  *	Cabeçalhos e estruturas de uma pilha por vetores
  */
 
-#ifndef pilha_H
-#define pilha_H
+#ifndef PILHA_H
+#define PILHA_H
 
 #include "boolutils.h"
 #include "core.h"

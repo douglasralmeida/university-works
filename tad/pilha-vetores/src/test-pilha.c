@@ -90,7 +90,10 @@ int main(void)
 	printf("OK.\n");
 	
 	printf("Empilhando pilha cheia...");
-	TPilha_Empilhar(Pilha, dado);
+	dado = (int*)malloc(sizeof(int));
+	*dado = 120;
+	if (TPilha_Empilhar(Pilha, dado))
+		printf("OK.\n");
 	
 	printf("Desempilhando pilha...");
 	dado = (int*)TPilha_Desempilhar(Pilha);

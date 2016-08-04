@@ -9,6 +9,24 @@
 #include <stdlib.h>
 #include "pilha.h"
 
+static bool ExpandirPilha(TPilha* Pilha)
+{
+	size_t NovaCapacidade;
+	void** NovoItens;
+
+	NovaCapacidade = Pilha->Capacidade + Pilha->Expansao;
+	NovoItens = realloc(Pilha->Itens, (NovaCapacidade) * sizeof(void*));
+	if (NovoItens == NULL)
+	{
+		printf("Erro (0x35): Erro durante alocacao de memoria.\n");
+		return false;
+	}
+	Pilha->Itens = NovoItens;
+	Pilha->Capacidade = NovaCapacidade;
+
+	return true;
+}
+
 TPilha* TPilha_Criar(size_t Capacidade)
 {
 	TPilha* NovaPilha;
@@ -64,10 +82,17 @@ void* TPilha_Desempilhar(TPilha* Pilha)
 bool TPilha_Empilhar(TPilha* Pilha, void* Item)
 {
 	if (Pilha->Frente == Pilha->Capacidade)
-	{
-		printf("Erro: (0x25): Erro ao empilhar. Pilha cheia.\n");
-		return false;
-	}
+		if (ExpandirPilha(Pilha))
+		{
+			Pilha->Itens[Pilha->Frente] = Item;
+			Pilha->Frente++;
+			return true;
+		}
+		else
+		{
+			printf("Erro: (0x25): Erro ao empilhar. Pilha cheia.\n");
+			return false;
+		}	
 	else 
 	{
 		Pilha->Itens[Pilha->Frente] = Item;
