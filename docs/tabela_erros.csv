@@ -6,6 +6,8 @@
 0x25,Erro ao enfileirar em fila cheia.
 0x26,Erro ao desenfileirar em fila vazia.
 0x31,Erro durante alocacao da pilha.
+0x34,Erro ao alocar o vetor da pilha.
+0x36,Erro ao desempilhar em pilha vazia.
 0x41,Erro durante alocacao da fila com prioridade.
 0x42,Erro ao desenfileirar item. Fila com prioridade vazia.
 0x43,Erro durante alocacao de no da fila de prioridade.
