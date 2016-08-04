@@ -8,6 +8,7 @@
 #ifndef FILA_H
 #define FILA_H
 
+#include "boolutils.h"
 #include "core.h"
 
 #define FILA_EXPANSAO 1024
@@ -17,7 +18,8 @@ typedef size_t TFilaNo;
 /* Estrutura da fila */
 typedef struct _TFila {
 	size_t Capacidade;	/*-- Capacidade de armazenamento atual da fila --*/
-	TFilaNo Frente		/*-- Primeiro item da fila --*/
+	size_t Expansao;	/*-- Capacidade de autoexpansão da fila --*/
+	TFilaNo Frente;		/*-- Primeiro item da fila --*/
 	void** Itens;		/*-- Conteúdo da fila --*/
 	size_t Tamanho;		/*-- Tamanho da fila --*/
 	TFilaNo Tras;		/*-- Ultimo item da fila --*/

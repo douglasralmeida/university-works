@@ -6,9 +6,8 @@
 */
 
 #include <stdio.h>
-#include "filaprior.h"
-
-
+#include <stdlib.h>
+#include "fila.h"
 
 TFila* TFila_Criar(size_t Capacidade)
 {
@@ -31,7 +30,7 @@ TFila* TFila_Criar(size_t Capacidade)
 	NovaFila->Expansao = FILA_EXPANSAO;
 	NovaFila->Frente = 1;
 	NovaFila->Tras = 1;
-	NovaFila->Tamanho = 0;
+
   
 	return NovaFila;
 
@@ -52,26 +51,31 @@ void* TFila_Desenfileirar(TFila* Fila)
 {
 	void* Item;
 	
-	if (TFila_Tamanho(Fila) == 0)
+	if (Fila->Frente == Fila->Tras)
 	{
 		printf("Erro (0x26): Erro ao desenfileirar. Fila vazia.\n");
 		return NULL;
 	}
 	else
 	{
-		Item = Fila->Item[Fila->Frente];
+		Item = Fila->Itens[Fila->Frente - 1];
 		Fila->Frente = Fila->Frente % Fila->Capacidade + 1;
+		return Item;
 	}
 }
 
 bool TFila_Enfileirar(TFila* Fila, void* Item)
 {
 	if (Fila->Tras % Fila->Capacidade + 1 == Fila->Frente)
+	{
 		printf("Erro: (0x25): Erro ao enfileirar em fila cheia.\n");
+		return false;
+	}
 	else 
 	{
-		Fila->Item[Fila->Tras] = Item;
+		Fila->Itens[Fila->Tras - 1] = Item;
 		Fila->Tras = Fila->Tras % Fila->Capacidade + 1;
+		return true;
 	}
 }
 
@@ -79,26 +83,68 @@ void TFila_Imprimir(TFila* Fila, TFuncaoImprimir FuncaoImprimir)
 {
 	TFilaNo NoTemp;
 	
-	NoTemp = Fila->Frente;
-	while (NoTemp <= Fila->Tras)
+	if (Fila->Frente > Fila->Tras)
 	{
-		FuncaoImprimir(Fila->Itens[NoTemp]);
-		NoTemp++;
+		NoTemp = Fila->Frente;
+		while (NoTemp <= Fila->Capacidade)
+		{
+			FuncaoImprimir(Fila->Itens[NoTemp - 1]);
+			NoTemp++;
+		}
+		NoTemp = 1;
+		while (NoTemp < Fila->Tras)
+		{
+			FuncaoImprimir(Fila->Itens[NoTemp - 1]);
+			NoTemp++;
+		}
+	}
+	else
+	{
+		NoTemp = Fila->Frente;
+		while (NoTemp < Fila->Tras)
+		{
+			FuncaoImprimir(Fila->Itens[NoTemp - 1]);
+			NoTemp++;
+		}
 	}
 }
 
 void TFila_Limpar(TFila* Fila, TFuncaoDestruir FuncaoDestruir)
 {
-	size_t i;
+	TFilaNo NoTemp;
 	
-	for(i = 0; i <= Fila->Tamanho; i++)
-		FuncaoDestruir(&(Fila->Item[i]));
-	Fila->Tamanho = 0;
-	NovaFila->Frente = 1;
-	NovaFila->Tras = 1;
+	if (Fila->Frente > Fila->Tras)
+	{
+		NoTemp = Fila->Frente;
+		while (NoTemp <= Fila->Capacidade)
+		{
+			FuncaoDestruir(&Fila->Itens[NoTemp - 1]);
+			NoTemp++;
+		}
+		NoTemp = 1;
+		while (NoTemp < Fila->Tras)
+		{
+			FuncaoDestruir(&Fila->Itens[NoTemp - 1]);
+			NoTemp++;
+		}
+	}
+	else
+	{
+		NoTemp = Fila->Frente;
+		while (NoTemp < Fila->Tras)
+		{
+			FuncaoDestruir(&Fila->Itens[NoTemp-1]);
+			NoTemp++;
+		}
+	}
+	Fila->Frente = 1;
+	Fila->Tras = 1;
 }
 
 size_t TFila_Tamanho(TFila* Fila)
 {
-	return Fila->Tras % Fila->Capacidade - Fila->Frente % Fila->Capacidade;***(corrigir)
+	if (Fila->Frente > Fila->Tras)
+		return Fila->Capacidade - Fila->Frente + Fila->Tras;
+	else
+		return Fila->Tras - Fila->Frente;
 }
