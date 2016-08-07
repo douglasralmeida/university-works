@@ -11,11 +11,13 @@
 #include "boolutils.h"
 #include "core.h"
 
+typedef int TMatrizItem;
+
 /* Estrutura da matriz */
 typedef struct _TMatriz {
 	size_t Colunas;		/*-- Nº de colunas da matriz --*/
 	size_t Linhas;		/*-- Nº de linhas --*/
-	int** Itens;		/*-- Conteúdo da matriz --*/
+	TMatrizItem** Itens;		/*-- Conteúdo da matriz --*/
 } TMatriz;
 
 /* ----------------------------------------------------------------------------
