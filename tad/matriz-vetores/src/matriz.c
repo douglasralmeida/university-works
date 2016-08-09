@@ -5,11 +5,13 @@
  *	Implementação de uma matriz com vetores
  */
 
+#include <stdio.h>
+#include <stdlib.h>
 #include "matriz.h"
 
 TMatriz* TMatriz_Criar(size_t NumLinhas, size_t NumColunas)
 {
-	int i, j;
+	size_t i, j;
 	TMatriz* NovaMatriz;
 
 	NovaMatriz = malloc(sizeof(TMatriz));
@@ -18,7 +20,7 @@ TMatriz* TMatriz_Criar(size_t NumLinhas, size_t NumColunas)
 		printf("Erro (0x61): Erro ao alocar matriz.\n");
 		return NULL;
 	}
-	NovaMatriz->Itens = malloc(NumLinhas * sizeof(TMatrizItem*);
+	NovaMatriz->Itens = malloc(NumLinhas * sizeof(TMatrizItem*));
 	if (NovaMatriz->Itens == NULL)
 	{
 		printf("Erro (0x62): Erro ao alocar linhas da matriz.\n");
@@ -35,19 +37,21 @@ TMatriz* TMatriz_Criar(size_t NumLinhas, size_t NumColunas)
 				free(NovaMatriz->Itens[j]);
 			free(NovaMatriz->Itens);
 			free(NovaMatriz);
+			return NULL;
 		}
 	}
-	
+	NovaMatriz->Linhas = NumLinhas;
+	NovaMatriz->Colunas = NumColunas;
 	return NovaMatriz;
 }
 
 void TMatriz_Destruir(TMatriz** PMatriz)
 {
-	int i;
+	size_t i;
 
 	if (PMatriz != NULL)
 	{
-		for (i = 0; i < (*PMatriz)->NumLinhas; i++)
+		for (i = 0; i < (*PMatriz)->Linhas; i++)
 			free((*PMatriz)->Itens[i]);
 		free((*PMatriz)->Itens);
 		free(*PMatriz);
@@ -57,7 +61,7 @@ void TMatriz_Destruir(TMatriz** PMatriz)
 
 TMatriz* TMatriz_Adicionar(TMatriz* MatrizA, TMatriz* MatrizB)
 {
-	int i, j;
+	size_t i, j;
 	TMatriz* MatrizR;
 
 	if (MatrizA->Linhas != MatrizB->Linhas)
@@ -73,8 +77,8 @@ TMatriz* TMatriz_Adicionar(TMatriz* MatrizA, TMatriz* MatrizB)
 	MatrizR = TMatriz_Criar(MatrizA->Linhas, MatrizA->Colunas);
 	if (MatrizR == NULL)
 		return NULL;
-	for (i = 0; i < MatrizA->NumLinhas); i++)
-		for (j = 0; j < MatrizA->NumColunas; j++)
+	for (i = 0; i < MatrizA->Linhas; i++)
+		for (j = 0; j < MatrizA->Colunas; j++)
 			MatrizR->Itens[i][j] = MatrizA->Itens[i][j] + MatrizB->Itens[i][j];
 
 	return MatrizR;
@@ -82,9 +86,8 @@ TMatriz* TMatriz_Adicionar(TMatriz* MatrizA, TMatriz* MatrizB)
 
 TMatriz* TMatriz_Multiplicar(TMatriz* MatrizA, TMatriz* MatrizB)
 {
-	int i, j, k;
+	size_t i, j, k;
 	TMatriz* MatrizR;
-	TMatrizItem Soma;
 
 	if (MatrizA->Colunas != MatrizB->Linhas)
 	{
@@ -94,18 +97,19 @@ TMatriz* TMatriz_Multiplicar(TMatriz* MatrizA, TMatriz* MatrizB)
 	MatrizR = TMatriz_Criar(MatrizA->Linhas, MatrizB->Colunas);
 	if (MatrizR == NULL)
 		return NULL;
-	for (i = 0; i < MatrizA->NumLinhas); i++)
-		for (j = 0; j < MatrizA->NumColunas; j++)
+	for (i = 0; i < MatrizR->Colunas; i++)
+		for (j = 0; j < MatrizR->Linhas; j++)
 		{
-			Soma = 0;
+			MatrizR->Itens[i][j] = 0;			
+			for (k = 0; k < MatrizA->Linhas; k++)
+				MatrizR->Itens[i][j] += MatrizA->Itens[i][k] * MatrizB->Itens[k][j];
 		}
-
 	return MatrizR;	
 }
 
 TMatriz* TMatriz_Subtrair(TMatriz* MatrizA, TMatriz* MatrizB)
 {
-	int i, j;
+	size_t i, j;
 	TMatriz* MatrizR;
 
 	if (MatrizA->Linhas != MatrizB->Linhas)
@@ -121,9 +125,22 @@ TMatriz* TMatriz_Subtrair(TMatriz* MatrizA, TMatriz* MatrizB)
 	MatrizR = TMatriz_Criar(MatrizA->Linhas, MatrizA->Colunas);
 	if (MatrizR == NULL)
 		return NULL;
-	for (i = 0; i < MatrizA->NumLinhas); i++)
-		for (j = 0; j < MatrizA->NumColunas; j++)
+	for (i = 0; i < MatrizA->Linhas; i++)
+		for (j = 0; j < MatrizA->Colunas; j++)
 			MatrizR->Itens[i][j] = MatrizA->Itens[i][j] - MatrizB->Itens[i][j];
 
 	return MatrizR;
+}
+
+void TMatriz_Imprimir(TMatriz* Matriz)
+{
+	size_t i, j;
+	
+	for (i = 0; i < Matriz->Linhas; i++)
+	{
+		for (j = 0; j < Matriz->Colunas; j++)
+			printf("%d ", (int)Matriz->Itens[i][j]);
+		printf("\n");
+	}
+	printf("\n");
 }

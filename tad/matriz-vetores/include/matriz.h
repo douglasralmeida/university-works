@@ -33,6 +33,8 @@ void TMatriz_Destruir(TMatriz** PMatriz);
 
 TMatriz* TMatriz_Adicionar(TMatriz* MatrizA, TMatriz* MatrizB);
 
+void TMatriz_Imprimir(TMatriz* Matriz);
+
 TMatriz* TMatriz_Multiplicar(TMatriz* MatrizA, TMatriz* MatrizB);
 
 TMatriz* TMatriz_Subtrair(TMatriz* MatrizA, TMatriz* MatrizB);
