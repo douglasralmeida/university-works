@@ -31,6 +31,8 @@ TMatriz* TMatriz_Criar(size_t NumLinhas, size_t NumColunas);
 
 void TMatriz_Destruir(TMatriz** PMatriz);
 
+bool TMatriz_AlterarItem(TMatriz* Matriz, const size_t Linha, const size_t Coluna, const TMatrizItem Valor);
+
 TMatriz* TMatriz_Adicionar(TMatriz* MatrizA, TMatriz* MatrizB);
 
 void TMatriz_Imprimir(TMatriz* Matriz);

@@ -59,6 +59,17 @@ void TMatriz_Destruir(TMatriz** PMatriz)
 	}
 }
 
+bool TMatriz_AlterarItem(TMatriz* Matriz, const size_t Linha, const size_t Coluna, const TMatrizItem Valor)
+{
+	if ((Linha <= Matriz->Linhas) && (Coluna <= Matriz->Colunas) && (Linha > 0) && (Coluna > 0))
+	{
+		Matriz->Itens[Linha-1][Coluna-1] = Valor;
+		return true;
+	}
+	else
+		return false;
+}
+
 TMatriz* TMatriz_Adicionar(TMatriz* MatrizA, TMatriz* MatrizB)
 {
 	size_t i, j;
