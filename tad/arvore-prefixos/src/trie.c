@@ -68,6 +68,29 @@ void TArvoreDigital_Destruir(TArvoreDigital** PArvore)
 	PArvore = NULL;
 }
 
+void TArvoreDigital_Adicionar(TArvoreDigital* Arvore, char* Palavra)
+{
+	char* c;
+	int i;
+	TArvoreDigitalNo NoAtual;
+	
+	NoAtual = Arvore->Raiz;
+	c = Palavra;
+	while (*c != '\0')
+	{
+		if (c < 123 && c > 96)
+		{
+			i = *c - 97;
+			if (NoAtual->Alfabeto[i] == NULL)
+				NoAtual->Alfabeto[i] = TArvoreDigitalNo_Criar();
+			NoAtual = NoAtual->Alfabeto[i];
+		}
+		c++;
+	}
+	if (NoAtual != Arvore->Raiz)
+		NoAtual->Sufixo = false;
+}
+
 void TArvoreDigital_Carregar(TArvoreDigital* Arvore, FILE* Arquivo)
 {
 	char c;

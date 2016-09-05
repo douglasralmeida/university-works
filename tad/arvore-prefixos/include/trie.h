@@ -8,14 +8,15 @@
 #ifndef TRIE_H
 #define TRIE_H
 
+#include <stdio.h>
 #include "boolutils.h"
 
 #define TAMANHO_ALFABETO 26
 
 typedef struct _TArvoreDigitalNo* TArvoreDigitalNo;
 
-typedef struct _TArvoreDigitalNo {
-	TArvoreDigitalNo Alfabeto[TAMANHO_ALFABETO];
+struct _TArvoreDigitalNo {
+	TArvoreDigitalNo* Alfabeto;
 	unsigned long Contador;
 	bool Sufixo;	
 };
@@ -43,5 +44,9 @@ TArvoreDigital* TArvoreDigital_Criar();
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/ 
 void TArvoreDigital_Destruir(TArvoreDigital** PArvore);
+
+void TArvoreDigital_Adicionar(TArvoreDigital* Arvore, char* Palavra);
+
+void TArvoreDigital_Carregar(TArvoreDigital* Arvore, FILE* Arquivo);
 
 #endif

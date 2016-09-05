@@ -13,6 +13,8 @@
 int main(void)
 {	
 	TArvoreDigital* Arvore;
+	FILE* Arquivo;
+	char* Palavra;
 	
 	printf("TESTE ARVORE DIGITAL\n");
 	printf("====================\n");
@@ -24,8 +26,25 @@ int main(void)
 	else
 		exit(EXIT_FAILURE);
 
+	printf("Carregando arvore...");
+	Arquivo = fopen("arquivo.dic", "rt");
+	if (!Arquivo)
+		printf("Erro: Erro ao abrir arquivo.\n");
+	else
+	{
+		TArvoreDigital_Carregar(Arvore, Arquivo);
+		printf("OK.\n");
+		fclose(Arquivo);
+	}
+
+	printf("Adicionando palavra...");
+	Palavra = malloc(16 * sizeof(char));
+	scanf("%15s", Palavra);
+	TArvoreDigital_Adicionar(Arvore, Palavra);
+	free(Palavra);
+
 	printf("Destruindo arvore...");
-	TArvore_Destruir(&Arvore);
+	TArvoreDigital_Destruir(&Arvore);
 	printf("OK.\n");
 	
 	exit(EXIT_SUCCESS);
