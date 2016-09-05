@@ -25,24 +25,42 @@ typedef struct _TArvoreDigital {
 	TArvoreDigitalNo Raiz;			/* Guarda a raiz da árvore */
 } TArvoreDigital;
 
+/* ----------------------------------------------------------------------------
+ * funcao:	TArvoreDigitalNo_Criar
+ * 		Cria um nó de arvore digital vazio
+ * @param:	(vazio)
+ * @retorna:	No
+ *---------------------------------------------------------------------------*/ 
 TArvoreDigitalNo TArvoreDigitalNo_Criar();
 
+/* ----------------------------------------------------------------------------
+ * funcao:	TArvoreDigitalNo_Destruir
+ * 		Destroi um nó de arvore digital
+ * @param:	No da arvore
+ * @retorna:	(vazio)
+ *---------------------------------------------------------------------------*/
 void TArvoreDigitalNo_Destruir(TArvoreDigitalNo* PArvoreDigitalNo);
 
+/* ----------------------------------------------------------------------------
+ * funcao:	TArvoreDigitalNo_ExibirContador
+ * 		Exibe o valor do contador armazenado no nó
+ * @param:	No
+ * @retorna:	(vazio)
+ *---------------------------------------------------------------------------*/
 void TArvoreDigitalNo_ExibirContador(TArvoreDigitalNo No);
 
 /* ----------------------------------------------------------------------------
- * funcao:		TArvoreDigital_Criar
- * 				Cria uma arvore digital vazia
- * @param:		(vazio)
- * @retorna:	A arvore digital alocada
+ * funcao:	TArvoreDigital_Criar
+ * 		Cria uma arvore digital vazia
+ * @param:	(vazio)
+ * @retorna:	Arvore
  *---------------------------------------------------------------------------*/ 
 TArvoreDigital* TArvoreDigital_Criar();
 
 /* ----------------------------------------------------------------------------
- * funcao:		TArvoreDigital_Destruir
- * 				Destroi a arvore
- * @param:		Arvore
+ * funcao:	TArvoreDigital_Destruir
+ * 		Destroi a arvore
+ * @param:	Arvore
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/ 
 void TArvoreDigital_Destruir(TArvoreDigital** PArvore);
