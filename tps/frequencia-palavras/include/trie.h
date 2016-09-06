@@ -18,12 +18,11 @@ typedef struct _TArvoreDigitalNo* TArvoreDigitalNo;
 struct _TArvoreDigitalNo {
 	TArvoreDigitalNo* Alfabeto;		/* Nó da arvore digital */
 	unsigned long Contador;			/* Contador da quantidade de palavras no texto */
-	unsigned long Repeticao;		/* Contador da quantidade de palavras no dicionario */
-	bool Prefixo;					/* Indica se o nó representa um prefixo ou uma palavra */
+	bool Prefixo;				/* Indica se o nó representa um prefixo ou uma palavra */
 };
 
 typedef struct _TArvoreDigital {
-	TArvoreD	igitalNo Raiz;			/* Guarda a raiz da árvore */
+	TArvoreDigitalNo Raiz;			/* Guarda a raiz da árvore */
 } TArvoreDigital;
 
 /* ----------------------------------------------------------------------------

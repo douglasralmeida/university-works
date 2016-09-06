@@ -27,7 +27,6 @@ TArvoreDigitalNo TArvoreDigitalNo_Criar()
 	for (i = 0; i < TAMANHO_ALFABETO; i++)
 		NovoNo->Alfabeto[i] = NULL;
 	NovoNo->Contador = 0;
-	NovoNo->Repeticao = 0;
 	NovoNo->Prefixo = true;
 	
 	return NovoNo;
@@ -48,13 +47,9 @@ void TArvoreDigitalNo_Destruir(TArvoreDigitalNo* PArvoreDigitalNo)
 void TArvoreDigitalNo_ExibirContador(TArvoreDigitalNo No)
 {
 	int i;
-	unsigned long j;
 
 	if (!No->Prefixo)
-	{
-		for (j = 0; j < No->Repeticao; j++)
-			printf("%lu", No->Contador);
-	}
+		printf("%lu", No->Contador);
 	for (i = 0; i < TAMANHO_ALFABETO; i++)
 	{	
 		if (No->Alfabeto[i] != NULL)
