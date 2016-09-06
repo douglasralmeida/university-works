@@ -2,16 +2,17 @@
 **	FREQUENCIA DE PALAVRAS
 **	DOUGLAS RODRIGUES DE ALMEIDA
 **
-**	Aplicativo principal
+**	Aplicativo de testes de stress
 */
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <sys/time.h>
 #include "trie.h"
 
 int main()
 {
+	struct timeval tvalDepois, tvalAntes;
 	unsigned long quantdic, quanttexto;
 	TArvoreDigital* Arvore;
 
@@ -42,10 +43,15 @@ int main()
 		exit(EXIT_FAILURE);	
 	}
 	scanf("%s", entrada);*/
+	gettimeofday (&tvalAntes, NULL);
 	TArvoreDigital_ContarPalavrasTela(Arvore);
-		
+	gettimeofday (&tvalDepois, NULL);
+			
 	/*Imprimir resultado na tela*/
 	TArvoreDigital_ExibirContador(Arvore);
+	printf("Time: %ld microsegundos\n",
+            ((tvalDepois.tv_sec - tvalAntes.tv_sec)*1000000L
+           +tvalDepois.tv_usec) - tvalAntes.tv_usec);	
 	
 	/*Limpar a bagunça*/
 	TArvoreDigital_Destruir(&Arvore);

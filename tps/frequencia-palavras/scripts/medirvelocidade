@@ -1,0 +1,26 @@
+exefile="$1"
+diff="diff -iad"
+texto=""
+declare -a arquivosteste=("test/bigfile1" "test/bigfile2" "test/bigfile3" "test/bigfile4" "test/bigfile5" "test/bigfile6" "test/bigfile7")
+
+echo $exefile
+
+> test/resultado
+for arquivo in "${arquivosteste[@]}"; do
+	printf "Teste %s..." "$arquivo"
+	
+	exec 5< $arquivo
+	read linha1 <&5
+	read linha2 <&5
+	read linha3 <&5
+	read linha4 <&5
+	exec 5<&-
+	
+	
+	"./$exefile" <<< $linha1$'\n'$linha2$'\n'$linha3$'\n'$linha4 1>>test/resultado
+	printf "\n" >> test/resultado
+	
+	printf "OK.\n"
+done
+
+exit 0

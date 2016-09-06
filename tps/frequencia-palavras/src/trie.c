@@ -27,7 +27,8 @@ TArvoreDigitalNo TArvoreDigitalNo_Criar()
 	for (i = 0; i < TAMANHO_ALFABETO; i++)
 		NovoNo->Alfabeto[i] = NULL;
 	NovoNo->Contador = 0;
-	NovoNo->Sufixo = true;
+	NovoNo->Repeticao = 0;
+	NovoNo->Prefixo = true;
 	
 	return NovoNo;
 }
@@ -47,9 +48,13 @@ void TArvoreDigitalNo_Destruir(TArvoreDigitalNo* PArvoreDigitalNo)
 void TArvoreDigitalNo_ExibirContador(TArvoreDigitalNo No)
 {
 	int i;
+	unsigned long j;
 
-	if (!No->Sufixo)
-		printf("%lu ", No->Contador);
+	if (!No->Prefixo)
+	{
+		for (j = 0; j < No->Repeticao; j++)
+			printf("%lu", No->Contador);
+	}
 	for (i = 0; i < TAMANHO_ALFABETO; i++)
 	{	
 		if (No->Alfabeto[i] != NULL)
@@ -101,10 +106,13 @@ void TArvoreDigital_Adicionar(TArvoreDigital* Arvore, char* Palavra)
 		c++;
 	}
 	if (NoAtual != Arvore->Raiz)
-		NoAtual->Sufixo = false;
+	{
+		NoAtual->Repeticao++;
+		NoAtual->Prefixo = false;
+	}
 }
 
-void TArvoreDigital_Carregar(TArvoreDigital* Arvore, FILE* Arquivo)
+void TArvoreDigital_CarregarArquivo(TArvoreDigital* Arvore, FILE* Arquivo)
 {
 	char c;
 	int i;
@@ -115,7 +123,8 @@ void TArvoreDigital_Carregar(TArvoreDigital* Arvore, FILE* Arquivo)
 	{
 		if (c == ' ')
 		{
-			NoAtual->Sufixo = false;
+			NoAtual->Repeticao++;
+			NoAtual->Prefixo = false;
 			NoAtual = Arvore->Raiz;
 		}
 		else
@@ -130,10 +139,81 @@ void TArvoreDigital_Carregar(TArvoreDigital* Arvore, FILE* Arquivo)
 		}
 	}
 	if (NoAtual != Arvore->Raiz)
-		NoAtual->Sufixo = false;
+	{
+		NoAtual->Repeticao++;
+		NoAtual->Prefixo = false;
+	}
 }
 
-void TArvoreDigital_ContarPalavras(TArvoreDigital* Arvore, FILE* Arquivo)
+void TArvoreDigital_CarregarString(TArvoreDigital* Arvore, char* Entrada)
+{
+	char* c;
+	int i;
+	TArvoreDigitalNo NoAtual;
+	
+	NoAtual = Arvore->Raiz;
+	c = Entrada;
+	while (*c != '\0')
+	{
+		if (*c == ' ')
+		{
+			NoAtual->Repeticao++;		
+			NoAtual->Prefixo = false;
+			NoAtual = Arvore->Raiz;
+		}
+		else
+		{
+			if (*c < 123 && *c > 96)
+			{
+				i = *c - 97;
+				if (NoAtual->Alfabeto[i] == NULL)
+					NoAtual->Alfabeto[i] = TArvoreDigitalNo_Criar();
+				NoAtual = NoAtual->Alfabeto[i];
+			}
+		}
+		c++;
+	}
+	if (NoAtual != Arvore->Raiz)
+	{
+		NoAtual->Repeticao++;
+		NoAtual->Prefixo = false;
+	}
+}
+
+void TArvoreDigital_CarregarTela(TArvoreDigital* Arvore)
+{
+	char c;
+	int i;
+	TArvoreDigitalNo NoAtual;
+	
+	NoAtual = Arvore->Raiz;
+	while( (c = getchar()) != '\n' && c != '\0' && c != EOF)
+	{
+		if (c == ' ')
+		{
+			NoAtual->Repeticao++;
+			NoAtual->Prefixo = false;
+			NoAtual = Arvore->Raiz;
+		}
+		else
+		{
+			if (c < 123 && c > 96)
+			{
+				i = c - 97;
+				if (NoAtual->Alfabeto[i] == NULL)
+					NoAtual->Alfabeto[i] = TArvoreDigitalNo_Criar();
+				NoAtual = NoAtual->Alfabeto[i];
+			}
+		}	
+	}
+	if (NoAtual != Arvore->Raiz)
+	{
+		NoAtual->Repeticao++;
+		NoAtual->Prefixo = false;
+	}	
+}
+
+void TArvoreDigital_ContarPalavrasArquivo(TArvoreDigital* Arvore, FILE* Arquivo)
 {
 	bool proxpalavra;
 	char c;
@@ -146,7 +226,7 @@ void TArvoreDigital_ContarPalavras(TArvoreDigital* Arvore, FILE* Arquivo)
 	{
 		if (c == ' ')
 		{
-			if (!proxpalavra && !NoAtual->Sufixo)
+			if (!proxpalavra && !NoAtual->Prefixo)
 				NoAtual->Contador++;
 			proxpalavra = false;
 			NoAtual = Arvore->Raiz;
@@ -158,7 +238,67 @@ void TArvoreDigital_ContarPalavras(TArvoreDigital* Arvore, FILE* Arquivo)
 				proxpalavra = true;
 		}
 	}
-	if (!proxpalavra && !NoAtual->Sufixo)
+	if (!proxpalavra && !NoAtual->Prefixo)
+		NoAtual->Contador++;
+}
+
+void TArvoreDigital_ContarPalavrasString(TArvoreDigital* Arvore, char* Entrada)
+{
+	bool proxpalavra;
+	char* c;
+	int i;
+	TArvoreDigitalNo NoAtual;
+
+	NoAtual = Arvore->Raiz;
+	proxpalavra = false;
+	c = Entrada;
+	while (*c != '\0')
+	{
+		if (*c == ' ')
+		{
+			if (!proxpalavra && !NoAtual->Prefixo)
+				NoAtual->Contador++;
+			proxpalavra = false;
+			NoAtual = Arvore->Raiz;
+		} else if (!proxpalavra && *c < 123 && *c > 96)
+		{
+			i = *c - 97;
+			NoAtual = NoAtual->Alfabeto[i];
+			if (!NoAtual)
+				proxpalavra = true;
+		}
+		c++;
+	}
+	if (!proxpalavra && !NoAtual->Prefixo)
+		NoAtual->Contador++;
+}
+
+void TArvoreDigital_ContarPalavrasTela(TArvoreDigital* Arvore)
+{
+	bool proxpalavra;
+	char c;
+	int i;
+	TArvoreDigitalNo NoAtual;
+
+	NoAtual = Arvore->Raiz;
+	proxpalavra = false;
+	while( (c = getchar()) != '\n' && c != '\0' && c != EOF)
+	{
+		if (c == ' ')
+		{
+			if (!proxpalavra && !NoAtual->Prefixo)
+				NoAtual->Contador++;
+			proxpalavra = false;
+			NoAtual = Arvore->Raiz;
+		} else if (!proxpalavra && c < 123 && c > 96)
+		{
+			i = c - 97;
+			NoAtual = NoAtual->Alfabeto[i];
+			if (!NoAtual)
+				proxpalavra = true;
+		}
+	}
+	if (!proxpalavra && !NoAtual->Prefixo)
 		NoAtual->Contador++;
 }
 

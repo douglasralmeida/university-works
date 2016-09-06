@@ -1,0 +1,5 @@
+for ((a=1; a <= 10 ; a++))
+do
+	printf "ipsum dolor sit amet consectetuer adipiscing elit aenean commodo ligula " >> bigfile1a2
+done
+exit 0
