@@ -12,42 +12,40 @@
 
 int main()
 {
-	unsigned long quantdic, quanttexto;
+	unsigned long long i, quantdic, quanttexto; /* suportar 10^16 palavras */
+	char** palavras; /* guarda as palavras na ordem de entrada */
 	TArvoreDigital* Arvore;
 
 	/*Criar arvore na memoria*/
 	Arvore = TArvoreDigital_Criar();
 	if (!Arvore)
 		exit(EXIT_FAILURE);
+		
 	/*Carregar o dicionario do stdin*/
-	scanf("%lu", &quantdic);
+	scanf("%llu", &quantdic);
 	getchar();
-	/*entrada = malloc(16 * quantdic * sizeof(char));
-	if (!entrada)
+	palavras = malloc(quantdic * sizeof(char*));
+	for (i = 0; i < quantdic; i++)
 	{
-		TArvoreDigital_Destruir(&Arvore);
-		exit(EXIT_FAILURE);
-	}	
-	scanf("%s", entrada);*/	
-	TArvoreDigital_CarregarTela(Arvore);
+		palavras[i] = malloc(16 * sizeof(char));
+		scanf("%s", palavras[i]);
+		TArvoreDigital_CarregarString(Arvore, palavras[i]);
+	}
 		
 	/*Carregar o texto do stdin e processar*/
-	scanf("%lu", &quanttexto);
-	getchar();
-	
-	/*entrada = malloc(16 * quanttexto * sizeof(char));
-	if (!entrada)
-	{
-		TArvoreDigital_Destruir(&Arvore);
-		exit(EXIT_FAILURE);	
-	}
-	scanf("%s", entrada);*/
+	scanf("%llu", &quanttexto);
+	getchar();	
 	TArvoreDigital_ContarPalavrasTela(Arvore);
 		
 	/*Imprimir resultado na tela*/
-	TArvoreDigital_ExibirContador(Arvore);
+	for (i = 0; i < quantdic; i++)
+	{
+		TArvoreDigital_ExibirContador(Arvore, palavras[i]);
+		free(palavras[i]);
+	}	
 	
 	/*Limpar a bagunça*/
+	free(palavras);
 	TArvoreDigital_Destruir(&Arvore);
 	exit(EXIT_SUCCESS);
 }

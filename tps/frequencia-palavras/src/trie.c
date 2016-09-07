@@ -44,19 +44,6 @@ void TArvoreDigitalNo_Destruir(TArvoreDigitalNo* PArvoreDigitalNo)
 	PArvoreDigitalNo = NULL;
 }
 
-void TArvoreDigitalNo_ExibirContador(TArvoreDigitalNo No)
-{
-	int i;
-
-	if (!No->Prefixo)
-		printf("%lu", No->Contador);
-	for (i = 0; i < TAMANHO_ALFABETO; i++)
-	{	
-		if (No->Alfabeto[i] != NULL)
-			TArvoreDigitalNo_ExibirContador(No->Alfabeto[i]);
-	}
-}
-
 TArvoreDigital* TArvoreDigital_Criar()
 {
 	TArvoreDigital* NovaArvore;
@@ -93,7 +80,7 @@ void TArvoreDigital_Adicionar(TArvoreDigital* Arvore, char* Palavra)
 	{
 		if (*c < 123 && *c > 96)
 		{
-			i = *c - 97;
+			i = *c - 97; /*o primeiro vetor representa o caractere 'a'...o ultimo, o caractere 'z'*/
 			if (NoAtual->Alfabeto[i] == NULL)
 				NoAtual->Alfabeto[i] = TArvoreDigitalNo_Criar();
 			NoAtual = NoAtual->Alfabeto[i];
@@ -101,10 +88,7 @@ void TArvoreDigital_Adicionar(TArvoreDigital* Arvore, char* Palavra)
 		c++;
 	}
 	if (NoAtual != Arvore->Raiz)
-	{
-		NoAtual->Repeticao++;
-		NoAtual->Prefixo = false;
-	}
+		NoAtual->Prefixo = false; /*prefixo da arvore que tambem representa uma palavra*/
 }
 
 void TArvoreDigital_CarregarArquivo(TArvoreDigital* Arvore, FILE* Arquivo)
@@ -118,15 +102,14 @@ void TArvoreDigital_CarregarArquivo(TArvoreDigital* Arvore, FILE* Arquivo)
 	{
 		if (c == ' ')
 		{
-			NoAtual->Repeticao++;
-			NoAtual->Prefixo = false;
+			NoAtual->Prefixo = false; /*prefixo da arvore que tambem representa uma palavra*/
 			NoAtual = Arvore->Raiz;
 		}
 		else
 		{
 			if (c < 123 && c > 96)
 			{
-				i = c - 97;
+				i = c - 97; /*o primeiro vetor representa o caractere 'a'...o ultimo, o caractere 'z'*/
 				if (NoAtual->Alfabeto[i] == NULL)
 					NoAtual->Alfabeto[i] = TArvoreDigitalNo_Criar();
 				NoAtual = NoAtual->Alfabeto[i];
@@ -134,10 +117,7 @@ void TArvoreDigital_CarregarArquivo(TArvoreDigital* Arvore, FILE* Arquivo)
 		}
 	}
 	if (NoAtual != Arvore->Raiz)
-	{
-		NoAtual->Repeticao++;
-		NoAtual->Prefixo = false;
-	}
+		NoAtual->Prefixo = false; /*prefixo da arvore que tambem representa uma palavra*/
 }
 
 void TArvoreDigital_CarregarString(TArvoreDigital* Arvore, char* Entrada)
@@ -152,15 +132,14 @@ void TArvoreDigital_CarregarString(TArvoreDigital* Arvore, char* Entrada)
 	{
 		if (*c == ' ')
 		{
-			NoAtual->Repeticao++;		
-			NoAtual->Prefixo = false;
+			NoAtual->Prefixo = false; /*prefixo da arvore que tambem representa uma palavra*/
 			NoAtual = Arvore->Raiz;
 		}
 		else
 		{
 			if (*c < 123 && *c > 96)
 			{
-				i = *c - 97;
+				i = *c - 97; /*o primeiro vetor representa o caractere 'a'...o ultimo, o caractere 'z'*/
 				if (NoAtual->Alfabeto[i] == NULL)
 					NoAtual->Alfabeto[i] = TArvoreDigitalNo_Criar();
 				NoAtual = NoAtual->Alfabeto[i];
@@ -169,10 +148,7 @@ void TArvoreDigital_CarregarString(TArvoreDigital* Arvore, char* Entrada)
 		c++;
 	}
 	if (NoAtual != Arvore->Raiz)
-	{
-		NoAtual->Repeticao++;
-		NoAtual->Prefixo = false;
-	}
+		NoAtual->Prefixo = false; /*prefixo da arvore que tambem representa uma palavra*/
 }
 
 void TArvoreDigital_CarregarTela(TArvoreDigital* Arvore)
@@ -186,15 +162,14 @@ void TArvoreDigital_CarregarTela(TArvoreDigital* Arvore)
 	{
 		if (c == ' ')
 		{
-			NoAtual->Repeticao++;
-			NoAtual->Prefixo = false;
-			NoAtual = Arvore->Raiz;
+			NoAtual->Prefixo = false; /*prefixo da arvore que tambem representa uma palavra*/
+			NoAtual = Arvore->Raiz; 
 		}
 		else
 		{
 			if (c < 123 && c > 96)
 			{
-				i = c - 97;
+				i = c - 97; /*o primeiro vetor representa o caractere 'a'...o ultimo, o caractere 'z'*/
 				if (NoAtual->Alfabeto[i] == NULL)
 					NoAtual->Alfabeto[i] = TArvoreDigitalNo_Criar();
 				NoAtual = NoAtual->Alfabeto[i];
@@ -202,10 +177,7 @@ void TArvoreDigital_CarregarTela(TArvoreDigital* Arvore)
 		}	
 	}
 	if (NoAtual != Arvore->Raiz)
-	{
-		NoAtual->Repeticao++;
-		NoAtual->Prefixo = false;
-	}	
+		NoAtual->Prefixo = false; /*prefixo da arvore que tambem representa uma palavra*/
 }
 
 void TArvoreDigital_ContarPalavrasArquivo(TArvoreDigital* Arvore, FILE* Arquivo)
@@ -221,20 +193,20 @@ void TArvoreDigital_ContarPalavrasArquivo(TArvoreDigital* Arvore, FILE* Arquivo)
 	{
 		if (c == ' ')
 		{
-			if (!proxpalavra && !NoAtual->Prefixo)
+			if (!proxpalavra && !NoAtual->Prefixo) /*palavra encontrada, aumenta seu contador*/
 				NoAtual->Contador++;
-			proxpalavra = false;
+			proxpalavra = false; 
 			NoAtual = Arvore->Raiz;
 		} else if (!proxpalavra && c < 123 && c > 96)
 		{
-			i = c - 97;
+			i = c - 97; /*o primeiro vetor representa o caractere 'a'...o ultimo, o caractere 'z'*/
 			NoAtual = NoAtual->Alfabeto[i];
-			if (!NoAtual)
+			if (!NoAtual) /*se palavra nao encontrada, pula para a proxima palavra*/
 				proxpalavra = true;
 		}
 	}
 	if (!proxpalavra && !NoAtual->Prefixo)
-		NoAtual->Contador++;
+		NoAtual->Contador++; /*palavra encontrada, aumenta seu contador*/
 }
 
 void TArvoreDigital_ContarPalavrasString(TArvoreDigital* Arvore, char* Entrada)
@@ -251,20 +223,20 @@ void TArvoreDigital_ContarPalavrasString(TArvoreDigital* Arvore, char* Entrada)
 	{
 		if (*c == ' ')
 		{
-			if (!proxpalavra && !NoAtual->Prefixo)
+			if (!proxpalavra && !NoAtual->Prefixo) /*palavra encontrada, aumenta seu contador*/
 				NoAtual->Contador++;
 			proxpalavra = false;
 			NoAtual = Arvore->Raiz;
 		} else if (!proxpalavra && *c < 123 && *c > 96)
 		{
-			i = *c - 97;
+			i = *c - 97; /*o primeiro vetor representa o caractere 'a'...o ultimo, o caractere 'z'*/
 			NoAtual = NoAtual->Alfabeto[i];
-			if (!NoAtual)
-				proxpalavra = true;
+			if (!NoAtual) /*se palavra nao encontrada, pula para a proxima palavra*/
+				proxpalavra = true; 
 		}
 		c++;
 	}
-	if (!proxpalavra && !NoAtual->Prefixo)
+	if (!proxpalavra && !NoAtual->Prefixo) /*palavra encontrada, aumenta seu contador*/
 		NoAtual->Contador++;
 }
 
@@ -281,23 +253,38 @@ void TArvoreDigital_ContarPalavrasTela(TArvoreDigital* Arvore)
 	{
 		if (c == ' ')
 		{
-			if (!proxpalavra && !NoAtual->Prefixo)
+			if (!proxpalavra && !NoAtual->Prefixo) /*palavra encontrada, aumenta seu contador*/
 				NoAtual->Contador++;
 			proxpalavra = false;
 			NoAtual = Arvore->Raiz;
 		} else if (!proxpalavra && c < 123 && c > 96)
 		{
-			i = c - 97;
+			i = c - 97; /*o primeiro vetor representa o caractere 'a'...o ultimo, o caractere 'z'*/
 			NoAtual = NoAtual->Alfabeto[i];
-			if (!NoAtual)
+			if (!NoAtual) /*se palavra nao encontrada, pula para a proxima palavra*/
 				proxpalavra = true;
 		}
 	}
-	if (!proxpalavra && !NoAtual->Prefixo)
+	if (!proxpalavra && !NoAtual->Prefixo) /*palavra encontrada, aumenta seu contador*/
 		NoAtual->Contador++;
 }
 
-void TArvoreDigital_ExibirContador(TArvoreDigital* Arvore)
+void TArvoreDigital_ExibirContador(TArvoreDigital* Arvore, char* Palavra)
 {
-	TArvoreDigitalNo_ExibirContador(Arvore->Raiz);
+	char* c;
+	int i;
+	TArvoreDigitalNo NoAtual;
+
+	NoAtual = Arvore->Raiz;
+	c = Palavra;
+	while (*c != '\0')
+	{
+		i = *c - 97; /*o primeiro vetor representa o caractere 'a'...o ultimo, o caractere 'z'*/
+		NoAtual = NoAtual->Alfabeto[i];
+		if (!NoAtual) /*se palavra nao encontrada, nao faz nada*/
+			return;
+		c++;
+	}
+	if (!NoAtual->Prefixo) /*palavra encontrada, exibe seu contador*/
+		printf("%llu ", NoAtual->Contador);		
 }

@@ -17,8 +17,8 @@ typedef struct _TArvoreDigitalNo* TArvoreDigitalNo;
 
 struct _TArvoreDigitalNo {
 	TArvoreDigitalNo* Alfabeto;		/* Nó da arvore digital */
-	unsigned long Contador;			/* Contador da quantidade de palavras no texto */
-	bool Prefixo;				/* Indica se o nó representa um prefixo ou uma palavra */
+	unsigned long long Contador;	/* Contador da quantidade de palavras no texto */
+	bool Prefixo;					/* Indica se o nó representa um prefixo ou uma palavra */
 };
 
 typedef struct _TArvoreDigital {
@@ -27,31 +27,23 @@ typedef struct _TArvoreDigital {
 
 /* ----------------------------------------------------------------------------
  * funcao:		TArvoreDigitalNo_Criar
- * 			Cria um nó de arvore digital vazio
+ * 				Cria um nó de arvore digital vazio
  * @param:		(vazio)
- * @retorna:		No
+ * @retorna:	No
  *---------------------------------------------------------------------------*/
 TArvoreDigitalNo TArvoreDigitalNo_Criar();
 
 /* ----------------------------------------------------------------------------
  * funcao:		TArvoreDigitalNo_Destruir
- * 			Destroi um nó de arvore digital
+ * 				Destroi um nó de arvore digital
  * @param:		No da arvore
  * @retorna:		(vazio)
  *---------------------------------------------------------------------------*/
 void TArvoreDigitalNo_Destruir(TArvoreDigitalNo* PArvoreDigitalNo);
 
 /* ----------------------------------------------------------------------------
- * funcao:		TArvoreDigitalNo_ExibirContador
- * 			Exibe o valor do contador armazenado no nó
- * @param:		No
- * @retorna:		(vazio)
- *---------------------------------------------------------------------------*/
-void TArvoreDigitalNo_ExibirContador(TArvoreDigitalNo No);
-
-/* ----------------------------------------------------------------------------
  * funcao:		TArvoreDigital_Criar
- * 			Cria uma arvore digital vazia
+ * 				Cria uma arvore digital vazia
  * @param:		(vazio)
  * @retorna:		Arvore
  *---------------------------------------------------------------------------*/ 
@@ -83,7 +75,7 @@ void TArvoreDigital_CarregarArquivo(TArvoreDigital* Arvore, FILE* Arquivo);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TArvoreDigital_CarregarString
- * 				Carrega um dicionário armazenda em uma string
+ * 				Carrega um dicionário armazendo em uma string
  * @param:		Arvore e a string
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/ 
@@ -99,7 +91,7 @@ void TArvoreDigital_CarregarTela(TArvoreDigital* Arvore);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TArvoreDigital_ContarPalavrasArquivo
- * 				Conta as palavras da árvore que estão presente em um arquivo
+ * 				Conta as palavras da árvore que estão presentes em um arquivo
  * @param:		Arvore e o arquivo
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/ 
@@ -107,7 +99,7 @@ void TArvoreDigital_ContarPalavrasArquivo(TArvoreDigital* Arvore, FILE* Arquivo)
 
 /* ----------------------------------------------------------------------------
  * funcao:		TArvoreDigital_ContarPalavrasString
- * 				Conta as palavras da árvore que estão presente em uma string
+ * 				Conta as palavras da árvore que estão presentes em uma string
  * @param:		Arvore e a string
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/ 
@@ -115,7 +107,7 @@ void TArvoreDigital_ContarPalavrasString(TArvoreDigital* Arvore, char* Entrada);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TArvoreDigital_ContarPalavrasTela
- * 				Conta as palavras da árvore que estão presente na tela
+ * 				Conta as palavras da árvore que estão presentes na tela
  * @param:		Arvore
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/ 
@@ -123,9 +115,9 @@ void TArvoreDigital_ContarPalavrasTela(TArvoreDigital* Arvore);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TArvoreDigital_ExibirContador
- * 				Exibe os contadores de cada palavra armazenada na árvore
- * @param:		Arvore
+ * 				Exibe o contador da palavra informada caso esteja armazenada na árvore
+ * @param:		Arvore e a palavra
  * @retorna:	(vazio)
  *---------------------------------------------------------------------------*/ 
-void TArvoreDigital_ExibirContador(TArvoreDigital* Arvore);
+void TArvoreDigital_ExibirContador(TArvoreDigital* Arvore, char* Palavra);
 #endif
