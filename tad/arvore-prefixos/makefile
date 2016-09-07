@@ -8,7 +8,7 @@ ARGS=
 CC=gcc
 
 #Flags do compilador
-CFLAGS=-c -Wall -Wextra -Wpedantic $(DEFS) -I../core/ -Iinclude/
+CFLAGS=-std=c99 -c -Wall -Wextra -Wpedantic $(DEFS) -I../core/ -Iinclude/
 DBGFLAGS=-ggdb -fno-inline -fno-omit-frame-pointer 
 LDFLAGS=
 

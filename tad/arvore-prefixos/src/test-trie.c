@@ -32,7 +32,7 @@ int main(void)
 		printf("Erro: Erro ao abrir arquivo.\n");
 	else
 	{
-		TArvoreDigital_Carregar(Arvore, Arquivo);
+		TArvoreDigital_CarregarArquivo(Arvore, Arquivo);
 		printf("OK.\n");
 		fclose(Arquivo);
 	}
@@ -49,11 +49,9 @@ int main(void)
 		printf("Erro: Erro ao abrir arquivo.\n");
 	else
 	{
-		TArvoreDigital_ContarPalavras(Arvore, Arquivo);
+		TArvoreDigital_ContarPalavrasArquivo(Arvore, Arquivo);
 		printf("OK.\n");
 		fclose(Arquivo);
-		TArvoreDigital_ExibirContador(Arvore);
-		printf("\n");
 	}	
 	
 	printf("Destruindo arvore...");
