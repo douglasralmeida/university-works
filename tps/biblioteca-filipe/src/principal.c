@@ -5,24 +5,17 @@
 **	Aplicativo principal
 */
 
-#include <stdio.h>
+#include <stdlib.h>
+#include "sistema.h"
 
 int main()
 {
-	char nomelivro[51];
-	int livrodisponivel;
-	unsigned long numlivros, numlivrosmemoria, numestantes, numlivrosporestante, numconsultas;
-	unsigned long i;
-		
-	scanf("%lu, %lu, %lu, %lu, %lu", &numlivros, &numlivrosmemoria, &numestantes, &numlivrosporestante, &numconsultas);
-	for (i = 0; i < numlivros; i++
-	{
-		scanf("%50s, %d", nomelivro, &livrodisponivel);
-	}
-	for (i = 0; i < numconsultas; i++)
-	{
-		scanf("%50s", nomelivro);
-	}
+	TSistema* Sistema;
 
+	Sistema = TSistema_Criar();
+	if (!Sistema)
+		exit(EXIT_FAILURE);
+	TSistema_LerEntrada(Sistema);
+	TSistema_Destruir(&Sistema);
 	exit(EXIT_SUCCESS);
 }

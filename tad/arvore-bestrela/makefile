@@ -1,34 +1,46 @@
-#Makefile do TP1 - Biblioteca do Filipe
+#TIPO ABSTRATO DE DADOS ARVORE B ESTRELA
+#DOUGLAS RODRIGUES DE ALMEIDA
 #
-#Douglas Rodrigue de Almeida
-#
+#Makefile do TAD Arvore B*
 
-PROJECTNAME=tp1
+PROJECTNAME=test-arvorebest
+ARGS=
 CC=gcc
-CFLAGS=-c -Wall -Wextra -Wpedantic $(DEFS) -Iinclude/
+
+#Flags do compilador
+CFLAGS=-c -Wall -Wextra -Wpedantic $(DEFS) -I../core/ -Iinclude/
 DBGFLAGS=-ggdb -fno-inline -fno-omit-frame-pointer 
+LDFLAGS=
+
+#Diretorios do projeto
 BINDIR=bin
 OBJDIR=obj
-OBJFILES=sistema.o principal.o
-OBJECTS=$(addprefix $(OBJDIR)/, $(OBJFILES))
 SOURCEDIR=src
-ARGS=
+TESTDIR=test
 
+#Arquivos do projeto
+OBJFILES=arvorebest.o test-arvorebest.o
+OBJECTS=$(addprefix $(OBJDIR)/, $(OBJFILES))
+
+#Compilar o codigo
 $(OBJDIR)/%.o: $(SOURCEDIR)/%.c
 	@echo 
 	@echo Compilando $<...
 	$(CC) $(DBGFLAGS) $(CFLAGS) $< -o $@
 
+#Gerar executavel
 $(PROJECTNAME): $(OBJECTS) 
 	@echo 
 	@echo Gerando executavel...
 	$(CC) $(LDFLAGS) -o $(BINDIR)/$@ $^ $(LIBS)
 
+#Regra padrao
 .PHONY: all
 all:
 	$(PROJECTNAME)
-	
-.PHONY:clean
+
+#Limpar arquivos
+.PHONY: clean
 clean:
 	@echo 
 	@echo Excluindo executavel...
@@ -36,31 +48,17 @@ clean:
 	@echo Excluindo objetos...
 	rm -f $(OBJECTS)
 
-.PHONY: debug
+#Depuracao
+.PHONY: debug	
 debug:
 	gdb --args ./$(BINDIR)/$(PROJECTNAME) $(ARGS)
 
-.PHONY: deploy
-deploy:
-	@echo 
-	@echo Gerando arquivo compactado...
-	mkdir -p $(PROJECTNAME)
-	cp makefile $(PROJECTNAME)/makefile
-	cp -r $(SOURCEDIR) $(PROJECTNAME)/$(SOURCEDIR)
-	zip -r $(PROJECTNAME).zip $(PROJECTNAME)
-	rm $(PROJECTNAME)/$(SOURCEDIR)/*	
-	rmdir $(PROJECTNAME)/$(SOURCEDIR)
-	rm $(PROJECTNAME)/*
-	rmdir $(PROJECTNAME)
-
+#Checar vazamentos de memoria
 .PHONY: memcheck
 memcheck:
 	valgrind -v --leak-check=yes --track-origins=yes $(BINDIR)/$(PROJECTNAME) $(ARGS)
 
+#Executar aplicacao
 .PHONY: run
 run:
 	./$(BINDIR)/$(PROJECTNAME) $(ARGS)
-	
-.PHONY: test
-test:
-	./executartestes $(BINDIR)/$(PROJECTNAME)
