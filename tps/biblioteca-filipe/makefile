@@ -9,7 +9,7 @@ CFLAGS=-c -Wall -Wextra -Wpedantic $(DEFS) -Iinclude/
 DBGFLAGS=-ggdb -fno-inline -fno-omit-frame-pointer 
 BINDIR=bin
 OBJDIR=obj
-OBJFILES=sistema.o principal.o
+OBJFILES=arquivo.o sistema.o principal.o
 OBJECTS=$(addprefix $(OBJDIR)/, $(OBJFILES))
 SOURCEDIR=src
 ARGS=
@@ -63,4 +63,4 @@ run:
 	
 .PHONY: test
 test:
-	./executartestes $(BINDIR)/$(PROJECTNAME)
+	./script/executartestes $(BINDIR)/$(PROJECTNAME)

@@ -18,4 +18,6 @@ TSistema* TSistema_Criar(void);
 
 void TSistema_Destruir(TSistema** PSistema);
 
+void TSistema_LerEntrada(void);
+
 #endif
