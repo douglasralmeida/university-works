@@ -15,10 +15,10 @@
 typedef struct _TOrdenador {
 	TArquivo* ArquivoDados;
 	TFuncaoComparar FuncaoComparar;
-	size_t TamanhoMemoria;
+	size_t MaxItensPorVez;
 } TOrdenador;
 
-TOrdenador* TOrdenador_Criar(TArquivo* Dados, TFuncaoComparar FuncaoComparar, size_t TamanhoMemoria);
+TOrdenador* TOrdenador_Criar(TArquivo* Dados, TFuncaoComparar FuncaoComparar, size_t MaxItensPorVez);
 
 void TOrdenador_Destruir(TOrdenador** POrdenador);
 

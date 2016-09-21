@@ -8,7 +8,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "strutils.h"
 #include "core.h"
+#include "ordenador.h"
 #include "sistema_consulta.h"
 #include "sistema.h"
 
@@ -80,7 +82,7 @@ void TSistema_Ordenar(TSistema* Sistema)
 	TFuncaoComparar TextoComparar;
 
 	TextoComparar = &StrComparar;
-	Ordenador = TOrdenador_Criar(Sistema->LivrosOrdenados, TextoCompara, Sistema->MaxItensMemoria);
+	Ordenador = TOrdenador_Criar(Sistema->LivrosOrdenados, TextoComparar, Sistema->MaxItensMemoria);
 
 	TOrdenador_Destruir(&Ordenador);
 }
@@ -89,5 +91,5 @@ void TSistema_Simular(TSistema* Sistema)
 {
 	/* 1a. parte -- ordenacao extrena */
 	TSistema_Ordenar(Sistema);
-	TArquivo_Destruir(Sistema->LivrosOrdenados);
+	TArquivo_Destruir(&Sistema->LivrosOrdenados);
 }
