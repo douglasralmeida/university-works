@@ -8,9 +8,11 @@
 #ifndef MEMORIA_H
 #define MEMORIA_H
 
+#include <stdlib.h>
+
 typedef struct _TMemoria {
 	size_t Tamanho;
-	void* Itens;
+	void** Itens;
 } TMemoria;
 
 TMemoria* TMemoria_Criar(size_t Tamanho);

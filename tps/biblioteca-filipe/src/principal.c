@@ -16,6 +16,7 @@ int main()
 	if (!Sistema)
 		exit(EXIT_FAILURE);
 	TSistema_LerEntrada(Sistema);
+	TSistema_Simular(Sistema);
 	TSistema_Destruir(&Sistema);
 	exit(EXIT_SUCCESS);
 }

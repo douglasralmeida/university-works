@@ -8,6 +8,8 @@
 #ifndef ARQUIVO_H
 #define ARQUIVO_H
 
+#include <stdio.h>
+
 typedef enum {amlBinario, amlTexto} TArquivoModoLeitura;
 
 typedef struct _TArquivo {

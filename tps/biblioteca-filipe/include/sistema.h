@@ -13,8 +13,9 @@
 #include "arquivo.h"
 
 typedef struct _TSistema {
-	TArquivo* LivrosOrdenados;
 	TFila* Consultas;
+	TArquivo* LivrosOrdenados;
+	size_t MemoriaMaxima;
 } TSistema;
 
 TSistema* TSistema_Criar(void);
@@ -22,5 +23,9 @@ TSistema* TSistema_Criar(void);
 void TSistema_Destruir(TSistema** PSistema);
 
 void TSistema_LerEntrada(TSistema* Sistema);
+
+void TSistema_Ordenar(TSistema* Sistema);
+
+void TSistema_Simular(TSistema* Sistema);
 
 #endif

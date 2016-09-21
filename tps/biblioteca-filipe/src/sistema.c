@@ -49,11 +49,11 @@ void TSistema_LerEntrada(TSistema* Sistema)
 {
 	char nomelivro[53];
 	int tamstring;
-	unsigned long numlivros, numlivrosnamemoria, numestantes, numlivrosporestante, numconsultas;
+	unsigned long numlivros, numestantes, numlivrosporestante, numconsultas;
 	unsigned long i;
 	TSistemaConsulta* Consulta;
 	
-	scanf("%lu %lu %lu %lu %lu", &numlivros, &numlivrosnamemoria, &numestantes, &numlivrosporestante, &numconsultas);
+	scanf("%lu %lu %lu %lu %lu", &numlivros, &Sistema->MemoriaMaxima, &numestantes, &numlivrosporestante, &numconsultas);
 	getchar();
 	getchar();
 
@@ -69,7 +69,25 @@ void TSistema_LerEntrada(TSistema* Sistema)
 	{
 		scanf("%50s", nomelivro);
 		Consulta = TSistemaConsulta_Criar(nomelivro);
-		TFila_Enfileirar(Sistema->Consultas, Consulta);
+		if (TFila_Enfileirar(Sistema->Consultas, Consulta))
 		getchar();		
 	}
+}
+
+void TSistema_Ordenar(TSistema* Sistema)
+{
+	TOrdenador* Ordenador;
+	TFuncaoComparar TextoCompara;
+
+	/*TextoCompara = &a; */
+	Ordenador = TOrdenador_Criar(Sistema->LivrosOrdenados, TextoCompara, Sistema->MemoriaMaxima);
+
+	TOrdenador_Destruir(&Ordenador);
+}
+
+void TSistema_Simular(TSistema* Sistema)
+{
+	/* 1a. parte -- ordenacao extrena */
+	TSistema_Ordenar(Sistema);
+	TArquivo_Destruir(Sistema->LivrosOrdenados);
 }
