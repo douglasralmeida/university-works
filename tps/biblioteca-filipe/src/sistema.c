@@ -8,7 +8,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "arquivo.h"
+#include "core.h"
+#include "sistema_consulta.h"
 #include "sistema.h"
 
 TSistema* TSistema_Criar(void)
@@ -18,40 +19,57 @@ TSistema* TSistema_Criar(void)
 	NovoSistema = malloc(sizeof(TSistema));
 	if (!NovoSistema)
 		return NULL;
+	NovoSistema->LivrosOrdenados = TArquivo_Criar("livros_ordenados", amlTexto);
+	if (!NovoSistema->LivrosOrdenados)
+	{
+		free(NovoSistema);
+		return NULL;
+	}
+	NovoSistema->Consultas = NULL;
 
 	return NovoSistema;
 }
 
 void TSistema_Destruir(TSistema** PSistema)
 {
+	TFuncaoDestruir FuncaoDestruir;
+	
+	if ((*PSistema)->LivrosOrdenados)
+		TArquivo_Destruir(&(*PSistema)->LivrosOrdenados);
+	if ((*PSistema)->Consultas)
+	{
+		FuncaoDestruir = &TSistemaConsulta_Destruir;
+		TFila_Destruir(&(*PSistema)->Consultas, FuncaoDestruir);
+	}
 	free(*PSistema);
 	PSistema = NULL;
 }
 
-void TSistema_LerEntrada(void)
+void TSistema_LerEntrada(TSistema* Sistema)
 {
 	char nomelivro[53];
 	int tamstring;
 	unsigned long numlivros, numlivrosnamemoria, numestantes, numlivrosporestante, numconsultas;
 	unsigned long i;
-	TArquivo* MassaDados;
+	TSistemaConsulta* Consulta;
 	
 	scanf("%lu %lu %lu %lu %lu", &numlivros, &numlivrosnamemoria, &numestantes, &numlivrosporestante, &numconsultas);
 	getchar();
 	getchar();
 
-	MassaDados = TArquivo_Criar("livros_ordenados", amlTexto);
 	for (i = 0; i < numlivros; i++)
 	{
 		fgets(nomelivro, 52, stdin);
 		tamstring = strlen(nomelivro);
-		TArquivo_ApensarNoFinal(MassaDados, nomelivro, tamstring * sizeof(char));
+		TArquivo_ApensarNoFinal(Sistema->LivrosOrdenados, nomelivro, tamstring * sizeof(char));
 	}
-	TArquivo_Destruir(&MassaDados);
 
+	Sistema->Consultas = TFila_Criar(numconsultas);
 	for (i = 0; i < numconsultas; i++)
 	{
 		scanf("%50s", nomelivro);
-		getchar();
+		Consulta = TSistemaConsulta_Criar(nomelivro);
+		TFila_Enfileirar(Sistema->Consultas, Consulta);
+		getchar();		
 	}
 }

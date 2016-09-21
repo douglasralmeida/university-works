@@ -14,15 +14,39 @@ TArquivo* TArquivo_Criar(char* Nome, TArquivoModoLeitura Modo)
 	TArquivo* NovoArquivo;
 	
 	NovoArquivo = malloc(sizeof(TArquivo));
+	if (!NovoArquivo)
+		return NULL;
 	switch (Modo)
 	{
 		case amlBinario:
 			NovoArquivo->Inicio = fopen(Nome, "wb");
-			NovoArquivo->Final = fopen(Nome, "wb");
+			if (!NovoArquivo->Inicio)
+			{
+				free(NovoArquivo);
+				return NULL;
+			}
+			NovoArquivo->Final = fopen(Nome, "wb");	
+			if (!NovoArquivo->Final)
+			{
+				fclose(NovoArquivo->Inicio);
+				free(NovoArquivo);
+				return NULL;
+			}
 		break;
 		case amlTexto:
 			NovoArquivo->Inicio = fopen(Nome, "wt");
+			if (!NovoArquivo->Inicio)
+			{
+				free(NovoArquivo);
+				return NULL;
+			}
 			NovoArquivo->Final = fopen(Nome, "wt");
+			if (!NovoArquivo->Final)
+			{
+				fclose(NovoArquivo->Inicio);
+				free(NovoArquivo);
+				return NULL;
+			}
 		break;
 	}
 	

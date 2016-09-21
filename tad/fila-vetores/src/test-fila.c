@@ -42,7 +42,7 @@ int main(void)
 	printf("==========\n");
 	
 	printf("Criando fila...");
-	Fila = TFila_Criar(11);
+	Fila = TFila_Criar(10);
 	if (Fila != NULL)
 		printf("OK.\n");
 	else
