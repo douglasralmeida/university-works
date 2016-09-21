@@ -53,7 +53,7 @@ void TSistema_LerEntrada(TSistema* Sistema)
 	unsigned long i;
 	TSistemaConsulta* Consulta;
 	
-	scanf("%lu %lu %lu %lu %lu", &numlivros, &Sistema->MemoriaMaxima, &numestantes, &numlivrosporestante, &numconsultas);
+	scanf("%lu %lu %lu %lu %lu", &numlivros, &Sistema->MaxItensMemoria, &numestantes, &numlivrosporestante, &numconsultas);
 	getchar();
 	getchar();
 
@@ -77,10 +77,10 @@ void TSistema_LerEntrada(TSistema* Sistema)
 void TSistema_Ordenar(TSistema* Sistema)
 {
 	TOrdenador* Ordenador;
-	TFuncaoComparar TextoCompara;
+	TFuncaoComparar TextoComparar;
 
-	/*TextoCompara = &a; */
-	Ordenador = TOrdenador_Criar(Sistema->LivrosOrdenados, TextoCompara, Sistema->MemoriaMaxima);
+	TextoComparar = &StrComparar;
+	Ordenador = TOrdenador_Criar(Sistema->LivrosOrdenados, TextoCompara, Sistema->MaxItensMemoria);
 
 	TOrdenador_Destruir(&Ordenador);
 }

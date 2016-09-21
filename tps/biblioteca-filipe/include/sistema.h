@@ -15,7 +15,7 @@
 typedef struct _TSistema {
 	TFila* Consultas;
 	TArquivo* LivrosOrdenados;
-	size_t MemoriaMaxima;
+	size_t MaxItensMemoria;
 } TSistema;
 
 TSistema* TSistema_Criar(void);
