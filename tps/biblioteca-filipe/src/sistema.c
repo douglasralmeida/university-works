@@ -45,7 +45,7 @@ void TSistema_Destruir(TSistema** PSistema)
 		TFila_Destruir(&(*PSistema)->Consultas, FuncaoDestruir);
 	}
 	free(*PSistema);
-	PSistema = NULL;
+	*PSistema = NULL;
 }
 
 void TSistema_LerEntrada(TSistema* Sistema)

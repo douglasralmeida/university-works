@@ -106,7 +106,7 @@ TOrdenador* TOrdenador_Criar(TArquivo* Dados, TFuncaoComparar FuncaoComparar, si
 void TOrdenador_Destruir(TOrdenador** POrdenador)
 {
 	free(*POrdenador);
-	POrdenador = NULL;
+	*POrdenador = NULL;
 }
 
 void TOrdenador_Ordenar(TOrdenador* Ordenador)

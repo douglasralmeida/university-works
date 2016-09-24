@@ -32,7 +32,7 @@ void TMemoria_Destruir(TMemoria** PMemoria)
 {
 	free((*PMemoria)->Itens);
 	free(*PMemoria);
-	PMemoria = NULL;
+	*PMemoria = NULL;
 }
 
 void TMemoria_Escrever(TMemoria* Memoria, size_t Posicao, void* Dado)

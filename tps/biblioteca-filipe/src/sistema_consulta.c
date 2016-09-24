@@ -25,7 +25,7 @@ TSistemaConsulta* TSistemaConsulta_Criar(char* Consulta)
 void TSistemaConsulta_Destruir(void** PConsulta)
 {
 	free(*PConsulta);
-	PConsulta = NULL;
+	*PConsulta = NULL;
 }
 
 void TSistemaConsulta_SalvarNoArquivo(TSistemaConsulta* Consulta)

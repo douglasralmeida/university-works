@@ -58,7 +58,7 @@ void TArquivo_Destruir(TArquivo** PArquivo)
 	fclose((*PArquivo)->Inicio);
 	fclose((*PArquivo)->Final);
 	free(*PArquivo);
-	PArquivo = NULL;
+	*PArquivo = NULL;
 }
 
 void TArquivo_ApensarNoInicio(TArquivo* Arquivo, void* Dado, size_t TamanhoDado)
