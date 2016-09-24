@@ -28,35 +28,44 @@ void QSortParticao(TOrdenador* Ordenador, TMemoria* Memoria, int Esq, int Dir, i
 			continue;
 		}
 		if (Ls == Es) 
-      LeSup(ArqLEs, &UltLido, &Ls, &OndeLer);
-      else if (Li == Ei) LeInf(ArqLi, &UltLido, &Li, &OndeLer);
-           else if (OndeLer) LeSup(ArqLEs, &UltLido, &Ls, &OndeLer);
-                else LeInf(ArqLi, &UltLido, &Li, &OndeLer);
-      if (UltLido.Chave > Lsup) 
-      { *j = Es;
-        EscreveMax(ArqLEs, UltLido, &Es);
-        continue;
-      }
-      if (UltLido.Chave < Linf) 
-      { *i = Ei;
-        EscreveMin(ArqEi, UltLido, &Ei);
-        continue;
-      }
-      InserirArea(&Area, &UltLido, &NRArea);
-      if (Ei - Esq < Dir - Es) 
-      { RetiraMin(&Area, &R, &NRArea);
-        EscreveMin(ArqEi, R, &Ei);
-        Linf = R.Chave;
-      } 
-      else { RetiraMax(&Area, &R, &NRArea);
-             EscreveMax(ArqLEs, R, &Es);
-             Lsup = R.Chave;
-           }
-    }
-  while (Ei <= Es) 
-    { RetiraMin(&Area, &R, &NRArea);
-      EscreveMin(ArqEi, R, &Ei);
-    }
+			LeSup(ArqLEs, &UltLido, &Ls, &OndeLer);
+		else if (Li == Ei)
+			LeInf(ArqLi, &UltLido, &Li, &OndeLer);
+		else if (OndeLer)
+			LeSup(ArqLEs, &UltLido, &Ls, &OndeLer);
+		else
+			LeInf(ArqLi, &UltLido, &Li, &OndeLer);
+		if (UltLido.Chave > Lsup) 
+		{
+			*j = Es;
+			EscreveMax(ArqLEs, UltLido, &Es);
+			continue;
+		}
+		if (UltLido.Chave < Linf) 
+		{
+			*i = Ei;
+			EscreveMin(ArqEi, UltLido, &Ei);
+			continue;
+		}
+		InserirArea(&Area, &UltLido, &NRArea);
+		if (Ei - Esq < Dir - Es) 
+		{
+			RetiraMin(&Area, &R, &NRArea);
+			EscreveMin(ArqEi, R, &Ei);
+			Linf = R.Chave;
+		}
+		else
+		{
+			RetiraMax(&Area, &R, &NRArea);
+			EscreveMax(ArqLEs, R, &Es);
+			Lsup = R.Chave;
+		}
+	}
+	while (Ei <= Es) 
+	{
+		RetiraMin(&Area, &R, &NRArea);
+		EscreveMin(ArqEi, R, &Ei);
+	}
 }
 
 void QSortIniciar(TOrdenador* Ordenador, int Esq, int Dir)

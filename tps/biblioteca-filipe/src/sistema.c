@@ -10,6 +10,7 @@
 #include <string.h>
 #include "strutils.h"
 #include "core.h"
+#include "livro.h"
 #include "ordenador.h"
 #include "sistema_consulta.h"
 #include "sistema.h"
