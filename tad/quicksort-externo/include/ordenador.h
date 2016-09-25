@@ -8,8 +8,8 @@
 #ifndef ORDENADOR_H
 #define ORDENADOR_H
 
+#include <stdio.h>
 #include "core.h"
-#include "memoria.h"
 
 typedef struct _TOrdenador {
 	FILE* ArquivoLeEscreveSup;
