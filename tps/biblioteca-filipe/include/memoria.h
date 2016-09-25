@@ -1,4 +1,4 @@
-/*
+	/*
 **	BIBLIOTECA DO FILIPE
 **	DOUGLAS RODRIGUES DE ALMEIDA
 **
@@ -11,16 +11,22 @@
 #include <stdlib.h>
 
 typedef struct _TMemoria {
-	size_t Tamanho;
+	size_t Capacidade;
 	void** Itens;
+	size_t ItensCont;
+	size_t Primeiro;
+	size_t Ultimo;
 } TMemoria;
 
-TMemoria* TMemoria_Criar(size_t Tamanho);
+TMemoria* TMemoria_Criar(size_t Capacidade);
 
 void TMemoria_Destruir(TMemoria** PMemoria);
 
-void TMemoria_Escrever(TMemoria* Memoria, size_t Posicao, void* Dado);
+void TMemoria_Escrever(TMemoria* Memoria, void* Dado);
 
-void* TMemoria_Ler(TMemoria* Memoria, size_t Posicao);
+void* TMemoria_LerPrimeiro(TMemoria* Memoria);
+
+void* TMemoria_LerUltimo(TMemoria* Memoria);
+
 
 #endif

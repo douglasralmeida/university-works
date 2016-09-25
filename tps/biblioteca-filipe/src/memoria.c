@@ -7,23 +7,26 @@
 
 #include "memoria.h"
 
-TMemoria* TMemoria_Criar(size_t Tamanho)
+TMemoria* TMemoria_Criar(size_t Capacidade)
 {
 	size_t i;
 	TMemoria* NovaMemoria;
 	
-	NovaMemoria = malloc(sizeof(NovaMemoria));
+	NovaMemoria = malloc(sizeof(TMemoria));
 	if (!NovaMemoria)
 		return NULL;
-	NovaMemoria->Itens = malloc(Tamanho * sizeof(void*));
+	NovaMemoria->Itens = malloc(Capacidade * sizeof(void*));
 	if (!NovaMemoria->Itens)
 	{
 		free(NovaMemoria);
 		return NULL;
 	}
-	for (i = 0; i < Tamanho; i++)
+	NovaMemoria->Capacidade = Capacidade;
+	for (i = 0; i < Capacidade; i++)
 		NovaMemoria->Itens[i] = NULL;
-	NovaMemoria->Tamanho = Tamanho;
+	NovaMemoria->ItensCont = 0;
+	NovaMemoria->Primeiro = 0;
+	NovaMemoria->Ultimo = Capacidade - 1;
 
 	return NovaMemoria;
 }
@@ -35,12 +38,40 @@ void TMemoria_Destruir(TMemoria** PMemoria)
 	*PMemoria = NULL;
 }
 
-void TMemoria_Escrever(TMemoria* Memoria, size_t Posicao, void* Dado)
+void TMemoria_Escrever(TMemoria* Memoria, void* Dado)
 {
-	Memoria->Itens[Posicao] = Dado;
+	Memoria->Ultimo++;
+	if (Memoria->Ultimo == Memoria->Capacidade)
+		Memoria->Ultimo = 0;
+	Memoria->Itens[Memoria->Ultimo] = Dado;
+	Memoria->ItensCont++;
 }
 
-void* TMemoria_Ler(TMemoria* Memoria, size_t Posicao)
+void* TMemoria_LerPrimeiro(TMemoria* Memoria)
 {
-	return Memoria->Itens[Posicao];
+	void* Item;
+	
+	Item = Memoria->Itens[Memoria->Primeiro];
+	Memoria->Itens[Memoria->Primeiro] = NULL;
+	Memoria->Primeiro++;
+	if (Memoria->Primeiro == Memoria->Capacidade)
+		Memoria->Primeiro = 0;
+	Memoria->ItensCont--;
+
+	return Item;
+}
+
+void* TMemoria_LerUltimo(TMemoria* Memoria)
+{
+	void* Item;
+	
+	Item = Memoria->Itens[Memoria->Ultimo];
+	Memoria->Itens[Memoria->Ultimo] = NULL;
+	if (Memoria->Ultimo > 0)
+		Memoria->Ultimo--;
+	else
+		Memoria->Ultimo = Memoria->Capacidade - 1;
+	Memoria->ItensCont--;
+
+	return Item;
 }

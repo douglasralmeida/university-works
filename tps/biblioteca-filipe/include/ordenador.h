@@ -13,12 +13,22 @@
 #include "arquivo.h"
 
 typedef struct _TOrdenador {
-	TArquivo* ArquivoDados;
+	FILE* ArquivoLeEscreveSup;
+	FILE* ArquivoLeInf;
+	FILE* ArquivoEscreveInf;
 	TFuncaoComparar FuncaoComparar;
+	TFuncaoCopiar FuncaoCopiar;
+	void* LimiteInferior;
+	void* LimiteSuperior;
 	size_t MaxItensPorVez;
+	int Quantidade;
+	void* RegistroEscolhido;
+	void* RegistroLido;
+	size_t TamRegistro;
+	int Variaveis[4];
 } TOrdenador;
 
-TOrdenador* TOrdenador_Criar(TArquivo* Dados, TFuncaoComparar FuncaoComparar, size_t MaxItensPorVez);
+TOrdenador* TOrdenador_Criar(char* NomeArquivo, TFuncaoComparar FuncaoComparar, TFuncaoCopiar FuncaoCopiar, size_t MaxItensPorVez);
 
 void TOrdenador_Destruir(TOrdenador** POrdenador);
 

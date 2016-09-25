@@ -17,6 +17,9 @@ typedef enum {ordCrescente, ordDecresente} TOrdem;
 /* Funcao para comparar o valor de dois itens */
 typedef bool (*TFuncaoComparar)(void* Dado1, void* Dado2);
 
+/* Funcao para copiar o conteúdo itens */
+typedef void (*TFuncaoCopiar)(void* Dado1, void* Dado2);
+
 /* Funcao para destruir um item */
 typedef void (*TFuncaoDestruir)(void** Dado);
 
