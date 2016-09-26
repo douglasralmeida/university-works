@@ -8,10 +8,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "core.h"
 #include "livro.h"
 #include "ordenador.h"
 #include "sistema_consulta.h"
+#include "sistema_es.h"
 #include "sistema.h"
 
 TSistema* TSistema_Criar(void)
@@ -23,7 +23,13 @@ TSistema* TSistema_Criar(void)
 		return NULL;
 	NovoSistema->Consultas = NULL;
 	NovoSistema->MaxItensMemoria = 0;
+	NovoSistema->NomeEstante = "estante";
+	NovoSistema->NomeIndice = "indice";
+	NovoSistema->NomeLivrosOrdenados = "livros_ordenados";
+	NovoSistema->NomeTemp = "temp";
+	NovoSistema->QuantEstantes = 0;
 	NovoSistema->QuantLivros = 0;
+	NovoSistema->QuantLivrosEstantes = 0;
 
 	return NovoSistema;
 }
@@ -41,51 +47,7 @@ void TSistema_Destruir(TSistema** PSistema)
 	*PSistema = NULL;
 }
 
-void TSistema_LerEntrada(TSistema* Sistema)
-{
-	char nomelivro[51];
-	unsigned long numestantes, numlivrosporestante, numconsultas;
-	unsigned long i;
-	TLivro* Livro;
-	TSistemaConsulta* Consulta;
-	TArquivo* ArquivoTemp;
-
-	scanf("%lu %lu %lu %lu %lu", &Sistema->QuantLivros, &Sistema->MaxItensMemoria, &numestantes, &numlivrosporestante, &numconsultas);
-	getchar();
-	ArquivoTemp = TArquivo_Criar("temp", amlBinario);
-	if (!ArquivoTemp)
-	{
-		perror("Erro: Arquivo temporario nao pôde ser criado.\n");
-		return;
-	}
-	Livro = TLivro_Criar();
-	if (!Livro)
-	{
-		perror("Erro: Estrutura TLivro nao pôde ser criada.\n");
-		TArquivo_Destruir(&ArquivoTemp);
-		return;
-	}
-	for (i = 0; i < Sistema->QuantLivros; i++)
-	{
-		scanf("%50s %c", Livro->Titulo, &Livro->Disponivel);
-		TArquivo_ApensarAgora(ArquivoTemp, Livro, sizeof(TLivro));
-		memset(Livro->Titulo, '\0', 50);
-	}
-	TArquivo_Destruir(&ArquivoTemp);
-	TLivro_Destruir(&Livro);
-	Sistema->Consultas = TFila_Criar(numconsultas);
-	if (!Sistema->Consultas)
-		return;
-	for (i = 0; i < numconsultas; i++)
-	{
-		scanf("%50s", nomelivro);
-		Consulta = TSistemaConsulta_Criar(nomelivro);
-		if (TFila_Enfileirar(Sistema->Consultas, Consulta))
-		getchar();		
-	}
-}
-
-void TSistema_OrdenarLivros(TSistema* Sistema)
+bool TSistema_OrdenarLivros(TSistema* Sistema)
 {
 	int i;
 	TLivro* Livro;
@@ -95,12 +57,23 @@ void TSistema_OrdenarLivros(TSistema* Sistema)
 
 	FuncaoComparar = &TLivro_Comparar;
 	FuncaoCopiar = &TLivro_Copiar;
-	Ordenador = TOrdenador_Criar("temp", FuncaoComparar, FuncaoCopiar, Sistema->MaxItensMemoria);
+	Ordenador = TOrdenador_Criar(Sistema->NomeTemp, FuncaoComparar, FuncaoCopiar, Sistema->MaxItensMemoria);
 	Livro = TLivro_Criar();
+	if (!Livro)
+	{
+		TOrdenador_Destruir(&Ordenador);
+		return false;
+	}
 	Livro->Titulo[0] = '_';
 	Livro->Titulo[1] = '\0';
 	Ordenador->LimiteInferior = Livro;
 	Livro = TLivro_Criar();
+	if (!Livro)
+	{
+		TLivro_Destruir((TLivro**)&Ordenador->LimiteInferior);
+		TOrdenador_Destruir(&Ordenador);
+		return false;
+	}
 	for (i = 0; i < 50; i++)
 		Livro->Titulo[i] = 'z';
 	Livro->Titulo[50] = '\0';
@@ -108,43 +81,222 @@ void TSistema_OrdenarLivros(TSistema* Sistema)
 	Ordenador->TamRegistro = sizeof(TLivro);
 	Ordenador->Quantidade = Sistema->QuantLivros;
 	TOrdenador_Ordenar(Ordenador);
-	printf("%s\n", ((TLivro*)Ordenador->LimiteInferior)->Titulo);
 	TLivro_Destruir((TLivro**)&Ordenador->LimiteInferior);
 	TLivro_Destruir((TLivro**)&Ordenador->LimiteSuperior);
 	TOrdenador_Destruir(&Ordenador);
+	
+	return true;
 }
 
-void TSistema_SalvarLivros(TSistema* Sistema, char* NomeArquivo)
+void TSistema_ProcessarConsultas(TSistema* Sistema)
 {
-	TArquivo* ArquivoLivros;
-	TLivro* Livro;
-	FILE* ArquivoTemp;
-	char String[54];
-	unsigned long i; 
-	int tamtitulo;
+	TSistemaConsulta* Consulta;
 
+	while (TFila_Tamanho(Sistema->Consultas) > 0)
+	{
+		Consulta = TFila_Desenfileirar(Sistema->Consultas);
+		
+		
+		TSistema_Consulta(&Consulta);
+	}
+}
+
+bool TSistema_ReceberConsultas(TSistema* Sistema, unsigned long NumConsultas)
+{
+	unsigned long i;
+	char nomelivro[51];
+	TSistemaConsulta* Consulta;
+	
+	Sistema->Consultas = TFila_Criar(NumConsultas);
+	if (!Sistema->Consultas)
+		return false;
+	for (i = 0; i < NumConsultas; i++)
+	{
+		if (scanf("%50s", nomelivro) > 0)
+		{
+			Consulta = TSistemaConsulta_Criar(nomelivro);
+			if (!TFila_Enfileirar(Sistema->Consultas, Consulta))
+				return false;
+			getchar();		
+		}
+		else
+		{
+			printf("Erro ao processar consulta (%lu de %lu).\n", i+1, NumConsultas);
+			return false;
+		}
+	}
+	
+	return true;
+}
+
+bool TSistema_ReceberEntrada(TSistema* Sistema)
+{
+	unsigned long numconsultas;
+
+	if (scanf("%lu %lu %lu %lu %lu", &Sistema->QuantLivros, &Sistema->MaxItensMemoria, &Sistema->QuantEstantes, &Sistema->QuantLivrosEstantes, &numconsultas) > 0)
+	{
+		getchar();
+		return TSistema_ReceberLivros(Sistema) && TSistema_ReceberConsultas(Sistema, numconsultas);
+	}
+	else
+	{
+		perror("Erro ao processar entrada de variáveis.\n");
+		return false;
+	}
+}
+
+bool TSistema_ReceberLivros(TSistema* Sistema)
+{
+	unsigned long i;
+	TSistemaManipuladorES* Livros;
+	TLivro* Livro;
+
+	Livros = TSistemaManipuladorES_Criar(Sistema->NomeTemp, esmBinarioEscrita);
+	if (!Livros)
+	{
+		printf("Erro ao criar arquivo temporário.\n");
+		return false;
+	}
 	Livro = TLivro_Criar();
-	ArquivoTemp = fopen("temp", "rb");
-	ArquivoLivros = TArquivo_Criar(NomeArquivo, amlTexto);
+	memset(Livro, 0, sizeof(TLivro));
+	if (!Livro)
+	{
+		TSistemaManipuladorES_Destruir(&Livros);
+		return false;
+	}
 	for (i = 0; i < Sistema->QuantLivros; i++)
 	{
-		fread(Livro, sizeof(TLivro), 1, ArquivoTemp);
-		strcpy(String, Livro->Titulo);
-		tamtitulo = strlen(String);
-		String[tamtitulo] = ' ';
-		String[tamtitulo+1] = Livro->Disponivel;
-		String[tamtitulo+2] = '\n';
-		String[tamtitulo+3] = '\0';
-		TArquivo_ApensarAgora(ArquivoLivros, String, (tamtitulo + 3) * sizeof(char));
+		if (scanf("%50s %c", Livro->Titulo, &Livro->Disponivel) > 0)
+		{
+			if (!TSistemaManipuladorES_ExportarFinal(Livros, Livro, sizeof(TLivro)))
+			{
+				TSistemaManipuladorES_Destruir(&Livros);
+				TLivro_Destruir(&Livro);
+				perror("Erro ao salvar livro em arquivo temporário.\n");
+				return false;		
+			}
+		}
+		else
+		{
+			TSistemaManipuladorES_Destruir(&Livros);
+			TLivro_Destruir(&Livro);
+			printf("Erro ao processar entreda de livros (%lu de %lu).\n", i+1, Sistema->QuantLivros);
+			return false;
+		}
 	}
-	fclose(ArquivoTemp);
-	TArquivo_Destruir(&ArquivoLivros);
+	TSistemaManipuladorES_Destruir(&Livros);
 	TLivro_Destruir(&Livro);
+
+	return true;
+}
+
+bool TSistema_SalvarLivros(TSistema* Sistema)
+{
+	unsigned long i, j = 0, numestante = 0;
+	char nomeestante[1024], string[54], txtindice[103];
+	int tamtitulo, tamtxtindice;
+	TLivro* Livro;
+	TSistemaManipuladorES* Estante;
+	TSistemaManipuladorES* Indice;
+	TSistemaManipuladorES* LivrosBinario;
+	TSistemaManipuladorES* LivrosTexto;
+
+	Livro = TLivro_Criar();
+	if (!Livro)
+		return false;
+	LivrosBinario = TSistemaManipuladorES_Criar(Sistema->NomeTemp, esmBinarioLeitura);
+	if (!LivrosBinario)
+	{
+		printf("Erro ao acessar arquivo temporario.\n");
+		TLivro_Destruir(&Livro);
+		return false;
+	}
+	LivrosTexto = TSistemaManipuladorES_Criar(Sistema->NomeLivrosOrdenados, esmTextoEscrita);
+	if (!LivrosTexto)
+	{
+		printf("Erro ao criar arquivo de livros.\n");
+		TLivro_Destruir(&Livro);
+		TSistemaManipuladorES_Destruir(&LivrosBinario);
+		return false;
+	}
+	Indice = TSistemaManipuladorES_Criar(Sistema->NomeIndice, esmTextoEscrita);
+	if (!Indice)
+	{
+		printf("Erro ao criar arquivo de indice.\n");
+		TLivro_Destruir(&Livro);
+		TSistemaManipuladorES_Destruir(&LivrosBinario);
+		TSistemaManipuladorES_Destruir(&LivrosTexto);
+		return false;
+	}
+	sprintf(nomeestante, "%s%lu", Sistema->NomeEstante, numestante);
+	Estante = TSistemaManipuladorES_Criar(nomeestante, esmBinarioEscrita);
+	if (!Estante)
+	{
+		printf("Erro ao criar arquivo da estante 0.\n");
+		TLivro_Destruir(&Livro);
+		TSistemaManipuladorES_Destruir(&Indice);
+		TSistemaManipuladorES_Destruir(&LivrosBinario);
+		TSistemaManipuladorES_Destruir(&LivrosTexto);
+		return false;
+	}
+	memset(txtindice, 0, 102);
+	for (i = 0; i < Sistema->QuantLivros; i++)
+	{
+		if (i / Sistema->QuantLivrosEstantes > numestante)
+		{
+			TSistemaManipuladorES_Destruir(&Estante);
+			numestante++;
+			sprintf(nomeestante, "%s%lu", Sistema->NomeEstante, numestante);
+			Estante = TSistemaManipuladorES_Criar(nomeestante, esmBinarioEscrita);
+			j = 0;
+		} 
+		TSistemaManipuladorES_ImportarProximo(LivrosBinario, Livro, sizeof(TLivro));
+		TSistemaManipuladorES_ExportarFinal(Estante, Livro, sizeof(TLivro));
+		strcpy(string, Livro->Titulo);
+		if (j == 0)
+			strcpy(txtindice, Livro->Titulo);
+		else if (j == Sistema->QuantLivrosEstantes - 1)
+		{
+			strcat(txtindice, " ");
+			strcat(txtindice, Livro->Titulo);
+			tamtxtindice = strlen(txtindice);
+			txtindice[tamtxtindice] = '\n';
+			TSistemaManipuladorES_ExportarFinal(Indice, txtindice, (tamtxtindice + 1) * sizeof(char));
+		}
+		tamtitulo = strlen(string);
+		string[tamtitulo] = ' ';
+		string[tamtitulo+1] = Livro->Disponivel;
+		string[tamtitulo+2] = '\n';
+		string[tamtitulo+3] = '\0';
+		TSistemaManipuladorES_ExportarFinal(LivrosTexto, string, (tamtitulo + 3) * sizeof(char));
+		j++;
+	}
+	if (j == 1)
+	{
+		tamtxtindice = strlen(txtindice);
+		TSistemaManipuladorES_ExportarFinal(Indice, txtindice, tamtxtindice * sizeof(char));
+	}
+	while (++numestante < Sistema->QuantEstantes)
+	{
+		TSistemaManipuladorES_Destruir(&Estante);
+		sprintf(nomeestante, "%s%lu", Sistema->NomeEstante, numestante);
+		Estante = TSistemaManipuladorES_Criar(nomeestante, esmBinarioEscrita);
+	}
+	TSistemaManipuladorES_Destruir(&Estante);
+	TSistemaManipuladorES_Destruir(&Indice);
+	TSistemaManipuladorES_Destruir(&LivrosBinario);
+	TSistemaManipuladorES_Destruir(&LivrosTexto);
+	TLivro_Destruir(&Livro);
+
+	return true;
 }
 
 void TSistema_Simular(TSistema* Sistema)
 {
 	/* 1a. parte -- ordenacao extrena */
-	TSistema_OrdenarLivros(Sistema);
-	TSistema_SalvarLivros(Sistema, "livros_ordenados");  
+	if (TSistema_OrdenarLivros(Sistema) && TSistema_SalvarLivros(Sistema)
+		TSistema_ProcessarConsultas(Sistema);
+	else
+		perror("Erro ao ordenar livros.\n");
+	remove(Sistema->NomeTemp);
 }

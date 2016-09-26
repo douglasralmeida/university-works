@@ -5,6 +5,7 @@
 **	Implementação do simulador de memoria
 */
 
+#include "core.h"
 #include "memoria.h"
 
 TMemoria* TMemoria_Criar(size_t Capacidade)
@@ -44,6 +45,46 @@ void TMemoria_Escrever(TMemoria* Memoria, void* Dado)
 	if (Memoria->Ultimo == Memoria->Capacidade)
 		Memoria->Ultimo = 0;
 	Memoria->Itens[Memoria->Ultimo] = Dado;
+	Memoria->ItensCont++;
+}
+
+void TMemoria_EscreverNaOrdem(TMemoria* Memoria, void* Dado)
+{
+	size_t i;
+
+	if (Memoria->ItensCont == 0)
+	{
+		i = 0;
+		Memoria->Primeiro = 0;
+		Memoria->Ultimo = Memoria->Capacidade - 1;
+	}
+	else
+	{
+		i = Memoria->Ultimo+1;
+		while (true)
+		{
+			if (Memoria->FuncaoComparar(Dado, Memoria->Itens[i-1]))
+			{
+				if (i == Memoria->Capacidade)
+					Memoria->Itens[0] = Memoria->Itens[i-1];
+				else
+					Memoria->Itens[i] = Memoria->Itens[i-1];
+				i--;
+			}
+			else
+				break;
+			if (i == Memoria->Primeiro)
+				break;
+			if (i == 0)
+				i = Memoria->Capacidade;
+		}
+	}
+	Memoria->Ultimo++;
+	if (Memoria->Ultimo == Memoria->Capacidade)
+		Memoria->Ultimo = 0;
+	if (i == Memoria->Capacidade)
+		i = 0;
+	Memoria->Itens[i] = Dado;
 	Memoria->ItensCont++;
 }
 
