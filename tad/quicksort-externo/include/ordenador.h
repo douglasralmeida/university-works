@@ -21,8 +21,7 @@ typedef struct _TOrdenador {
 	void* LimiteSuperior;
 	size_t MaxItensPorVez;
 	int Quantidade;
-	void* RegistroEscolhido;
-	void* RegistroLido;
+	void* Registro;
 	size_t TamRegistro;
 	int Variaveis[4];
 } TOrdenador;

@@ -6,7 +6,6 @@
 **	
 **/
 
-#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -43,6 +42,7 @@ int main(void)
 	srand(time(NULL));
 	Arquivo = fopen(NomeArquivo, "wb");
 	dado = malloc(sizeof(int));
+
 	for (i = 0; i < 20; i++)
 	{
 		*dado = rand() % 100;
@@ -61,10 +61,10 @@ int main(void)
 	else
 		exit(EXIT_FAILURE);
 	dado = malloc(sizeof(int));
-	*dado = INT_MIN;
+	*dado = 0;
 	Ordenador->LimiteInferior = dado;
 	dado = malloc(sizeof(int));
-	*dado = INT_MAX;
+	*dado = 100;
 	Ordenador->LimiteSuperior = dado;
 	Ordenador->Quantidade = 20;
 	Ordenador->TamRegistro = sizeof(int);
@@ -82,11 +82,8 @@ int main(void)
 	printf("Lendo o arquivo...");
 	Arquivo = fopen(NomeArquivo, "rb");
 	dado = malloc(sizeof(int));
-	for (i = 0; i < 20; i++)
-	{
-		fread(dado, sizeof(int), 1, Arquivo);
+ 	while (fread(dado, sizeof(int), 1, Arquivo))
 		printf("%d ", *dado);
-	}
 	free(dado);
 	fclose(Arquivo);
 	printf("OK.\n");

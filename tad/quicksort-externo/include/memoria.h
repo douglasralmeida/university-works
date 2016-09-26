@@ -9,9 +9,11 @@
 #define MEMORIA_H
 
 #include <stdlib.h>
+#include "core.h"
 
 typedef struct _TMemoria {
 	size_t Capacidade;
+	TFuncaoComparar FuncaoComparar;
 	void** Itens;
 	size_t ItensCont;
 	size_t Primeiro;

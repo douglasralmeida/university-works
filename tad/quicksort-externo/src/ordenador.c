@@ -29,43 +29,54 @@ void QSortEscreverMenor(TOrdenador* Ordenador, void* Registro)
 
 void QSortLeInferior(TOrdenador* Ordenador, bool* lerdireito)
 {
-	Ordenador->RegistroLido = malloc(Ordenador->TamRegistro);
-	fread(Ordenador->RegistroLido, Ordenador->TamRegistro, 1, Ordenador->ArquivoLeInf);
+	Ordenador->Registro = malloc(Ordenador->TamRegistro);
+	fread(Ordenador->Registro, Ordenador->TamRegistro, 1, Ordenador->ArquivoLeInf);
 	Ordenador->Variaveis[LI]++;
 	*lerdireito = true;
 }
 
 void QSortLeSuperior(TOrdenador* Ordenador, bool* lerdireito)
 {
-	Ordenador->RegistroLido = malloc(Ordenador->TamRegistro);
+	Ordenador->Registro = malloc(Ordenador->TamRegistro);
 	fseek(Ordenador->ArquivoLeEscreveSup, (Ordenador->Variaveis[LS]-1) * Ordenador->TamRegistro, SEEK_SET);
-	fread(Ordenador->RegistroLido, Ordenador->TamRegistro, 1, Ordenador->ArquivoLeEscreveSup);
+	fread(Ordenador->Registro, Ordenador->TamRegistro, 1, Ordenador->ArquivoLeEscreveSup);
 	Ordenador->Variaveis[LS]--;
 	*lerdireito = false;
 }
 
-void QSortParticao(TOrdenador* Ordenador, TMemoria* Memoria, int Esq, int Dir, int *i, int *j)
+void QSortParticao(TOrdenador* Ordenador, int Esq, int Dir, int *i, int *j)
 {	
 	bool lerladodireito  = true;
+	void* LimInferior;
+	void* LimSuperior;
+	void* RegEscolhido;
+	TMemoria* Memoria;
 
+	/* -- só definir variáveis --*/
+	LimInferior = malloc(Ordenador->TamRegistro);
+	Ordenador->FuncaoCopiar(Ordenador->LimiteInferior, LimInferior);
+	LimSuperior = malloc(Ordenador->TamRegistro);
+	Ordenador->FuncaoCopiar(Ordenador->LimiteSuperior, LimSuperior);
+	Memoria = TMemoria_Criar(Ordenador->MaxItensPorVez);
+	Memoria->FuncaoComparar = Ordenador->FuncaoComparar;
 	Ordenador->Variaveis[EI] = Esq;
 	Ordenador->Variaveis[ES] = Dir;
 	Ordenador->Variaveis[LI] = Esq;
 	Ordenador->Variaveis[LS] = Dir;
-	*j = Dir + 1;	
+	*j = Dir + 1;
 	*i = Esq - 1;
 	fseek(Ordenador->ArquivoLeInf, (Esq - 1) * Ordenador->TamRegistro, SEEK_SET);
 	fseek(Ordenador->ArquivoEscreveInf, (Esq - 1) * Ordenador->TamRegistro, SEEK_SET);
 
 	while (Ordenador->Variaveis[LS] >= Ordenador->Variaveis[LI])
 	{
-		if (Memoria->Capacidade > Memoria->ItensCont + 1)
+		if (Memoria->ItensCont < Memoria->Capacidade - (size_t)1)
 		{
 			if (lerladodireito)
 				QSortLeSuperior(Ordenador, &lerladodireito);
 			else
 				QSortLeInferior(Ordenador, &lerladodireito);
-			TMemoria_Escrever(Memoria, Ordenador->RegistroLido);
+			TMemoria_EscreverNaOrdem(Memoria, Ordenador->Registro);
 			continue;
 		}
 		if (Ordenador->Variaveis[LS] == Ordenador->Variaveis[ES])
@@ -76,66 +87,63 @@ void QSortParticao(TOrdenador* Ordenador, TMemoria* Memoria, int Esq, int Dir, i
 			QSortLeSuperior(Ordenador, &lerladodireito);
 		else
 			QSortLeInferior(Ordenador, &lerladodireito);
-		if (Ordenador->FuncaoComparar(Ordenador->LimiteSuperior, Ordenador->RegistroLido))
+		if (Ordenador->FuncaoComparar(LimSuperior, Ordenador->Registro))
 		{
 			*j = Ordenador->Variaveis[ES];
-			QSortEscreverMaior(Ordenador, Ordenador->RegistroLido);
-			Ordenador->RegistroLido = NULL;
+			QSortEscreverMaior(Ordenador, Ordenador->Registro);			
 			continue;
 		}
-		if (Ordenador->FuncaoComparar(Ordenador->RegistroLido, Ordenador->LimiteInferior))
+		if (Ordenador->FuncaoComparar(Ordenador->Registro, LimInferior))
 		{
 			*i = Ordenador->Variaveis[EI];
-			QSortEscreverMenor(Ordenador, Ordenador->RegistroLido);
-			Ordenador->RegistroLido = NULL;
+			QSortEscreverMenor(Ordenador, Ordenador->Registro);
 			continue;
 		}
-		TMemoria_Escrever(Memoria, Ordenador->RegistroLido);
-		if (Ordenador->Variaveis[EI] - Esq < Dir - Ordenador->Variaveis[ES]) 
+		TMemoria_EscreverNaOrdem(Memoria, Ordenador->Registro);
+		if (Ordenador->Variaveis[EI] - Esq < Dir - Ordenador->Variaveis[ES])
 		{
-			Ordenador->RegistroEscolhido = TMemoria_LerPrimeiro(Memoria);
-			Ordenador->FuncaoCopiar(Ordenador->RegistroEscolhido, Ordenador->LimiteInferior);
-			QSortEscreverMenor(Ordenador, Ordenador->RegistroEscolhido);
-			Ordenador->RegistroEscolhido = NULL;			
+			RegEscolhido = TMemoria_LerPrimeiro(Memoria);
+			Ordenador->FuncaoCopiar(RegEscolhido, LimInferior);
+			QSortEscreverMenor(Ordenador, RegEscolhido);
 		}
 		else
 		{
-			Ordenador->RegistroEscolhido = TMemoria_LerUltimo(Memoria);
-			Ordenador->FuncaoCopiar(Ordenador->RegistroEscolhido, Ordenador->LimiteSuperior);
-			QSortEscreverMaior(Ordenador, Ordenador->RegistroEscolhido);
-			Ordenador->RegistroEscolhido = NULL;				
+			RegEscolhido = TMemoria_LerUltimo(Memoria);
+			Ordenador->FuncaoCopiar(RegEscolhido, LimSuperior);
+			QSortEscreverMaior(Ordenador, RegEscolhido);		
 		}
 	}
 	while (Ordenador->Variaveis[EI] <= Ordenador->Variaveis[ES]) 
 	{
-		Ordenador->RegistroEscolhido = TMemoria_LerPrimeiro(Memoria);
-		QSortEscreverMenor(Ordenador, Ordenador->RegistroEscolhido);
-		Ordenador->RegistroEscolhido = NULL;
+		RegEscolhido = TMemoria_LerPrimeiro(Memoria);
+		QSortEscreverMenor(Ordenador, RegEscolhido);
 	}
+	fflush(Ordenador->ArquivoLeInf);
+	Ordenador->Registro = NULL;
+	free(LimInferior);
+	free(LimSuperior);
+	TMemoria_Destruir(&Memoria);
 }
 
 void QSortIniciar(TOrdenador* Ordenador, int Esq, int Dir)
 {
 	int i, j;
-	TMemoria* Memoria;
 	
-	if (Dir - Esq < 1)
-		return;
-		
-	Memoria = TMemoria_Criar(Ordenador->MaxItensPorVez);
-	QSortParticao(Ordenador, Memoria, Esq, Dir, &i, &j);
-	if (i - Esq < Dir - j) 
+	if (Dir - Esq > 0)
 	{
-		/* ordene primeiro o subarquivo menor */
-		QSortIniciar(Ordenador, Esq, i);
-		QSortIniciar(Ordenador, j, Dir);
+		QSortParticao(Ordenador, Esq, Dir, &i, &j);
+		if (i - Esq < Dir - j) 
+		{
+			/* ordene primeiro o subarquivo menor */
+			QSortIniciar(Ordenador, Esq, i);
+			QSortIniciar(Ordenador, j, Dir);
+		}
+		else 
+		{
+			QSortIniciar(Ordenador, j, Dir);
+			QSortIniciar(Ordenador, Esq, i);
+		}
 	}
-	else 
-	{
-		QSortIniciar(Ordenador, j, Dir);
-		QSortIniciar(Ordenador, Esq, i);
-	}
-	TMemoria_Destruir(&Memoria);
 }
 
 TOrdenador* TOrdenador_Criar(char* NomeArquivo, TFuncaoComparar FuncaoComparar, TFuncaoCopiar FuncaoCopiar, size_t MaxItensPorVez)
@@ -172,8 +180,7 @@ TOrdenador* TOrdenador_Criar(char* NomeArquivo, TFuncaoComparar FuncaoComparar, 
 	NovoOrdenador->LimiteSuperior = NULL;
 	NovoOrdenador->MaxItensPorVez = MaxItensPorVez;
 	NovoOrdenador->Quantidade = 0;
-	NovoOrdenador->RegistroEscolhido = NULL;
-	NovoOrdenador->RegistroLido = NULL;
+	NovoOrdenador->Registro = NULL;
 	NovoOrdenador->TamRegistro = 0;
 
 	return NovoOrdenador;
@@ -191,5 +198,4 @@ void TOrdenador_Destruir(TOrdenador** POrdenador)
 void TOrdenador_Ordenar(TOrdenador* Ordenador)
 {
 	QSortIniciar(Ordenador, 1, Ordenador->Quantidade);
-	fflush(Ordenador->ArquivoLeInf);
 }

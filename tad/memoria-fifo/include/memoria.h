@@ -1,17 +1,19 @@
 	/*
-**	TAD MEMORIA
+**	BIBLIOTECA DO FILIPE
 **	DOUGLAS RODRIGUES DE ALMEIDA
 **
-**	Estrutura de dados do simulador de memoria de memoria
+**	Estrutura de dados do simulador de memoria
 */
 
 #ifndef MEMORIA_H
 #define MEMORIA_H
 
 #include <stdlib.h>
+#include "core.h"
 
 typedef struct _TMemoria {
 	size_t Capacidade;
+	TFuncaoComparar FuncaoComparar;
 	void** Itens;
 	size_t ItensCont;
 	size_t Primeiro;
@@ -24,8 +26,11 @@ void TMemoria_Destruir(TMemoria** PMemoria);
 
 void TMemoria_Escrever(TMemoria* Memoria, void* Dado);
 
+void TMemoria_EscreverNaOrdem(TMemoria* Memoria, void* Dado);
+
 void* TMemoria_LerPrimeiro(TMemoria* Memoria);
 
 void* TMemoria_LerUltimo(TMemoria* Memoria);
+
 
 #endif
