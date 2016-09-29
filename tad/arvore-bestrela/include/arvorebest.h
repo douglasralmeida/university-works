@@ -10,25 +10,13 @@
 
 #include "core.h"
 
-/* Tipos de nó da arvore */
-typedef enum {tnInterno, tnExterno} TArvoreBENoTipo;
-
 /* Estrutura do nó da arvore */
 typedef struct _TArvoreBENo* TArvoreBENo;
 
 struct _TArvoreBENo {
-	TArvoreBENoTipo Tipo;
-	union {
-		struct _I {
-			unsigned short Contador;
-			void** Chaves;
-			TArvoreBENo* Filhos
-		} Interno;
-		struct _E {
-			unsigned short Contador;
-			void* Items;	/* Guarda o itens da arvore */
-		} Externo;
-	} Conteudo;
+	unsigned short Contador;
+	void** Itens;
+	TArvoreBENo* Subarvores;
 };
 
 typedef struct _TArvoreBE {

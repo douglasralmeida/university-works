@@ -19,17 +19,9 @@ TArvoreBENo TArvoreBENo_Criar(TArvoreBENoTipo Tipo, unsigned short Ordem)
 	NovoNo = malloc(sizeof(struct _TArvoreBENo));
 	if (!NovoNo)
 		return NULL;
-	switch (Tipo)
-	{
-		case tnInterno:
-			NovoNo->Conteudo.Interno.Contador = 0;
-			NovoNo->Conteudo.Interno.Chaves = malloc(Ordem * sizeof(void*);
-			NovoNo->Conteudo.Interno.Chaves = malloc(Ordem * sizeof(void*);
-		break;
-		case tnExterno:
-		
-		break;
-	}	
+	NovoNo->Contador = 0;
+	NovoNo->Itens = malloc(Ordem * sizeof(void*));
+	NovoNo->Subarvores = malloc((Ordem+1) * sizeof(TArvoreBENo*));
 
 	return NovoNo;
 }
