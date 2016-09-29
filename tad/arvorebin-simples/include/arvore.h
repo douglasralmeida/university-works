@@ -12,7 +12,7 @@
 typedef struct _TArvoreNo* TArvoreNo;
 
 struct _TArvoreNo {
-	void* Item;			/* Guarda o item da fila */
+	void* Item;		/* Guarda o item da fila */
 	TArvoreNo Esquerda;	/* Aponta para o filho esquerdo do nó */
 	TArvoreNo Direita;	/* Aponta para o filho direito do nó */
 };

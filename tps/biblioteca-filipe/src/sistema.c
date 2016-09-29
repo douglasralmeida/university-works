@@ -95,8 +95,7 @@ void TSistema_ProcessarConsultas(TSistema* Sistema)
 	while (TFila_Tamanho(Sistema->Consultas) > 0)
 	{
 		Consulta = TFila_Desenfileirar(Sistema->Consultas);
-		
-		
+		TSistema		
 		TSistema_Consulta(&Consulta);
 	}
 }
