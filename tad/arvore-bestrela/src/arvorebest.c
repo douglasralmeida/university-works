@@ -5,14 +5,11 @@
  *	Implementação de uma arvore b*
  */
 
-#ifndef ARVORE_H
-#define ARVORE_H
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "arvorebest.h"
 
-TArvoreBENo TArvoreBENo_Criar(TArvoreBENoTipo Tipo, unsigned short Ordem)
+TArvoreBENo TArvoreBENo_Criar(unsigned short Ordem, void* Item, TArvoreBENo* No1, TArvoreBENo* No2)
 {
 	TArvoreBENo NovoNo;
 
@@ -26,11 +23,29 @@ TArvoreBENo TArvoreBENo_Criar(TArvoreBENoTipo Tipo, unsigned short Ordem)
 	return NovoNo;
 }
 
-TArvoreBE* TArvoreBE_Criar(unsigned short Ordem)
+bool TArvoreBENo_Inserir(TArvoreBENo NoAtual, unsigned short Ordem, void* Item, TArvoreBMNo NoRetorno, void* ItemRetorno)
 {
-	TArvoreBE* NovaArvore;
+	unsigned short i;
 	
-	NovaArvore = malloc(sizeof(TArvoreBE));
+	if (!NoAtual)
+		return true;
+	while (i < NoAtual->Contador && FuncaoCompara(Item, NoAtual->Itens[i-1]))
+		i++;
+
+	/*-- INSERIR AQUI UMA FUNCAO DE VERIFICAR SE OS ITENS SAO IGUAIS --*/
+	
+	if FuncaoCompara(NoAtual->Itens[i-1], Item)
+		i--;
+		
+	if (TArvoreBENo_Inserir(NoAtual->Subarvores[i], Ordem, Item, NoRetorno, ItemRetorno))
+		return;
+}
+
+TArvoreBEstrela* TArvoreBEstrela_Criar(unsigned short Ordem)
+{
+	TArvoreBEstrela* NovaArvore;
+	
+	NovaArvore = malloc(sizeof(TArvoreBEstrela));
 	if (!NovaArvore)
 		return NULL;
 	if (Ordem)
@@ -45,10 +60,23 @@ TArvoreBE* TArvoreBE_Criar(unsigned short Ordem)
 	return NovaArvore;
 }
 
-void TArvoreBE_Destruir(TArvoreBE** PArvoreBE, TFuncaoDestruir FuncaoDestruir)
+void TArvoreBEstrela_Destruir(TArvoreBEstrela** PArvore, TFuncaoDestruir FuncaoDestruir)
 {
-	/*-- destruir todos os nós --*/	
-	free(*PArvoreBE);
-	PArvoreBE = NULL;
+	/*-- destruir todos os nós antes --*/	
+	
+	free(*PArvore);
+	PArvore = NULL;
 }
-#endif
+
+void TArvoreBEstrela_Inserir(TArvoreBEstrela* Arvore, void* Item)
+{
+	bool novaraiz;
+	TArvoreBENo* NovaRaiz;
+	
+	novaraiz = TArvoreBENo_Inserir(Arvore->Raiz, Arvore->Ordem, Item, SubarvoreRetornada, itemretornado);
+	if (novaraiz)
+	{
+		NovaRaiz = TArvoreBENo_Criar(Arvore->Ordem, itemretornado, Arvore->Raiz, SubarvoreRetornada);
+		Arvore->Raiz = NovaRaiz;
+	}	
+}

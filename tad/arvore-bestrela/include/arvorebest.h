@@ -19,26 +19,26 @@ struct _TArvoreBENo {
 	TArvoreBENo* Subarvores;
 };
 
-typedef struct _TArvoreBE {
+typedef struct _TArvoreBEstrela {
 	unsigned short Ordem;
 	TArvoreBENo Raiz;
-} TArvoreBE;
+} TArvoreBEstrela;
 
 /* ----------------------------------------------------------------------------
- * funcao:		TArvoreBE_Criar
+ * funcao:		TArvoreBEstrela_Criar
  * 			Cria uma arvore vazia
  * @param:		Ordem da arvora a ser criada
  * @retorna:		A arvore alocada
  *---------------------------------------------------------------------------*/ 
-TArvoreBE* TArvoreBE_Criar(unsigned short Ordem);
+TArvoreBEstrela* TArvoreBEstrela_Criar(unsigned short Ordem);
 
 /* ----------------------------------------------------------------------------
- * funcao:		TArvoreBE_Destruir
+ * funcao:		TArvoreBEstrela_Destruir
  * 			Destroi a arvore
  * @param:		Arvore
  * @param:		Funcao que destroi cada item da folha da árvore
  * @retorna:		(vazio)
  *---------------------------------------------------------------------------*/ 
-void TArvoreBE_Destruir(TArvoreBE** PArvoreBE, TFuncaoDestruir FuncaoDestruir);
+void TArvoreBEstrela_Destruir(TArvoreBEstrela** PArvore, TFuncaoDestruir FuncaoDestruir);
 
 #endif
