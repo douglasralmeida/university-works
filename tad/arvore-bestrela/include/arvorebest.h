@@ -41,4 +41,6 @@ TArvoreBEstrela* TArvoreBEstrela_Criar(unsigned short Ordem);
  *---------------------------------------------------------------------------*/ 
 void TArvoreBEstrela_Destruir(TArvoreBEstrela** PArvore, TFuncaoDestruir FuncaoDestruir);
 
+void TArvoreBEstrela_Inserir(TArvoreBEstrela* Arvore, void* Item);
+
 #endif

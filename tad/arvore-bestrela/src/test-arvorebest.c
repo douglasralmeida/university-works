@@ -29,7 +29,7 @@ void ImprimirInt(void* PInt)
 
 int main(void)
 {	
-	TArvoreBE* ArvoreBE;
+	TArvoreBEstrela* ArvoreBEstrela;
 	TFuncaoDestruir FuncaoDestruir;
 	
 	printf("TESTE ARBORE B*\n");
@@ -38,14 +38,14 @@ int main(void)
 	FuncaoDestruir = DestruirInt;	
 
 	printf("Criando arvore...");
-	ArvoreBE = TArvoreBE_Criar(70);
-	if (ArvoreBE != NULL)
+	ArvoreBEstrela = TArvoreBEstrela_Criar(3);
+	if (ArvoreBEstrela != NULL)
 		printf("OK.\n");
 	else
 		exit(EXIT_FAILURE);
 
 	printf("Destruindo arvore...");
-	TArvoreBE_Destruir(&ArvoreBE, FuncaoDestruir);
+	TArvoreBEstrela_Destruir(&ArvoreBEstrela, FuncaoDestruir);
 	printf("OK.\n");
 	
 	exit(EXIT_SUCCESS);

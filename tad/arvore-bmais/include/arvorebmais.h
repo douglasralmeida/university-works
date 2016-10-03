@@ -22,11 +22,11 @@ struct _TArvoreBMNo {
 		struct _I {
 			unsigned short Contador;
 			void** Chaves;
-			TArvoreBMNo* Subarvores;
+			TArvoreBMNo** Subarvores;
 		} Interno;
 		struct _E {
 			unsigned short Contador;
-			void* Itens;	/* Guarda o itens da arvore */
+			void** Itens;	/* Guarda o itens da arvore */
 		} Externo;
 	} Conteudo;
 };
