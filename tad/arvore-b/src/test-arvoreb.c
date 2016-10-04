@@ -20,7 +20,6 @@ void DestruirInt(void** PInt)
 {
 	if (PInt != NULL)
 	{
-		printf("NUM: %d\n", **(int**) PInt);
 		free(*PInt);
 		PInt = NULL;
 	}
@@ -36,6 +35,7 @@ void ImprimirInt(void* PInt)
 
 int main(void)
 {	
+	int i;
 	int* p;
 	TArvoreB* Arvore;
 	
@@ -43,7 +43,7 @@ int main(void)
 	printf("==============\n");
 
 	printf("Criando arvore...");
-	Arvore = TArvoreB_Criar(3);
+	Arvore = TArvoreB_Criar(2);
 	Arvore->FuncaoComparar = CompararInt;
 	if (Arvore != NULL)
 		printf("OK.\n");
@@ -51,9 +51,13 @@ int main(void)
 		exit(EXIT_FAILURE);
 
 	printf("Inserindo itens na arvore...");
-	p = malloc(sizeof(int));
-	*p = 1;
-	TArvoreB_Inserir(Arvore, p);
+	for (i = 20; i > 1; i--)
+	{
+		p = malloc(sizeof(int));
+		*p = i;
+		printf("[%d] ", i);
+		TArvoreB_Inserir(Arvore, p);
+	}
 	printf("OK.\n");
 
 	printf("Destruindo arvore...");

@@ -17,8 +17,8 @@ TArvoreBNo TArvoreBNo_Criar(unsigned short Ordem, void* Item, TArvoreBNo No1, TA
 	if (!NovoNo)
 		return NULL;
 	NovoNo->Contador = 0;
-	NovoNo->Itens = malloc(Ordem * sizeof(void*));
-	NovoNo->Subarvores = malloc((Ordem+1) * sizeof(TArvoreBNo*));
+	NovoNo->Itens = malloc(2 * Ordem * sizeof(void*));
+	NovoNo->Subarvores = malloc((2 * Ordem + 1) * sizeof(TArvoreBNo*));
 	if (Item)
 	{
 		NovoNo->Contador++;
@@ -38,16 +38,15 @@ void TArvoreBNo_Destruir(TArvoreBNo* PNo, TFuncaoDestruir FuncaoDestruir)
 		return;
 	for (i = 0; i < (*PNo)->Contador; i++)
 		FuncaoDestruir((*PNo)->Itens + i);
-	for (i = 1; i <= (*PNo)->Contador; i++)
+	for (i = 0; i <= (*PNo)->Contador; i++)
 		TArvoreBNo_Destruir((*PNo)->Subarvores + i, FuncaoDestruir);
-	
 	free((*PNo)->Itens);
 	free((*PNo)->Subarvores);
 	free(*PNo);
 	*PNo = NULL;
 }
 
-void TArvoreBNo_Fixar(TFuncaoComparar FuncaoComparar, TArvoreBNo NoAtual, void** Item, TArvoreBNo Subarvore)
+void TArvoreBNo_Fixar(TFuncaoComparar FuncaoComparar, TArvoreBNo NoAtual, void* Item, TArvoreBNo Subarvore)
 {
 	bool naoacharposicao;
 	int i;
@@ -56,7 +55,7 @@ void TArvoreBNo_Fixar(TFuncaoComparar FuncaoComparar, TArvoreBNo NoAtual, void**
 	naoacharposicao = (i > 0);
 	while (naoacharposicao)
 	{
-		if (FuncaoComparar(NoAtual->Itens[i-1], *Item))
+		if (FuncaoComparar(NoAtual->Itens[i-1], Item))
 		{
 			naoacharposicao = false;
 			break;
@@ -67,21 +66,21 @@ void TArvoreBNo_Fixar(TFuncaoComparar FuncaoComparar, TArvoreBNo NoAtual, void**
 		if (i < 1)
 			naoacharposicao = false;
 	}
-	NoAtual->Itens[i] = *Item;
+	NoAtual->Itens[i] = Item;
 	NoAtual->Subarvores[i+1] = Subarvore;
 	NoAtual->Contador++;
 }
 
-bool TArvoreBNo_Inserir(TArvoreB* Arvore, TArvoreBNo NoAtual, void** Item, TArvoreBNo NoRetorno, void** ItemRetorno)
+bool TArvoreBNo_Inserir(TArvoreB* Arvore, TArvoreBNo NoAtual, void** Item, TArvoreBNo* NoRetorno, void** ItemRetorno)
 {
-	unsigned short i;
+	unsigned short i = 1;
 	TArvoreBNo NoTemp;
 	
 	/*-- não tem nada aqui, entao vamos gerar uma nova raiz --*/
 	if (!NoAtual)
 	{
-		ItemRetorno = Item;
-		NoRetorno = NoAtual;
+		*ItemRetorno = *Item;
+		*NoRetorno = NULL;
 		return true;
 	}
 	/*-- varre o nó atual em busca da saída para a próxima subarvore --*/
@@ -99,7 +98,7 @@ bool TArvoreBNo_Inserir(TArvoreB* Arvore, TArvoreBNo NoAtual, void** Item, TArvo
 	/*-- não achou a saída, então fica por aqui mesmo --*/
 	if (NoAtual->Contador < Arvore->Ordem * 2)
 	{
-		TArvoreBNo_Fixar(Arvore->FuncaoComparar, NoAtual, ItemRetorno, NoRetorno);
+		TArvoreBNo_Fixar(Arvore->FuncaoComparar, NoAtual, *ItemRetorno, *NoRetorno);
 		return false;
 	}
 	/*-- nó esta cheio, terá que ser dividido --*/
@@ -108,17 +107,17 @@ bool TArvoreBNo_Inserir(TArvoreB* Arvore, TArvoreBNo NoAtual, void** Item, TArvo
 	{
 		TArvoreBNo_Fixar(Arvore->FuncaoComparar, NoTemp, NoAtual->Itens[2*Arvore->Ordem-1], NoAtual->Subarvores[2*Arvore->Ordem]);
 		NoAtual->Contador--;
-		TArvoreBNo_Fixar(Arvore->FuncaoComparar, NoAtual, ItemRetorno, NoRetorno);
+		TArvoreBNo_Fixar(Arvore->FuncaoComparar, NoAtual, *ItemRetorno, *NoRetorno);
 	}
 	else
-		TArvoreBNo_Fixar(Arvore->FuncaoComparar, NoTemp, ItemRetorno, NoRetorno);
+		TArvoreBNo_Fixar(Arvore->FuncaoComparar, NoTemp, *ItemRetorno, *NoRetorno);
 	for (i = Arvore->Ordem + 2; i <= 2*Arvore->Ordem; i++)
 	{
 		TArvoreBNo_Fixar(Arvore->FuncaoComparar, NoTemp, NoAtual->Itens[i-1], NoAtual->Subarvores[i]);
 		NoAtual->Contador = Arvore->Ordem;
-		NoTemp->Itens[0] = NoAtual->Itens[Arvore->Ordem+1];
+		NoTemp->Subarvores[0] = NoAtual->Subarvores[Arvore->Ordem+1];
 		*ItemRetorno = NoAtual->Itens[Arvore->Ordem];
-		NoRetorno = NoTemp;
+		*NoRetorno = NoTemp;
 	}
 	
 	return true;
@@ -157,7 +156,7 @@ void TArvoreB_Inserir(TArvoreB* Arvore, void* Item)
 	bool novaraiz;
 	TArvoreBNo NovaRaiz, SubarvoreRetornada = NULL;
 	
-	novaraiz = TArvoreBNo_Inserir(Arvore, Arvore->Raiz, &Item, SubarvoreRetornada, &itemretornado);
+	novaraiz = TArvoreBNo_Inserir(Arvore, Arvore->Raiz, &Item, &SubarvoreRetornada, &itemretornado);
 	if (novaraiz)
 	{
 		NovaRaiz = TArvoreBNo_Criar(Arvore->Ordem, itemretornado, Arvore->Raiz, SubarvoreRetornada);
