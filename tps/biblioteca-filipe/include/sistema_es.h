@@ -32,4 +32,6 @@ bool TSistemaManipuladorES_ExportarFinal(TSistemaManipuladorES* Manipulador, voi
 
 bool TSistemaManipuladorES_ImportarProximo(TSistemaManipuladorES* Manipulador, void* Dado, size_t TamanhoDado);
 
+size_t TSistemaManipuladorES_ItensQuantidade(TSistemaManipuladorES* Manipulador, size_t TamanhoDado);
+
 #endif

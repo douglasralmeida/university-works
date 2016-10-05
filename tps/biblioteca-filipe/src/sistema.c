@@ -90,13 +90,23 @@ bool TSistema_OrdenarLivros(TSistema* Sistema)
 
 void TSistema_ProcessarConsultas(TSistema* Sistema)
 {
+	TLivro* Livro;
 	TSistemaConsulta* Consulta;
 
 	while (TFila_Tamanho(Sistema->Consultas) > 0)
 	{
 		Consulta = TFila_Desenfileirar(Sistema->Consultas);
-		TSistema		
-		TSistema_Consulta(&Consulta);
+		Livro = TSistemaMotorBusca_PesquisarIndice(, Consulta);
+		if (Livro)
+		{
+			if (Livro->Disponivel == '1')
+				printf("disponivel na posicao %d na estante %d\n", 0, 0);
+			else
+				printf("emprestado\n", )
+			TLivro_Destruir(&Livro);
+		}
+		else
+			printf("livro nao encontrado\n", );
 	}
 }
 

@@ -27,8 +27,3 @@ void TSistemaConsulta_Destruir(void** PConsulta)
 	free(*PConsulta);
 	*PConsulta = NULL;
 }
-
-void TSistemaConsulta_SalvarNoArquivo(TSistemaConsulta* Consulta)
-{
-	
-}

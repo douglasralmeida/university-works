@@ -60,3 +60,10 @@ bool TSistemaManipuladorES_ImportarProximo(TSistemaManipuladorES* Manipulador, v
 {
 	return (fread(Dado, TamanhoDado, 1, Manipulador->Arquivo) > 0);
 }
+
+size_t TSistemaManipuladorES_ItensQuantidade(TSistemaManipuladorES* Manipulador, size_t TamanhoDado)
+{
+    fseek(Manipulador->Arquivo, 0, SEEK_END);   // non-portable
+    return (ftell(Manipulador->Arquivo) / TamandoDado);
+
+}
