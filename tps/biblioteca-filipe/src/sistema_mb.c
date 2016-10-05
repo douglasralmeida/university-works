@@ -14,6 +14,7 @@ TSistemaMotorBuscaItem* TSistemaMotorBuscaItem_Criar(char* Inicio, char* Final, 
 {
 	TSistemaMotorBuscaItem* NovoItem;
 
+	NovoItem = malloc(sizeof(TSistemaMotorBuscaItem));
 	NovoItem->NomeInicial = malloc((strlen(Inicio)+1) * sizeof(char));
 	NovoItem->NomeFinal = malloc((strlen(Final)+1) * sizeof(char));
 	strcpy(NovoItem->NomeInicial, Inicio);
@@ -33,14 +34,31 @@ void TSistemaMotorBuscaItem_Destruir(void** PItem)
 
 bool TSistemaMotorBuscaItem_Comparar(void* Item1, void* Item2)
 {
-	return false;
+	return (strcmp(((TSistemaMotorBuscaItem*)Item1)->NomeFinal, ((TSistemaMotorBuscaItem*)Item2)->NomeInicial) < 0);
 }
 
 bool TSistemaMotorBuscaItem_Iguais(void* Item1, void* Item2)
 {
-	return false;
+	return (strcmp(((TSistemaMotorBuscaItem*)Item1)->NomeInicial, ((TSistemaMotorBuscaItem*)Item2)->NomeInicial) <= 0) &&
+	(strcmp(((TSistemaMotorBuscaItem*)Item1)->NomeFinal, ((TSistemaMotorBuscaItem*)Item2)->NomeFinal) >= 0);
 }
 
+TSistemaMotorBuscaResultado* TSistemaMotorBuscaResultado_Criar()
+{
+	TSistemaMotorBuscaResultado* NovoResultado;
+	
+	NovoResultado = malloc(sizeof(TSistemaMotorBuscaResultado));
+	NovoResultado->Livro = TLivro_Criar();
+
+	return NovoResultado;
+}
+
+void TSistemaMotorBuscaResultado_Destruir(TSistemaMotorBuscaResultado** PResultado)
+{
+	TLivro_Destruir(&(*PResultado)->Livro);
+	free(*PResultado);
+	*PResultado = NULL;
+}
 
 TSistemaMotorBusca* TSistemaMotorBusca_Criar(char* ArquivoEstante, char* ArquivoIndice, size_t Memoria, size_t QuantIndice)
 {
@@ -64,7 +82,7 @@ TSistemaMotorBusca* TSistemaMotorBusca_Criar(char* ArquivoEstante, char* Arquivo
 
 void TSistemaMotorBusca_Destruir(TSistemaMotorBusca** PMotor)
 {
-	TArvoreB_Destruir(NovoMotor->ArvorePesquisa, TSistemaMotorBuscaItem_Destruir);
+	TArvoreB_Destruir(&(*PMotor)->ArvorePesquisa, TSistemaMotorBuscaItem_Destruir);
 	if ((*PMotor)->IndicePesquisa)
 		TSistemaManipuladorES_Destruir(&(*PMotor)->IndicePesquisa);
 	free((*PMotor)->Indice);
@@ -76,21 +94,24 @@ void TSistemaMotorBusca_Destruir(TSistemaMotorBusca** PMotor)
 bool TSistemaMotorBusca_CarregarIndice(TSistemaMotorBusca* Motor)
 {
 	size_t i;
-	char String[102], LivroA[51], LivroB[51];
+	char string[102], LivroA[51], LivroB[51];
 	TSistemaMotorBuscaItem* MotorItem;
 	
-	Motor->IndicePesquisa = TSistemaManipuladorES(Motor->Indice, esmTextoLeitura);
+	Motor->IndicePesquisa = TSistemaManipuladorES_Criar(Motor->Indice, esmTextoLeitura);
 	if (!Motor->IndicePesquisa)
 		return false;
 	for (i = 0; i < Motor->QuantItensIndice; i++)
 	{
-		if (TSistemaManipuladorES_ImportarProximo(Motor->IndicePesquisa, string, 0))
+		if (TSistemaManipuladorES_ImportarProximo(Motor->IndicePesquisa, string, 102))
 		{
-			sscanf("%s %s", LivroA, LivroB);
-			MotorItem = TSistemaMotorBuscaItem_Criar(LivroA, LivroB, i);
-			if (!MotorItem)
-				return false;
-			TArvore_Inserir(Motor->ArvorePesquisa, MotorItem);
+			if (string[0] != '#')
+			{
+				sscanf(string, "%s %s", LivroA, LivroB);
+				MotorItem = TSistemaMotorBuscaItem_Criar(LivroA, LivroB, i);
+				if (!MotorItem)
+					return false;
+				TArvoreB_Inserir(Motor->ArvorePesquisa, MotorItem);
+			}
 		}
 		else
 			return false;
@@ -99,43 +120,45 @@ bool TSistemaMotorBusca_CarregarIndice(TSistemaMotorBusca* Motor)
 	return true;
 }
 
-TLivro* TSistemaMotorBusca_PesquisarArquivo(TSistemaMotorBusca* Motor, size_t ID, TSistemaConsulta* Consulta)
+TSistemaMotorBuscaResultado* TSistemaMotorBusca_PesquisarArquivo(TSistemaMotorBusca* Motor, size_t ID, TSistemaConsulta* Consulta)
 {
 	char arquivoestante[64];
 	size_t i, quantlivros;
-	TLivro* Livro;
 	TSistemaManipuladorES* Estante;
+	TSistemaMotorBuscaResultado* Resultado;
 	
 	sprintf(arquivoestante, "%s%lu", Motor->Estante, ID);
 	Estante = TSistemaManipuladorES_Criar(arquivoestante, esmBinarioLeitura);
 	if (!Estante)
 		return NULL;
-	Livro = TLivro_Criar();
 	quantlivros = TSistemaManipuladorES_ItensQuantidade(Estante, sizeof(TLivro));
+	Resultado = TSistemaMotorBuscaResultado_Criar();
 	for (i = 0; i < quantlivros; i++)
 	{
-		TSistemaManipuladorES_ImportarProximo(Estante, Livro, sizeof(TLivro));
-		if (!strcmp(Livro->Titulo, Consulta->Conteudo))
+		TSistemaManipuladorES_ImportarProximo(Estante, Resultado->Livro, sizeof(TLivro));
+		if (!strcmp(Resultado->Livro->Titulo, Consulta->Conteudo))
 		{
+			Resultado->Posicao = i;
+			Resultado->Estante = ID;
 			TSistemaManipuladorES_Destruir(&Estante);
-			return Livro;
+			return Resultado;
 		}
 	}
-
+	TSistemaMotorBuscaResultado_Destruir(&Resultado);
 	TSistemaManipuladorES_Destruir(&Estante);
 	return NULL;
 }
 
-TLivro* TSistemaMotorBusca_PesquisarIndice(TSistemaMotorBusca* Motor, TSistemaConsulta* Consulta)
+TSistemaMotorBuscaResultado* TSistemaMotorBusca_PesquisarIndice(TSistemaMotorBusca* Motor, TSistemaConsulta* Consulta)
 {
-	TSistemaMotorBuscaItem* ItemEncontrado;
+	TSistemaMotorBuscaItem* Item;
 	TSistemaMotorBuscaItem* Chave;
 	
 	Chave = TSistemaMotorBuscaItem_Criar(Consulta->Conteudo, Consulta->Conteudo, 0);
 	Item = TArvoreB_Pesquisar(Motor->ArvorePesquisa, Chave);
-	TSistemaMotorBuscaItem_Destruir(&Chave);
+	TSistemaMotorBuscaItem_Destruir((void**)&Chave);
 	if (Item)
-		return TSitemaMotorBusca_PesquisarArquivo(Motor, Item->ID, Consulta);
+		return TSistemaMotorBusca_PesquisarArquivo(Motor, Item->ID, Consulta);
 	else
 		return NULL;
 }

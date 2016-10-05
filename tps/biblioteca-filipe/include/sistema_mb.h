@@ -20,6 +20,12 @@ typedef struct _TSistemaMotorBuscaItem {
 	size_t ID;
 } TSistemaMotorBuscaItem;
 
+typedef struct _TSistemaMotorBuscaResultado {
+	TLivro* Livro;
+	size_t Posicao;
+	size_t Estante;
+} TSistemaMotorBuscaResultado;
+
 typedef struct _TSistemaMotorBusca {
 	TArvoreB* ArvorePesquisa;
 	char* Estante;
@@ -30,7 +36,11 @@ typedef struct _TSistemaMotorBusca {
 
 TSistemaMotorBuscaItem* TSistemaMotorBuscaItem_Criar(char* Inicio, char* Final, size_t ID);
 
-void TSistemaMotorBuscaItem_Destruir(TSistemaMotorBuscaItem** PSistemaMotorBuscaItem);
+void TSistemaMotorBuscaItem_Destruir(void** PSistemaMotorBuscaItem);
+
+TSistemaMotorBuscaResultado* TSistemaMotorBuscaResultado_Criar();
+
+void TSistemaMotorBuscaResultado_Destruir(TSistemaMotorBuscaResultado** PResultado);
 
 TSistemaMotorBusca* TSistemaMotorBusca_Criar(char* ArquivoIndice, char* ArquivoEstante, size_t Memoria, size_t QuantIndice);
 
@@ -38,8 +48,8 @@ void TSistemaMotorBusca_Destruir(TSistemaMotorBusca** PMotor);
 
 bool TSistemaMotorBusca_CarregarIndice(TSistemaMotorBusca* Motor);
 
-TLivro* TSistemaMotorBusca_PesquisarArquivo(TSistemaMotorBusca* Motor, size_t ID, TSistemaConsulta* Consulta);
+TSistemaMotorBuscaResultado* TSistemaMotorBusca_PesquisarArquivo(TSistemaMotorBusca* Motor, size_t ID, TSistemaConsulta* Consulta);
 
-TLivro* TSistemaMotorBusca_PesquisarIndice(TSistemaMotorBusca* Motor, TSistemaConsulta* Consulta);
+TSistemaMotorBuscaResultado* TSistemaMotorBusca_PesquisarIndice(TSistemaMotorBusca* Motor, TSistemaConsulta* Consulta);
 
 #endif

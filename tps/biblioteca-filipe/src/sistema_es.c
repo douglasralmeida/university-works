@@ -15,6 +15,7 @@ TSistemaManipuladorES* TSistemaManipuladorES_Criar(char* Nome, TESModo Modo)
 	NovoManipulador = malloc(sizeof(TSistemaManipuladorES));
 	if (!NovoManipulador)
 		return NULL;
+	NovoManipulador->Modo = Modo;
 	switch (Modo)
 	{
 		case esmBinarioEscrita:
@@ -58,12 +59,22 @@ bool TSistemaManipuladorES_ExportarFinal(TSistemaManipuladorES* Manipulador, voi
 
 bool TSistemaManipuladorES_ImportarProximo(TSistemaManipuladorES* Manipulador, void* Dado, size_t TamanhoDado)
 {
-	return (fread(Dado, TamanhoDado, 1, Manipulador->Arquivo) > 0);
+	if (Manipulador->Modo == esmTextoLeitura)
+	{
+		fgets((char*)Dado, TamanhoDado, Manipulador->Arquivo);
+		return true;
+	}
+	else
+		return (fread(Dado, TamanhoDado, 1, Manipulador->Arquivo) > 0);
 }
 
 size_t TSistemaManipuladorES_ItensQuantidade(TSistemaManipuladorES* Manipulador, size_t TamanhoDado)
 {
-    fseek(Manipulador->Arquivo, 0, SEEK_END);   // non-portable
-    return (ftell(Manipulador->Arquivo) / TamandoDado);
+	size_t resultado;
+	fseek(Manipulador->Arquivo, 0, SEEK_END);
+	resultado = ftell(Manipulador->Arquivo) / TamanhoDado;
+	fseek(Manipulador->Arquivo, 0, SEEK_SET);
+	return resultado;
+	fseek(Manipulador->Arquivo, 0, SEEK_END);
 
 }

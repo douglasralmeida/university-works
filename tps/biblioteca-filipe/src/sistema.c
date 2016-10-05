@@ -12,6 +12,7 @@
 #include "ordenador.h"
 #include "sistema_consulta.h"
 #include "sistema_es.h"
+#include "sistema_mb.h"
 #include "sistema.h"
 
 TSistema* TSistema_Criar(void)
@@ -90,24 +91,33 @@ bool TSistema_OrdenarLivros(TSistema* Sistema)
 
 void TSistema_ProcessarConsultas(TSistema* Sistema)
 {
-	TLivro* Livro;
 	TSistemaConsulta* Consulta;
+	TSistemaMotorBusca* MotorBusca;
+	TSistemaMotorBuscaResultado* Resultado;
 
-	while (TFila_Tamanho(Sistema->Consultas) > 0)
-	{
-		Consulta = TFila_Desenfileirar(Sistema->Consultas);
-		Livro = TSistemaMotorBusca_PesquisarIndice(, Consulta);
-		if (Livro)
+	MotorBusca = TSistemaMotorBusca_Criar(Sistema->NomeEstante, Sistema->NomeIndice, Sistema->MaxItensMemoria, Sistema->QuantEstantes);
+	if (!MotorBusca)
+		return;
+	if (TSistemaMotorBusca_CarregarIndice(MotorBusca))
+		while (TFila_Tamanho(Sistema->Consultas) > 0)
 		{
-			if (Livro->Disponivel == '1')
-				printf("disponivel na posicao %d na estante %d\n", 0, 0);
+			Consulta = TFila_Desenfileirar(Sistema->Consultas);
+			Resultado = TSistemaMotorBusca_PesquisarIndice(MotorBusca, Consulta);
+			if (Resultado)
+			{
+				if (Resultado->Livro->Disponivel == '1')
+					printf("disponivel na posicao %lu na estante %lu\n", Resultado->Posicao, Resultado->Estante);
+				else
+					printf("emprestado\n");
+				TSistemaMotorBuscaResultado_Destruir(&Resultado);
+			}
 			else
-				printf("emprestado\n", )
-			TLivro_Destruir(&Livro);
+				printf("livro nao encontrado\n");
+			TSistemaConsulta_Destruir((void**)&Consulta);
 		}
-		else
-			printf("livro nao encontrado\n", );
-	}
+	else
+		printf("Erro ao carregar índice no motor de busca.\n");
+	TSistemaMotorBusca_Destruir(&MotorBusca);
 }
 
 bool TSistema_ReceberConsultas(TSistema* Sistema, unsigned long NumConsultas)
@@ -282,14 +292,19 @@ bool TSistema_SalvarLivros(TSistema* Sistema)
 	}
 	if (j == 1)
 	{
+		strcat(txtindice, " ");
+		strcat(txtindice, Livro->Titulo);
+		strcat(txtindice, "\n");
 		tamtxtindice = strlen(txtindice);
 		TSistemaManipuladorES_ExportarFinal(Indice, txtindice, tamtxtindice * sizeof(char));
 	}
 	while (++numestante < Sistema->QuantEstantes)
 	{
-		TSistemaManipuladorES_Destruir(&Estante);
-		sprintf(nomeestante, "%s%lu", Sistema->NomeEstante, numestante);
-		Estante = TSistemaManipuladorES_Criar(nomeestante, esmBinarioEscrita);
+		if (numestante < Sistema->QuantEstantes - 1)
+			strcpy(txtindice, "#\n");
+		else
+			strcpy(txtindice, "#");
+		TSistemaManipuladorES_ExportarFinal(Indice, txtindice, strlen(txtindice) * sizeof(char));
 	}
 	TSistemaManipuladorES_Destruir(&Estante);
 	TSistemaManipuladorES_Destruir(&Indice);
@@ -303,7 +318,7 @@ bool TSistema_SalvarLivros(TSistema* Sistema)
 void TSistema_Simular(TSistema* Sistema)
 {
 	/* 1a. parte -- ordenacao extrena */
-	if (TSistema_OrdenarLivros(Sistema) && TSistema_SalvarLivros(Sistema)
+	if (TSistema_OrdenarLivros(Sistema) && TSistema_SalvarLivros(Sistema))
 		TSistema_ProcessarConsultas(Sistema);
 	else
 		perror("Erro ao ordenar livros.\n");

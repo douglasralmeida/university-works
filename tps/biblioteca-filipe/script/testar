@@ -1,7 +1,7 @@
 exefile="$1"
 diff="diff -iad"
-declare -a arquivosteste=("test/t1")
-declare -a arquivosrespostas=("test/r1")
+declare -a arquivosteste=("test/t1" "test/t2")
+declare -a arquivosrespostas=("test/r1" "test/r2")
 red=$'\e[1;31m'
 grn=$'\e[1;32m'
 end=$'\e[0m'

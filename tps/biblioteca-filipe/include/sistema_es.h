@@ -20,6 +20,7 @@ typedef enum {
 
 typedef struct _TSistemaManipuladorES {
 	FILE* Arquivo;
+	TESModo Modo;
 } TSistemaManipuladorES;
 
 TSistemaManipuladorES* TSistemaManipuladorES_Criar(char* Nome, TESModo Modo);
