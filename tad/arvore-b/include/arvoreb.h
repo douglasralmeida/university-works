@@ -21,6 +21,7 @@ struct _TArvoreBNo {
 
 typedef struct _TArvoreB {
 	TFuncaoComparar FuncaoComparar;
+	TFuncaoIguais FuncaoIguais;
 	unsigned short Ordem;
 	TArvoreBNo Raiz;
 } TArvoreB;
@@ -44,4 +45,7 @@ void TArvoreB_Destruir(TArvoreB** PArvore, TFuncaoDestruir FuncaoDestruir);
 
 void TArvoreB_Inserir(TArvoreB* Arvore, void* Item);
 
+void TArvoreB_Imprimir(TArvoreB* Arvore, TFuncaoImprimir FuncaoImprimir);
+
+void* TArvoreB_Pesquisar(TArvoreB* Arvore, void* Item);
 #endif
