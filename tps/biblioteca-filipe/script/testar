@@ -1,14 +1,15 @@
 exefile="$1"
 diff="diff -iad"
-declare -a arquivosteste=("test/t1" "test/t2")
-declare -a arquivosrespostas=("test/r1" "test/r2")
+declare -a arquivosteste=("test/t1" "test/t2" "test/t3")
+declare -a arquivosrespostas=("test/r1" "test/r2" "test/3")
 red=$'\e[1;31m'
 grn=$'\e[1;32m'
 end=$'\e[0m'
 
 echo $exefile
 
-for i in "${!arquivostestes[*]}"; do
+for i in {0..1}
+do
 	printf "Teste %s..." "${arquivosteste[$i]}"
 	
 	"./$exefile" < ${arquivosteste[$i]} 1>test/resultado

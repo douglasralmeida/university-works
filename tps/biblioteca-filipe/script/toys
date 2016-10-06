@@ -1,0 +1,42 @@
+exefile="$1"
+diff="diff -iad"
+testeentrada="test/toy%d/input"
+testesaida="test/toy%d/output"
+red=$'\e[1;31m'
+grn=$'\e[1;32m'
+end=$'\e[0m'
+
+echo $exefile
+
+for i in {2..2}
+do
+	printf "Toy %s:\n" "$i"
+	
+	"./$exefile" < test/toy"$i"/input 1>test/resultado
+
+	printf "   Livros ordenados........."
+	if diff livros_ordenados test/toy"$i"/livros_ordenados >/dev/null;
+	then
+		printf "[${grn}OK${end}]\n";
+	else
+		printf "[${red}Falha${end}]\n";
+	fi
+
+	printf "   Indice..................."
+	if diff indice test/toy"$i"/indice >/dev/null;
+	then
+		printf "[${grn}OK${end}]\n";
+	else
+		printf "[${red}Falha${end}]\n";
+	fi
+
+	printf "   Respotas das consultas..."
+	if diff test/resultado test/toy"$i"/output >/dev/null;
+	then
+		printf "[${grn}OK${end}]\n";
+	else
+		printf "[${red}Falha${end}]\n";
+	fi
+done
+
+exit 0
