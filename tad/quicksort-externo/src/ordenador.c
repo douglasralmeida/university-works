@@ -119,6 +119,8 @@ void QSortParticao(TOrdenador* Ordenador, int Esq, int Dir, int *i, int *j)
 		QSortEscreverMenor(Ordenador, RegEscolhido);
 	}
 	fflush(Ordenador->ArquivoLeInf);
+	fflush(Ordenador->ArquivoEscreveInf);
+	fflush(Ordenador->ArquivoLeEscreveSup);
 	Ordenador->Registro = NULL;
 	free(LimInferior);
 	free(LimSuperior);
