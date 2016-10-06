@@ -14,7 +14,7 @@ do
 	
 	"./$exefile" < test/toy"$i"/input 1>test/resultado
 
-	printf "   Livros ordenados........."
+	printf "   Livros ordenados.........."
 	if diff livros_ordenados test/toy"$i"/livros_ordenados >/dev/null;
 	then
 		printf "[${grn}OK${end}]\n";
@@ -22,7 +22,7 @@ do
 		printf "[${red}Falha${end}]\n";
 	fi
 
-	printf "   Indice..................."
+	printf "   Indice...................."
 	if diff indice test/toy"$i"/indice >/dev/null;
 	then
 		printf "[${grn}OK${end}]\n";
@@ -30,7 +30,7 @@ do
 		printf "[${red}Falha${end}]\n";
 	fi
 
-	printf "   Respotas das consultas..."
+	printf "   Respostas das consultas..."
 	if diff test/resultado test/toy"$i"/output >/dev/null;
 	then
 		printf "[${grn}OK${end}]\n";

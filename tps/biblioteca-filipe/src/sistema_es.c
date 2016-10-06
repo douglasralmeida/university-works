@@ -45,12 +45,6 @@ void TSistemaManipuladorES_Destruir(TSistemaManipuladorES** PManipulador)
 	free(*PManipulador);
 	*PManipulador = NULL;
 }
-/*
-void TArquivo_ApensarNoInicio(TArquivo* Arquivo, void* Dado, size_t TamanhoDado)
-{
-	rewind(Arquivo->Descritor);	
-	fwrite(Dado, TamanhoDado, 1, Arquivo->Descritor);
-}*/
 
 bool TSistemaManipuladorES_ExportarFinal(TSistemaManipuladorES* Manipulador, void* Dado, size_t TamanhoDado)
 {
@@ -75,6 +69,4 @@ size_t TSistemaManipuladorES_ItensQuantidade(TSistemaManipuladorES* Manipulador,
 	resultado = ftell(Manipulador->Arquivo) / TamanhoDado;
 	fseek(Manipulador->Arquivo, 0, SEEK_SET);
 	return resultado;
-	fseek(Manipulador->Arquivo, 0, SEEK_END);
-
 }
