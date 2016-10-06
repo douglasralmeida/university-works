@@ -290,7 +290,7 @@ bool TSistema_SalvarLivros(TSistema* Sistema)
 		TSistemaManipuladorES_ExportarFinal(LivrosTexto, string, (tamtitulo + 3) * sizeof(char));
 		j++;
 	}
-	if (j == 1)
+	if (j <= Sistema->QuantLivrosEstantes - 1)
 	{
 		strcat(txtindice, " ");
 		strcat(txtindice, Livro->Titulo);
@@ -300,10 +300,7 @@ bool TSistema_SalvarLivros(TSistema* Sistema)
 	}
 	while (++numestante < Sistema->QuantEstantes)
 	{
-		if (numestante < Sistema->QuantEstantes - 1)
-			strcpy(txtindice, "#\n");
-		else
-			strcpy(txtindice, "#");
+		strcpy(txtindice, "#\n");
 		TSistemaManipuladorES_ExportarFinal(Indice, txtindice, strlen(txtindice) * sizeof(char));
 	}
 	TSistemaManipuladorES_Destruir(&Estante);

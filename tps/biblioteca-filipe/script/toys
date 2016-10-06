@@ -8,7 +8,7 @@ end=$'\e[0m'
 
 echo $exefile
 
-for i in {2..2}
+for i in {1..10}
 do
 	printf "Toy %s:\n" "$i"
 	
