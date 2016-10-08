@@ -1,0 +1,44 @@
+exefile="$1"
+
+	printf "Variando N:\n"
+	for i in {1..6}
+	do
+		echo "N = "$i"000...."
+		tempo="$(time ( "./$exefile" < test/variaentrada/arq_"$i"000_5_100_60_10) 1>/dev/null )"
+		echo "$tempo"
+	done
+
+	printf "Variando M:\n"
+	for i in {1..6}
+	do
+		echo "M = "$i"0...."
+		tempo="$(time ( "./$exefile" < test/variaentrada/arq_1000_"$i"0_10_100_10) 1>/dev/null )"
+		echo "$tempo"
+	done
+
+	printf "Variando E:\n"
+	for i in {1..6}
+	do
+		echo "E = "$i"00...."
+		tempo="$(time ( "./$exefile" < test/variaentrada/arq_1000_5_"$i"00_100_10) 1>/dev/null )"
+		echo "$tempo"
+	done
+
+	printf "Variando L:\n"
+	for i in {1..6}
+	do
+		echo "L = "$i"00...."
+		tempo="$(time ( "./$exefile" < test/variaentrada/arq_1000_5_100_"$i"00_10) 1>/dev/null )"
+		echo "$tempo"
+	done
+
+	printf "Variando K:\n"
+	for i in {1..6}
+	do
+		echo "K = "$i"00...."
+		tempo="$(time ( "./$exefile" < test/variaentrada/arq_1000_5_100_10_"$i"00) 1>/dev/null )"
+		echo "$tempo"
+	done
+
+
+exit 0

@@ -5,7 +5,7 @@
 
 PROJECTNAME=tp1
 CC=gcc
-CFLAGS=-c -Wall -Wextra -Wpedantic $(DEFS) -Iinclude/
+CFLAGS=-c -Wall -Wextra -Werror -pedantic -std=c99 $(DEFS) -Iinclude/
 DBGFLAGS=-ggdb -fno-inline -fno-omit-frame-pointer 
 BINDIR=bin
 OBJDIR=obj
