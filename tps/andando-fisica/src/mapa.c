@@ -7,13 +7,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void TMapa_ProcessarLinha(char* Linha, int Tamanho)
+void TMapa_ProcessarLinha(char* Linha, int Numero, int Tamanho)
 {
 	int i;
 
 	for (i = 0; i < Tamanho; i++)
 	{
-		
+		TGrafo_AdicionarAresta(Mapa->Grafo, Numero + i, Numero + i + 1);
 	}
 }
 
@@ -27,6 +27,6 @@ bool TMapa_ProcessarEntrada(void)
 	for (i = 0; i < altura; i++)
 	{
 		fscanf("%s", linha);
-		TMapa_ProcessarLinha(linha, 9);
+		TMapa_ProcessarLinha(linha, i, 9);
 	}
 }
