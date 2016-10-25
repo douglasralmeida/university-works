@@ -13,17 +13,17 @@
 #include <stdlib.h>
 #include "core.h"
 
-/* Estrutura dos vertices do grafo */
-typedef size_t TGrafoVertice;
-
 /* Estrutura do peso dos vertices do grafo */
-typedef unsigned int TGrafoPeso;
+typedef unsigned long TGrafoPeso;
 
-/* Estrutura das arestas do grafo */
-typedef struct _TGrafoAresta {
-	TGrafoVertice Destino;
+/* Estrutura dos vertices do grafo */
+typedef unsigned long TGrafoVetice;
+
+/* Estrutura dos items da matriz que representa grafo */
+typedef struct _TGrafoItem {
 	TGrafoPeso Peso;
-} TGrafoAresta;
+	void* Dado;
+} TGrafoItem;
 
 /* Estrutura do item de um caminho */
 typedef struct _TGrafoCaminhoItem {
@@ -40,7 +40,7 @@ typedef struct _TGrafoCaminhoItem {
  * @param:		Peso da aresta
  * @retorna:		A aresta alocada
  *---------------------------------------------------------------------------*/
-TGrafoAresta* TGrafoAresta_Criar(TGrafoVertice Vertice, TGrafoPeso Peso);
+TGrafoItem* TGrafoItem_Criar(void* Dado, TGrafoPeso Peso);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TGrafoAresta_Destruir
@@ -48,24 +48,7 @@ TGrafoAresta* TGrafoAresta_Criar(TGrafoVertice Vertice, TGrafoPeso Peso);
  * @param:		Aresta
  * @retorna:		(vazio)
  *---------------------------------------------------------------------------*/
-void TGrafoAresta_Destruir(void** PAresta);
-
-/* ----------------------------------------------------------------------------
- * funcao:		TGrafoAresta_Igual
- * 			Checa se duas arestas são iguais
- * @param:		Aresta a ser comparada
- * @param:		Outra aresta a ser comparada
- * @retorna:		True se ambas forem iguais. False, caso contrário
- *---------------------------------------------------------------------------*/
-bool TGrafoAresta_Igual(void* Dado1, void* Dado2);
-
-/* ----------------------------------------------------------------------------
- * funcao:		TGrafoAresta_Imprimir
- * 			Imprimir uma aresta na tela
- * @param:		Aresta
- * @retorna:		(vazio)
- *---------------------------------------------------------------------------*/
-void TGrafoAresta_Imprimir(void* Dado);
+void TGrafoItem_Destruir(void** PItem);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TGrafoCaminho_Criar

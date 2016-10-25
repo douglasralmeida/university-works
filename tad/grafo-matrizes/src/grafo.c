@@ -2,7 +2,7 @@
 **	TIPO ABSTRATO DE DADOS GRAFO
 **	DOUGLAS RODRIGUES DE ALMEIDA
 **
-**	Implementação de grafo com listas de adjacencias usando vetores
+**	Implementação de grafo com matriz
 */
 
 #include <limits.h>

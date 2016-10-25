@@ -20,7 +20,7 @@ typedef struct _TGrafo {
 	long** Pesos;
 	size_t NumArestas;
 	size_t NumVertices;
-	TListaNo PesquisaProxNo;
+} TGrafo;
 
 /* ----------------------------------------------------------------------------
  * funcao:		TGrafo_Criar
@@ -68,24 +68,6 @@ bool TGrafo_ArestaExiste(TGrafo* Grafo, TGrafoVertice VOrigem, TGrafoVertice VDe
  * @retorna:		(vazio)
  *---------------------------------------------------------------------------*/
 void TGrafo_ArestaRemover(TGrafo* Grafo, TGrafoVertice VOrigem, TGrafoVertice VDestino);
-
-/* ----------------------------------------------------------------------------
- * funcao:		TGrafo_DistanciaMinima
- * 			Retorna o valor da distancia minima entre dois vertices do grafo
- * @param:		Grafo
- * @param:		Vertice de origem
- * @param:		Vertice de destino
- * @retorna:		Valor da distancia. Retorna -1 em caso de caminho inexistente
- *---------------------------------------------------------------------------*/
-int TGrafo_DistanciaMinima(TGrafo* Grafo, TGrafoVertice Origem, TGrafoVertice Destino);
-
-/* ----------------------------------------------------------------------------
- * funcao:		TGrafo_Imprimir
- * 			Imprime um grafo na tela
- * @param:		Grafo
- * @retorna:		(vazio)
- *---------------------------------------------------------------------------*/
-void TGrafo_Imprimir(TGrafo* Grafo);
 
 /* funcoes para obter a lista de adjacencias */
 

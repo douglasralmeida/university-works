@@ -13,44 +13,28 @@
 #include "grafo_item.h"
 
 /* Estrutura de uma aresta do grafo */
-TGrafoAresta* TGrafoAresta_Criar(TGrafoVertice Vertice, TGrafoPeso Peso)
+TGrafoItem* TGrafoItem_Criar(void* Dado, TGrafoPeso Peso)
 {
-	TGrafoAresta* NovaAresta;
+	TGrafoItem* NovoItem;
 	
-	NovaAresta = (TGrafoAresta*)malloc(sizeof(TGrafoAresta));
-	if (NovaAresta == NULL)
+	NovoItem = (TGrafoItem*)malloc(sizeof(TGrafoItem));
+	if (NovoItem == NULL)
 	{
 		printf("Erro (0x53). Erro ao alocar memoria.\n");
 		return NULL;
 	}
-	NovaAresta->Destino = Vertice;
-	NovaAresta->Peso = Peso;
+	NovoItem->Dado = Dado;
+	NovoItem->Peso = Peso;
 	
-	return NovaAresta;
+	return NovoItem;
 }
 
-void TGrafoAresta_Destruir(void** PAresta)
+void TGrafoItem_Destruir(void** PItem)
 {
-	free(*PAresta);
-	*PAresta = NULL;
-}
-
-bool TGrafoAresta_Igual(void* Dado1, void* Dado2)
-{
-	TGrafoAresta* Aresta1;
-	TGrafoAresta* Aresta2;
-	
-	Aresta1 = (TGrafoAresta*)Dado1;
-	Aresta2 = (TGrafoAresta*)Dado2;
-	return (Aresta1->Destino == Aresta2->Destino);
-}
-
-void TGrafoAresta_Imprimir(void* Dado)
-{
-	TGrafoAresta* Aresta;
-	
-	Aresta = (TGrafoAresta*)Dado;
-	printf(" %2d [%d]", (int)Aresta->Destino, (int)Aresta->Peso);
+	if ((TGrafoItem*)(*PItem)->Dado)
+		free((TGrafoItem*)(*PItem)->Dado);
+	free(*PItem);
+	*PItem = NULL;
 }
 
 /* Estrutura do caminhamento pelo grafo */
