@@ -17,7 +17,7 @@
 
 /* Estrutura da grafo */
 typedef struct _TGrafo {
-	long** Pesos;
+	TGrafoItem** Itens;
 	size_t NumArestas;
 	size_t NumVertices;
 } TGrafo;
