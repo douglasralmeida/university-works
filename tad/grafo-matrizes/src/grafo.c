@@ -72,6 +72,8 @@ bool TGrafo_ArestaExiste(TGrafo* Grafo, TGrafoVertice VOrigem, TGrafoVertice VDe
 
 void TGrafo_ArestaRemover(TGrafo* Grafo, TGrafoVertice VOrigem, TGrafoVertice VDestino)
 {
+	size_t posicao;
+
 	if ((VOrigem > Grafo->NumVertices) || (VDestino > Grafo->NumVertices))
 		return false;
 	
@@ -85,36 +87,41 @@ void TGrafo_ArestaRemover(TGrafo* Grafo, TGrafoVertice VOrigem, TGrafoVertice VD
 
 bool TGrafo_ListaAdjVazia(TGrafo* Grafo, TGrafoVertice Vertice)
 {
-	return (TLista_Tamanho(Grafo->Adjacencias[Vertice-1]) == 0);
+	return (Grafo->Adjacencias[Vertice] == 0);
 }
 
-TGrafoAresta* TGrafo_ListaAdjPrimeiro(TGrafo* Grafo, TGrafoVertice Vertice)
-{
-	TGrafoAresta* Aresta;
-	
-	if (TLista_Tamanho(Grafo->Adjacencias[Vertice-1]) > 0)
-	{
-		Aresta = (TGrafoAresta*)TLista_Item(Grafo->Adjacencias[Vertice-1], Grafo->Adjacencias[Vertice-1]->Primeiro);
-		Grafo->PesquisaProxNo = TLista_Proximo(Grafo->Adjacencias[Vertice-1], Grafo->Adjacencias[Vertice-1]->Primeiro);
-		return Aresta;
-	}
-	else
-	{
-		Grafo->PesquisaProxNo = NO_NULO;
-		return NULL;
-	}
+TGrafoVertice TGrafo_ListaAdjPrimeiro(TGrafo* Grafo, TGrafoVertice Vertice)
+{	
+	size_t posicao_atual;
+	size_t posicao_proxlinha;
+	size_t i;
+
+	posicao_atual = Vertice * Grafo->NumVertices;
+	posicao_proxlinha = (Vertice + 1) * Grafo->NumVertices;
+	for (i = posicao_atual; i < posicao_proxlinha; i++)
+		if (Grafo->Matriz[i].Peso > 0)
+		{
+			Grafo->PesquisaOffset = i - (Vertice * Grafo->NumVertices);
+			return (i - (Vertice * Grafo->NumVertices));
+		}
 }
 
 TGrafoAresta* TGrafo_ListaAdjProximo(TGrafo* Grafo, TGrafoVertice Vertice)
 {
-	TGrafoAresta* Aresta;
-	
-	if (Grafo->PesquisaProxNo != NO_NULO)
-	{
-		Aresta = (TGrafoAresta*)TLista_Item(Grafo->Adjacencias[Vertice-1], Grafo->PesquisaProxNo);
-		Grafo->PesquisaProxNo = TLista_Proximo(Grafo->Adjacencias[Vertice-1], Grafo->PesquisaProxNo);
-		return Aresta;
-	} 
-	else
-		return NULL;
+	size_t posicao_proxlinha;
+	size_t i;
+
+	posicao_proxlinh = (Vertice + 1) * Grafo->NumVertices;
+	for (i = Grafo->PesquisaOffset; i < posicao_proxlinha; i++)
+		if (Grafo->Matriz[i].Peso > 0)
+		{
+			Grafo->PesquisaOffset = i - (Vertice * Grafo->NumVertices);
+			return (i - (Vertice * Grafo->NumVertices));
+		}
 }
+
+void TGrafo_VerticeGravarDados(TGrafo* Grafo, size_t Offset, void* Dado)
+{
+	Grafo->Itens[posicao].Dado = Dado;
+}
+
