@@ -17,7 +17,7 @@
 typedef unsigned long TGrafoPeso;
 
 /* Estrutura dos vertices do grafo */
-typedef unsigned long TGrafoVetice;
+typedef unsigned long TGrafoVertice;
 
 /* Estrutura dos items da matriz que representa grafo */
 typedef struct _TGrafoItem {

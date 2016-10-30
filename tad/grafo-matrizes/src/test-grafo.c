@@ -2,7 +2,7 @@
 **	TESTE DO TAD LISTA
 **	DOUGLAS RODRIGUES DE ALMEIDA
 **
-**	Teste do TAD Lista
+**	Teste do TAD Grafo
 **	
 **/
 
@@ -17,7 +17,7 @@ int main(void)
 	int NArestas;
 	int vertice1, vertice2, peso;
 	TGrafo* Grafo;
-	TGrafoAresta* Aux;
+	TGrafoVertice VerticeTemp;
 	
 	printf("TESTE GRAFO\n");
 	printf("===========\n");
@@ -37,8 +37,9 @@ int main(void)
 	printf("Preenchendo arestas...\n");
 	for (i = 0; i < NArestas; i++) 
 	{
-		printf("Nova aresta (%d de %d) (vertice1, vertice2, peso): ", i+1, NArestas);
-		scanf("%d, %d, %d", &vertice1, &vertice2, &peso);
+		printf("Nova aresta (%d de %d) (vertice1 vertice2 peso): ", i+1, NArestas);
+		scanf("%d %d %d", &vertice1, &vertice2, &peso);
+		getchar();
 		TGrafo_ArestaInserir(Grafo, vertice1, vertice2, peso);
 	}
 	printf("OK.\n");
@@ -51,27 +52,18 @@ int main(void)
 	scanf("%d", &vertice1);
 	if (!TGrafo_ListaAdjVazia(Grafo, vertice1))
  	{
- 		Aux = TGrafo_ListaAdjPrimeiro(Grafo, vertice1);
-    	while (Aux) 
+ 		if (TGrafo_ListaAdjPrimeiro(Grafo, vertice1, &VerticeTemp))
 		{
-			TGrafoAresta_Imprimir((void*)Aux);
-			Aux = TGrafo_ListaAdjProximo(Grafo, vertice1);
+			printf("%2lu ", VerticeTemp);
+			while (TGrafo_ListaAdjProximo(Grafo, vertice1, &VerticeTemp))
+				printf("%2lu ", VerticeTemp);
 		}
 	}
 	printf("OK.\n");
 	
-	printf("Calculando distancia minima...");
-	printf("Vertices (vertice1, vertice2):");
-	scanf("%d, %d", &vertice1, &vertice2);
-	i = TGrafo_DistanciaMinima(Grafo, vertice1, vertice2);
-	if (i > -1)
-		printf("Distancia = %d.\n", i);
-	else
-		printf("Caminho nao existe.\n");
-	
 	printf("Removendo aresta...");
-	printf("Vertices (vertice1, vertice2):");
-	scanf("%d, %d", &vertice1, &vertice2);
+	printf("Vertices (vertice1 vertice2):");
+	scanf("%d %d", &vertice1, &vertice2);
 	if (TGrafo_ArestaExiste(Grafo, vertice1, vertice2)) 
 	{
 	    TGrafo_ArestaRemover(Grafo, vertice1, vertice2);

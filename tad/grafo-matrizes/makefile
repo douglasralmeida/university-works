@@ -17,7 +17,7 @@ TESTDIR=test
 SOURCEDIR=src
 
 #Arquivos do projeto
-OBJFILES=filaprior.o grafo.o test-grafo.o
+OBJFILES=	grafo.o test-grafo.o
 OBJECTS=$(addprefix $(OBJDIR)/, $(OBJFILES))
 
 #Compilar o codigo
@@ -54,7 +54,7 @@ debug:
 #Checar vazamentos de memoria
 .PHONY: memcheck
 memcheck:
-	valgrind -v --leak-check=yes --track-origins=yes $(BINDIR)/$(PROJECTNAME) $(ARGS)
+	valgrind -v --leak-check=full --track-origins=yes --show-leak-kinds=all $(BINDIR)/$(PROJECTNAME) $(ARGS)
 
 #Executar aplicacao
 .PHONY: run
