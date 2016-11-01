@@ -7,14 +7,25 @@
 #ifndef MAPA_H
 #define MAPA_H
 
+#include "boolutils.h"
+#include "grafo.h"
+
 typedef struct _TMapaItem {
 	char ID;
 	int DestinoH;
 	int DestinoV;	
 } TMapaItem;
 
-void TMapa_ProcessarLinha(char* Linha, int Tamanho);
+typedef struct _TMapa {
+	TGrafo* Grafo;
+	TGrafoVertice PontoInicial[2];
+	TGrafoVertice PontoFinal[2];
+} TMapa;
 
-bool TMapa_ProcessarEntrada(void);
+void TMapa_ProcessarLinha(TMapa* Mapa, char* String, int Linha, int Tamanho);
+
+bool TMapa_ProcessarEntrada(TMapa* Mapa);
+
+void TMapa_ProcessarGrafo(TMapa* Mapa);
 
 #endif

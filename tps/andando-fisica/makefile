@@ -9,7 +9,7 @@ CFLAGS=-c -Wall -Wextra -Werror -pedantic -std=c99 $(DEFS) -Iinclude/
 DBGFLAGS=-ggdb -fno-inline -fno-omit-frame-pointer 
 BINDIR=bin
 OBJDIR=obj
-OBJFILES=principal.o
+OBJFILES=filaprior.o grafo_item.o grafo.o mapa.o principal.o
 OBJECTS=$(addprefix $(OBJDIR)/, $(OBJFILES))
 SOURCEDIR=src
 ARGS=

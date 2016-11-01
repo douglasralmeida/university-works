@@ -6,6 +6,7 @@
 */
 #include <stdio.h>
 #include <stdlib.h>
+#include "mapa.h"
 
 void TMapa_ProcessarLinha(TMapa* Mapa, char* String, int Linha, int Tamanho)
 {
@@ -31,18 +32,18 @@ void TMapa_ProcessarLinha(TMapa* Mapa, char* String, int Linha, int Tamanho)
 			switch (s[0])
 			{
 				case 'V':
-					Mapa->PontoInicio[0] = Linha;
-					Mapa->PontoInicio[1] = i;
+					Mapa->PontoInicial[0] = Linha;
+					Mapa->PontoInicial[1] = i;
 				break;
 
 				case 'E':
-					Mapa->PontoFim[0] = Linha;
-					Mapa->PontoFim[1] = i;
+					Mapa->PontoFinal[0] = Linha;
+					Mapa->PontoFinal[1] = i;
 				break;
 			}
 		}
 		posicao = Linha * Mapa->Grafo->NumVertices + i;
-		TGrafo_VerticeGravarDados(Mapa->Grafo, posicao);
+		TGrafo_VerticeGravarDados(Mapa->Grafo, posicao, Item);
 	}
 }
 
@@ -52,15 +53,38 @@ bool TMapa_ProcessarEntrada(TMapa* Mapa)
 	int altura, largura, capacidade_chaves;
 	char linha[20];
 
-	fscanf("%d %d %d", &altura, &largura, &capacidade_chaves);
+	scanf("%d %d %d", &altura, &largura, &capacidade_chaves);
 	for (i = 0; i < altura; i++)
 	{
-		fscanf("%s", linha);
+		scanf("%s", linha);
 		TMapa_ProcessarLinha(Mapa, linha, i, 9);
 	}
+
+	return true;
 }
 
-void TMapa_ProcessarGrafo(TMapa* Mapa)
+void TMapa_ConstruirAresta(TGrafo* Grafo, TGrafoVertice A, TGrafoVertice B)
 {
 	
+}
+
+void TMapa_ConstruirGrafo(TMapa* Mapa)
+{
+	TGrafoVertice i;
+
+	for (i = 0; i < Mapa->Grafo->NumVertices; i++)
+	{
+		for (j = 0; j < Mapa->Grafo->NumVertices; j++)
+		{
+			
+		}
+		if (i % Mapa->Grafo->NumVertices != 0)
+			TMapa_ConstruirAresta(Mapa->Grafo, i, i - 1);
+		else if (i % Mapa->Grafo->NumVertices != Mapa->Grafo->NumVertices - 1)
+			TMapa_ConstruirAresta(Mapa->Grafo, i, i + 1);
+		if (i / Mapa->Grafo->NumVertices != 0)
+			TMapa_ConstruirAresta(Mapa->Grafo, i, i - Mapa->Grafo->NumVertices);
+		else (i / Mapa->Grafo->NumVertices != v - 1)
+			TMapa_ConstruirAresta(Mapa->Grafo, i, i + Mapa->Grafo->NumVertices):
+	}
 }

@@ -130,7 +130,7 @@ bool TGrafo_ListaAdjPrimeiro(TGrafo* Grafo, TGrafoVertice Vertice, TGrafoVertice
 	posicao_atual = Vertice * Grafo->NumVertices;
 	posicao_proxlinha = (Vertice + 1) * Grafo->NumVertices;
 	for (i = posicao_atual; i < posicao_proxlinha; i++)
-		if (Grafo->Itens[i].Peso > 0)
+		if (Grafo->Itens[i].Peso > 0) 
 		{
 			Grafo->PesquisaOffset = i+1;
 			*Adjacencia = i - (Vertice * Grafo->NumVertices);

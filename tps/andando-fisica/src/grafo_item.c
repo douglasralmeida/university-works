@@ -31,8 +31,8 @@ TGrafoItem* TGrafoItem_Criar(void* Dado, TGrafoPeso Peso)
 
 void TGrafoItem_Destruir(void** PItem)
 {
-	if ((TGrafoItem*)(*PItem)->Dado)
-		free((TGrafoItem*)(*PItem)->Dado);
+	if (((TGrafoItem*) *PItem)->Dado)
+		free(((TGrafoItem*)*PItem)->Dado);
 	free(*PItem);
 	*PItem = NULL;
 }

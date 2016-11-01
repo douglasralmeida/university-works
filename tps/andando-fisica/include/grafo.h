@@ -100,4 +100,6 @@ bool TGrafo_ListaAdjPrimeiro(TGrafo* Grafo, TGrafoVertice Vertice, TGrafoVertice
  *---------------------------------------------------------------------------*/
 bool TGrafo_ListaAdjProximo(TGrafo* Grafo, TGrafoVertice Vertice, TGrafoVertice* Adjacencia);
 
+void TGrafo_VerticeGravarDados(TGrafo* Grafo, TGrafoVertice Vertice, void* Dado);
+
 #endif
