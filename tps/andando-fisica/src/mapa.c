@@ -50,10 +50,11 @@ void TMapa_ProcessarLinha(TMapa* Mapa, char* String, int Linha, int Tamanho)
 bool TMapa_ProcessarEntrada(TMapa* Mapa)
 {
 	int i;
-	int altura, largura, capacidade_chaves;
+	size_t altura, largura, capacidade_chaves;
 	char linha[20];
 
-	scanf("%d %d %d", &altura, &largura, &capacidade_chaves);
+	scanf("%lu %lu %lu", &altura, &largura, &capacidade_chaves);
+	TMapa->Grafo = TGrafo_Criar(altura * largura);
 	for (i = 0; i < altura; i++)
 	{
 		scanf("%s", linha);
@@ -65,26 +66,31 @@ bool TMapa_ProcessarEntrada(TMapa* Mapa)
 
 void TMapa_ConstruirAresta(TGrafo* Grafo, TGrafoVertice A, TGrafoVertice B)
 {
-	
+	if (TMapa_VerticeCaminhavel(Grafo, A) && TMapa_VerticeCaminhavel(Grafo, B))
+	{
+		if (TMapa_VerticeBuracoNegro(Grafo, A))
+			//adicionar aresta A->BURACO
+		else (TMapa_VerticeBuracoNegro(Grafo, B))
+			//adicioanr aresta B->BURACO
+		else
+			//adicionar aresta A->B
+			//adicionar aresta B->A
+	}
 }
 
-void TMapa_ConstruirGrafo(TMapa* Mapa)
+void TMapa_ConstruirGrafo(TMapa* Mapa, size_t TamLinha)
 {
 	TGrafoVertice i;
 
 	for (i = 0; i < Mapa->Grafo->NumVertices; i++)
 	{
-		for (j = 0; j < Mapa->Grafo->NumVertices; j++)
-		{
-			
-		}
-		if (i % Mapa->Grafo->NumVertices != 0)
+		if (i % TamLinha != 0)
 			TMapa_ConstruirAresta(Mapa->Grafo, i, i - 1);
-		else if (i % Mapa->Grafo->NumVertices != Mapa->Grafo->NumVertices - 1)
+		if (i % TamLinha != TamLinha - 1)
 			TMapa_ConstruirAresta(Mapa->Grafo, i, i + 1);
-		if (i / Mapa->Grafo->NumVertices != 0)
-			TMapa_ConstruirAresta(Mapa->Grafo, i, i - Mapa->Grafo->NumVertices);
-		else (i / Mapa->Grafo->NumVertices != v - 1)
-			TMapa_ConstruirAresta(Mapa->Grafo, i, i + Mapa->Grafo->NumVertices):
+		if (i / TamLinha != 0)
+			TMapa_ConstruirAresta(Mapa->Grafo, i, i - TamLinha);
+		if (i / TamLinha != TamLinha - 1)
+			TMapa_ConstruirAresta(Mapa->Grafo, i, i + TamLinha);
 	}
 }
