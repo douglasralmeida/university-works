@@ -63,4 +63,4 @@ run:
 	
 .PHONY: test
 test:
-	./script/executartestes $(BINDIR)/$(PROJECTNAME)
+	./script/testar $(BINDIR)/$(PROJECTNAME)

@@ -1,0 +1,7 @@
+exefile="$1"
+
+echo $exefile
+
+	"./$exefile" < "entrada"
+
+exit 0
