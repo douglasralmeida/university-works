@@ -11,7 +11,7 @@
 #include "filaprior.h"
 #include "grafo.h"
 
-TGrafo* TGrafo_Criar(size_t NumVertices)
+TGrafo* TGrafo_Criar(size_t NumVertices, bool Direcionado)
 {
 	size_t i, total_itens;
 	TGrafo* NovoGrafo;
@@ -23,8 +23,14 @@ TGrafo* TGrafo_Criar(size_t NumVertices)
 		return NULL;
 	}
 	total_itens = NumVertices * NumVertices;
+	NovoGrafo->Direcionado = Direcionado;
 	NovoGrafo->NumVertices = NumVertices;
 	NovoGrafo->Adjacencias = malloc(NumVertices * sizeof(size_t));
+	if (!NovoGrafo->Adjacencias)
+	{
+		free(NovoGrafo);
+		return NULL;
+	}
 	NovoGrafo->Itens = malloc(total_itens * sizeof(TGrafoItem));
 	for (i = 0; i < total_itens; i++)
 	{
@@ -67,6 +73,13 @@ bool TGrafo_ArestaInserir(TGrafo* Grafo, TGrafoVertice VOrigem, TGrafoVertice VD
 	Grafo->Itens[posicao].Peso = Peso;
 	Grafo->Adjacencias[VOrigem]++;
 	Grafo->NumArestas++;
+	if (!Grafo->Direcionado)
+	{
+		posicao = VDestino * Grafo->NumVertices + VOrigem;
+		Grafo->Itens[posicao].Peso = Peso;
+		Grafo->Adjacencias[VDestino]++;
+		Grafo->NumArestas++;
+	}
 	return true;
 }
 
@@ -95,6 +108,16 @@ void TGrafo_ArestaRemover(TGrafo* Grafo, TGrafoVertice VOrigem, TGrafoVertice VD
 	Grafo->Itens[posicao].Dado = NULL;
 	Grafo->Adjacencias[VOrigem]--;
 	Grafo->NumArestas--;
+	if (!Grafo->Direcionado)
+	{
+		posicao = VDestino * Grafo->NumVertices + VOrigem;
+		Grafo->Itens[posicao].Peso = 0;
+		if (Grafo->Itens[posicao].Dado)
+			free(Grafo->Itens[posicao].Dado);
+		Grafo->Itens[posicao].Dado = NULL;
+		Grafo->Adjacencias[VDestino]--;
+		Grafo->NumArestas--;		
+	}
 }
 
 void TGrafo_Imprimir(TGrafo* Grafo)
@@ -153,9 +176,4 @@ bool TGrafo_ListaAdjProximo(TGrafo* Grafo, TGrafoVertice Vertice, TGrafoVertice*
 			return true;
 		}
 	return false;
-}
-
-void TGrafo_VerticeGravarDados(TGrafo* Grafo, TGrafoVertice Vertice, void* Dado)
-{
-	Grafo->Itens[Vertice].Dado = Dado;
 }

@@ -17,6 +17,7 @@
 /* Estrutura da grafo */
 typedef struct _TGrafo {
 	TGrafoItem* Itens;
+	bool Direcionado;
 	unsigned long* Adjacencias;
 	size_t NumArestas;
 	size_t NumVertices;
@@ -27,9 +28,10 @@ typedef struct _TGrafo {
  * funcao:		TGrafo_Criar
  * 			Cria um grafo
  * @param:		Quantidade de vertices do grafo
+ * @param:		Grafo direcionado ou não direcionado
  * @retorna:		O grafo alocado
  *---------------------------------------------------------------------------*/
-TGrafo* TGrafo_Criar(size_t NumVertices);
+TGrafo* TGrafo_Criar(size_t NumVertices, bool Direcionado);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TGrafo_Destruir
@@ -99,7 +101,5 @@ bool TGrafo_ListaAdjPrimeiro(TGrafo* Grafo, TGrafoVertice Vertice, TGrafoVertice
  * @retorna:		Proxima aresta ou retorna nulo no caso de final da lista
  *---------------------------------------------------------------------------*/
 bool TGrafo_ListaAdjProximo(TGrafo* Grafo, TGrafoVertice Vertice, TGrafoVertice* Adjacencia);
-
-void TGrafo_VerticeGravarDados(TGrafo* Grafo, TGrafoVertice Vertice, void* Dado);
 
 #endif

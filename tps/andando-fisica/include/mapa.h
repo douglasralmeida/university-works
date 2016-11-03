@@ -10,22 +10,21 @@
 #include "boolutils.h"
 #include "grafo.h"
 
-typedef struct _TMapaItem {
-	char ID;
-	int DestinoH;
-	int DestinoV;	
-} TMapaItem;
-
 typedef struct _TMapa {
+	short* PodeCaminhar;
 	TGrafo* Grafo;
-	TGrafoVertice PontoInicial[2];
-	TGrafoVertice PontoFinal[2];
+	TGrafoVertice PontoInicial;
+	TGrafoVertice PontoFinal;
 } TMapa;
 
-void TMapa_ProcessarLinha(TMapa* Mapa, char* String, int Linha, int Tamanho);
+TMapa* TMapa_Criar(void);
+
+void TMapa_Destruir(TMapa** PMapa);
+
+void TMapa_Imprimir(TMapa* Mapa);
+
+void TMapa_ProcessarLinha(TMapa* Mapa, char* Linha, int PosicaoX, int TamanhoLinha);
 
 bool TMapa_ProcessarEntrada(TMapa* Mapa);
-
-void TMapa_ProcessarGrafo(TMapa* Mapa);
 
 #endif
