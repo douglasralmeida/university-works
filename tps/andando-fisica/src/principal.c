@@ -14,11 +14,12 @@ int main()
 	
 	Mapa = TMapa_Criar();
 	if (!Mapa)
-		exit(0);
-	TMapa_ProcessarEntrada(Mapa);
-
-	TMapa_Imprimir(Mapa);
-
+		exit(EXIT_FAILURE);
+	if (TMapa_ProcessarEntrada(Mapa))
+	{
+		TMapa_EncontrarMenorCaminho(Mapa);
+		TMapa_ImprimirResultado(Mapa);
+	}
 	TMapa_Destruir(&Mapa);
 	exit(EXIT_SUCCESS);
 }

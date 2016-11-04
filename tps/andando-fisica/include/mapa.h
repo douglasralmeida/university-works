@@ -15,13 +15,18 @@ typedef struct _TMapa {
 	TGrafo* Grafo;
 	TGrafoVertice PontoInicial;
 	TGrafoVertice PontoFinal;
+	int TempoMinimo;
 } TMapa;
 
 TMapa* TMapa_Criar(void);
 
 void TMapa_Destruir(TMapa** PMapa);
 
-void TMapa_Imprimir(TMapa* Mapa);
+void TMapa_EncontrarMenorCaminho(TMapa* Mapa);
+
+void TMapa_ImprimirResultado(TMapa* Mapa);
+
+void TMapa_InserirCaminho(TMapa* Mapa, TGrafoVertice Origem, TGrafoVertice Destino);
 
 void TMapa_ProcessarLinha(TMapa* Mapa, char* Linha, int PosicaoX, int TamanhoLinha);
 

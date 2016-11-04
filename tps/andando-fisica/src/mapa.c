@@ -18,7 +18,8 @@ TMapa* TMapa_Criar(void)
 		return NULL;
 	NovoMapa->Grafo = NULL;
 	NovoMapa->PontoFinal = 0;
-	NovoMapa->PontoInicial = 0;	
+	NovoMapa->PontoInicial = 0;
+	NovoMapa->TempoMinimo = -1;
 
 	return NovoMapa;
 }
@@ -31,11 +32,14 @@ void TMapa_Destruir(TMapa** PMapa)
 	*PMapa = NULL;
 }
 
-void TMapa_Imprimir(TMapa* Mapa)
+void TMapa_EncontrarMenorCaminho(TMapa* Mapa)
 {
-	printf("MAPA: Vertice Inicio: %lu -- Vertice Fim: %lu\n", Mapa->PontoInicial, Mapa->PontoFinal);
-	printf("GRAFO:\n");
-	TGrafo_Imprimir(Mapa->Grafo);
+	Mapa->TempoMinimo = -1;
+}
+
+void TMapa_ImprimirResultado(TMapa* Mapa)
+{
+	printf("%d", Mapa->TempoMinimo);
 }
 
 void TMapa_InserirCaminho(TMapa* Mapa, TGrafoVertice Origem, TGrafoVertice Destino)
@@ -106,7 +110,7 @@ void TMapa_ProcessarLinha(TMapa* Mapa, char* Linha, int PosicaoX, int TamanhoLin
 				break;
 				case 'V':
 					Mapa->PodeCaminhar[verticeorigem] = 1;
-					Mapa->PontoInicial = PosicaoX * TamanhoLinha + i;
+					Mapa->PontoInicial = verticeorigem;
 					if (i > 0)
 					{
 						verticedestino = verticeorigem - 1;
@@ -120,7 +124,7 @@ void TMapa_ProcessarLinha(TMapa* Mapa, char* Linha, int PosicaoX, int TamanhoLin
 				break;
 				case 'E':
 					Mapa->PodeCaminhar[verticeorigem] = 1;
-					Mapa->PontoFinal = PosicaoX * TamanhoLinha + i;
+					Mapa->PontoFinal = verticeorigem;
 					if (i > 0)
 					{
 						verticedestino = verticeorigem - 1;
@@ -152,6 +156,11 @@ bool TMapa_ProcessarEntrada(TMapa* Mapa)
 	if (!Mapa->Grafo)
 		return false;
 	Mapa->PodeCaminhar = malloc(altura*largura * sizeof(short));
+	if (!Mapa->PodeCaminhar)
+	{
+		free(Mapa->Grafo);
+		return false;
+	}
 	for (i = 0; i < altura; i++)
 	{
 		fgets(linha, 3*largura+1, stdin);

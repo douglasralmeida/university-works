@@ -1,7 +1,44 @@
 exefile="$1"
+diff="diff -iad"
+declare -a arquivosteste=("test/entradasimples.t" "test/entradabarreira.t" "test/entradasemsaida.t" "test/entradaburaconegro.t" "test/exemplo1.t" "test/exemplo2.t")
+declare -a arquivosrespostas=("test/entradasimples.r" "test/entradabarreira.r" "test/entradasemsaida.r" "test/entradaburaconegro.r" "test/exemplo1.r" "test/exemplo2.r")
+red=$'\e[1;31m'
+grn=$'\e[1;32m'
+end=$'\e[0m'
 
-echo $exefile
+echo "############ TESTES AUTOMÁTICOS TP2 ############"
 
-	"./$exefile" < "entrada"
+for i in {0..5}
+do
+	printf "Teste %s..." "${arquivosteste[$i]}"
+	
+	"./$exefile" < ${arquivosteste[$i]} 1>test/resultado
+	echo "" >> test/resultado
+
+	if diff test/resultado ${arquivosrespostas[$i]} >/dev/null;
+	then
+		printf "[${grn}OK${end}]\n";
+	else
+		printf "[${red}Falha${end}]\n";
+	fi
+done
+
+echo ""
+
+for i in {1..10}
+do
+	printf "Toy %d..." "$i"
+	"./$exefile" < "test/toys/in"$i 1>test/resultado
+	echo "" >> test/resultado
+
+	if diff test/resultado "test/toys/out"$i >/dev/null;
+	then
+		printf "[${grn}OK${end}]\n";
+	else
+		printf "[${red}Falha${end}]\n";
+	fi
+done
+
+rm test/resultado
 
 exit 0
