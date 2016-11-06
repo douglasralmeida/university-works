@@ -31,6 +31,7 @@ TGrafo* TGrafo_Criar(size_t NumVertices, bool Direcionado)
 		free(NovoGrafo);
 		return NULL;
 	}
+	NovoGrafo->CustoCaminhamento = 0;
 	NovoGrafo->Itens = malloc(total_itens * sizeof(TGrafoItem));
 	for (i = 0; i < total_itens; i++)
 	{
@@ -124,15 +125,16 @@ void TGrafo_Imprimir(TGrafo* Grafo)
 {
 	TGrafoVertice i;
 	TGrafoVertice temp;
+	TGrafoPeso peso;
 
 	for (i = 0; i < Grafo->NumVertices; i++)
 	{
 		printf("Vertice %2lu: ", i);
 		if (!TGrafo_ListaAdjVazia(Grafo, i))
 		{
-			TGrafo_ListaAdjPrimeiro(Grafo, i, &temp);
+			TGrafo_ListaAdjPrimeiro(Grafo, i, &temp, &peso);
 			printf("(%lu, %lu) ", i, temp);
-			while (TGrafo_ListaAdjProximo(Grafo, i, &temp))
+			while (TGrafo_ListaAdjProximo(Grafo, i, &temp, &peso))
 				printf("(%lu, %lu) ", i, temp);
 		}
 		printf("\n");
@@ -144,7 +146,7 @@ bool TGrafo_ListaAdjVazia(TGrafo* Grafo, TGrafoVertice Vertice)
 	return (Grafo->Adjacencias[Vertice] == 0);
 }
 
-bool TGrafo_ListaAdjPrimeiro(TGrafo* Grafo, TGrafoVertice Vertice, TGrafoVertice* Adjacencia)
+bool TGrafo_ListaAdjPrimeiro(TGrafo* Grafo, TGrafoVertice Vertice, TGrafoVertice* Adjacencia, TGrafoPeso* Peso)
 {	
 	size_t posicao_atual;
 	size_t posicao_proxlinha;
@@ -157,12 +159,13 @@ bool TGrafo_ListaAdjPrimeiro(TGrafo* Grafo, TGrafoVertice Vertice, TGrafoVertice
 		{
 			Grafo->PesquisaOffset = i+1;
 			*Adjacencia = i - (Vertice * Grafo->NumVertices);
+			*Peso = Grafo->Itens[i].Peso;
 			return true;
 		}
 	return false;
 }
 
-bool TGrafo_ListaAdjProximo(TGrafo* Grafo, TGrafoVertice Vertice, TGrafoVertice* Adjacencia)
+bool TGrafo_ListaAdjProximo(TGrafo* Grafo, TGrafoVertice Vertice, TGrafoVertice* Adjacencia, TGrafoPeso* Peso)
 {
 	size_t posicao_proxlinha;
 	size_t i;
@@ -173,7 +176,25 @@ bool TGrafo_ListaAdjProximo(TGrafo* Grafo, TGrafoVertice Vertice, TGrafoVertice*
 		{
 			Grafo->PesquisaOffset = i+1;
 			*Adjacencia = i - (Vertice * Grafo->NumVertices);
+			*Peso = Grafo->Itens[i].Peso;
 			return true;
 		}
 	return false;
+}
+
+void TGrafo_DefinirVertice(TGrafo* Grafo, TGrafoVertice Vertice, void* Dado)
+{
+	size_t posicao_atual;
+
+	posicao_atual = Vertice * Grafo->NumVertices;
+	Grafo->Itens[posicao_atual].Dado = Dado;
+}
+
+void* TGrafo_ObterVertice(TGrafo* Grafo, TGrafoVertice Vertice)
+{
+	size_t posicao_atual;
+
+	posicao_atual = Vertice * Grafo->NumVertices;
+
+	return Grafo->Itens[posicao_atual].Dado;	
 }

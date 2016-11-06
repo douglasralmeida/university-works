@@ -18,7 +18,8 @@
 typedef struct _TGrafo {
 	TGrafoItem* Itens;
 	bool Direcionado;
-	unsigned long* Adjacencias;
+	size_t* Adjacencias;
+	size_t CustoCaminhamento;
 	size_t NumArestas;
 	size_t NumVertices;
 	size_t PesquisaOffset;
@@ -72,7 +73,11 @@ bool TGrafo_ArestaExiste(TGrafo* Grafo, TGrafoVertice VOrigem, TGrafoVertice VDe
  *---------------------------------------------------------------------------*/
 void TGrafo_ArestaRemover(TGrafo* Grafo, TGrafoVertice VOrigem, TGrafoVertice VDestino);
 
+void TGrafo_DefinirVertice(TGrafo* Grafo, TGrafoVertice Vertice, void* Dado);
+
 void TGrafo_Imprimir(TGrafo* Grafo);
+
+void* TGrafo_ObterVertice(TGrafo* Grafo, TGrafoVertice Vertice);
 
 /* funcoes para obter a lista de adjacencias */
 
@@ -91,7 +96,7 @@ bool TGrafo_ListaAdjVazia(TGrafo* Grafo, TGrafoVertice Vertice);
  * @param:		Vertice
  * @retorna:		Aresta
  *---------------------------------------------------------------------------*/
-bool TGrafo_ListaAdjPrimeiro(TGrafo* Grafo, TGrafoVertice Vertice, TGrafoVertice* Adjacencia);
+bool TGrafo_ListaAdjPrimeiro(TGrafo* Grafo, TGrafoVertice Vertice, TGrafoVertice* Adjacencia, TGrafoPeso* Peso);
 
 /* ----------------------------------------------------------------------------
  * funcao:		TGrafo_ListaAdjProximo
@@ -100,6 +105,6 @@ bool TGrafo_ListaAdjPrimeiro(TGrafo* Grafo, TGrafoVertice Vertice, TGrafoVertice
  * @param:		Vertice
  * @retorna:		Proxima aresta ou retorna nulo no caso de final da lista
  *---------------------------------------------------------------------------*/
-bool TGrafo_ListaAdjProximo(TGrafo* Grafo, TGrafoVertice Vertice, TGrafoVertice* Adjacencia);
+bool TGrafo_ListaAdjProximo(TGrafo* Grafo, TGrafoVertice Vertice, TGrafoVertice* Adjacencia, TGrafoPeso* Peso);
 
 #endif
