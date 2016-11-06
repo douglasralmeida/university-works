@@ -1,14 +1,14 @@
 exefile="$1"
 diff="diff -iad"
-declare -a arquivosteste=("test/entradasimples.t" "test/entradabarreira.t" "test/entradasemsaida.t" "test/entradaburaconegro.t" "test/entradaporta.t")
-declare -a arquivosrespostas=("test/entradasimples.r" "test/entradabarreira.r" "test/entradasemsaida.r" "test/entradaburaconegro.r" "test/entradaporta.r")
+declare -a arquivosteste=("test/simples.t" "test/combarreira.t" "test/semsaida.t" "test/buraconegro.t" "test/buraconegroloop.t" "test/comporta.t")
+declare -a arquivosrespostas=("test/simples.r" "test/combarreira.r" "test/semsaida.r" "test/buraconegro.r" "test/buraconegroloop.r" "test/comporta.r")
 red=$'\e[1;31m'
 grn=$'\e[1;32m'
 end=$'\e[0m'
 
 echo "############ TESTES AUTOMÁTICOS TP2 ############"
 
-for i in {0..4}
+for i in {0..5}
 do
 	printf "Teste %s..." "${arquivosteste[$i]}"
 	

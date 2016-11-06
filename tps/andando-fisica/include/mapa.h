@@ -29,15 +29,18 @@ typedef struct _TMapaInfo {
 	TMapaPos PosicaoY;
 	TMapaTipo Tipo;
 	TMapaChave Chave;
+	TGrafoVertice DestinoBuraco;
+	short Passou;
 } TMapaInfo;
 
 typedef struct _TMapa {
 	short* PodeCaminhar;
+	unsigned short CapacidadeChaves;
 	TGrafo* Grafo;
 	TGrafoVertice PontoInicial;
 	TGrafoVertice PontoFinal;
 	bool TemSaida;
-	size_t TempoMinimo;
+	size_t CustoCaminhamento;
 } TMapa;
 
 TMapaInfo* TMapaInfo_Criar(TMapaPos PosicaoX, TMapaPos PosicaoY);
@@ -49,8 +52,6 @@ TMapa* TMapa_Criar(void);
 void TMapa_Destruir(TMapa** PMapa);
 
 TGrafoPeso TMapa_CaminhamentoCusto(TGrafo* Grafo, TGrafoVertice Vertice);
-
-TGrafoPeso TMapa_CaminhamentoHeuristica(TGrafo* Grafo, TGrafoVertice VerticeAtual, TGrafoVertice VerticeDestino);
 
 void TMapa_EncontrarMenorCaminho(TMapa* Mapa);
 

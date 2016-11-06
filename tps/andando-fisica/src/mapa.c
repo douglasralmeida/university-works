@@ -7,8 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "grafo_caminhamento.h"
 #include "mapa.h"
+#include "mapa_caminhamento.h"
 
 TMapaInfo* TMapaInfo_Criar(TMapaPos PosicaoX, TMapaPos PosicaoY)
 {
@@ -19,6 +19,8 @@ TMapaInfo* TMapaInfo_Criar(TMapaPos PosicaoX, TMapaPos PosicaoY)
 		return NULL;
 	NovaInfo->PosicaoX = PosicaoX;
 	NovaInfo->PosicaoY = PosicaoY;
+	NovaInfo->Passou = 0;
+	NovaInfo->DestinoBuraco = 0;
 
 	return NovaInfo;
 }
@@ -37,10 +39,11 @@ TMapa* TMapa_Criar(void)
 	if (!NovoMapa)
 		return NULL;
 	NovoMapa->Grafo = NULL;
+	NovoMapa->CapacidadeChaves = 0;
 	NovoMapa->PontoFinal = 0;
 	NovoMapa->PontoInicial = 0;
 	NovoMapa->TemSaida = false;
-	NovoMapa->TempoMinimo = -1;
+	NovoMapa->CustoCaminhamento = 0;
 
 	return NovoMapa;
 }
@@ -53,26 +56,15 @@ void TMapa_Destruir(TMapa** PMapa)
 	*PMapa = NULL;
 }
 
-TGrafoPeso TMapa_CaminhamentoHeuristica(TGrafo* Grafo, TGrafoVertice VerticeAtual, TGrafoVertice VerticeDestino)
-{
-	TMapaInfo* InfoAtual;
-	TMapaInfo* InfoDestino;
-
-	InfoAtual = TGrafo_ObterVertice(Grafo, VerticeAtual);
-	InfoDestino = TGrafo_ObterVertice(Grafo, VerticeDestino);
-	
-	return abs(InfoAtual->PosicaoX - InfoDestino->PosicaoX) + abs(InfoAtual->PosicaoY - InfoDestino->PosicaoY);
-}
-
 void TMapa_EncontrarMenorCaminho(TMapa* Mapa)
 {
-	Mapa->TemSaida = TGrafo_MenorCaminho(Mapa->Grafo, Mapa->PontoInicial, Mapa->PontoFinal, &TMapa_CaminhamentoHeuristica);
+	Mapa->TemSaida = TMapa_MenorCaminho(Mapa);
 }
 
 void TMapa_ImprimirResultado(TMapa* Mapa)
 {
 	if (Mapa->TemSaida)
-		printf("%lu", Mapa->Grafo->CustoCaminhamento);
+		printf("%lu", Mapa->CustoCaminhamento);
 	else
 		printf("-1");
 }
@@ -97,28 +89,25 @@ void TMapa_ProcessarLinha(TMapa* Mapa, char* Linha, int PosicaoX, int TamanhoLin
 	t = strtok(Linha, " ");
 	while (t != NULL)
 	{
+		Info = TMapaInfo_Criar(PosicaoX, PosicaoY);
 		verticeorigem = PosicaoX * TamanhoLinha + PosicaoY;
 		if (t[0] >= '0' && t[0] <= '9')
 		{		
 			Mapa->PodeCaminhar[verticeorigem] = 1;
-			verticedestino = (t[0] - '0') * TamanhoLinha + t[1] - '0';
-			TGrafo_ArestaInserir(Mapa->Grafo, verticeorigem, verticedestino, 1);
 			if (PosicaoY > 0)
 			{
 				verticedestino = verticeorigem - 1;
-				if (Mapa->PodeCaminhar[verticedestino])
-					TGrafo_ArestaInserir(Mapa->Grafo, verticedestino, verticeorigem, 1);
+				TMapa_InserirCaminho(Mapa, verticeorigem, verticedestino);
 			}
 			if (PosicaoX > 0)
 			{
 				verticedestino = verticeorigem - TamanhoLinha;
-				if (Mapa->PodeCaminhar[verticedestino])
-					TGrafo_ArestaInserir(Mapa->Grafo, verticedestino, verticeorigem, 1);
+				TMapa_InserirCaminho(Mapa, verticeorigem, verticedestino);
 			}	
-			Info = TMapaInfo_Criar(PosicaoX, PosicaoY);
 			Info->Tipo = mtBuracoNegro;
 			Info->Chave = '\0';
-			TGrafo_DefinirVertice(Mapa->Grafo, verticeorigem, Info);
+			verticedestino = (t[0] - '0') * TamanhoLinha + t[1] - '0';
+			Info->DestinoBuraco = verticedestino;
 		}
 		else
 		{			
@@ -126,19 +115,45 @@ void TMapa_ProcessarLinha(TMapa* Mapa, char* Linha, int PosicaoX, int TamanhoLin
 			{
 				case '#':
 					Mapa->PodeCaminhar[verticeorigem] = 0;
-					Info = TMapaInfo_Criar(PosicaoX, PosicaoY);
 					Info->Tipo = mtParede;
 					Info->Chave = '\0';
-					TGrafo_DefinirVertice(Mapa->Grafo, verticeorigem, Info);
 				break;
 				case 'c':
 				case 'd':
 				case 'h':
 				case 's':
+					Mapa->PodeCaminhar[verticeorigem] = 1;
+					if (PosicaoY > 0)
+					{
+						verticedestino = verticeorigem - 1;
+						TMapa_InserirCaminho(Mapa, verticeorigem, verticedestino);
+					}
+					if (PosicaoX > 0)
+					{
+						verticedestino = verticeorigem - TamanhoLinha;
+						TMapa_InserirCaminho(Mapa, verticeorigem, verticedestino);
+					}
+					Info->Tipo = mtChave;
+					Info->Chave = t[0];
+				break;
 				case 'C':
 				case 'D':
 				case 'H':
 				case 'S':
+					Mapa->PodeCaminhar[verticeorigem] = 1;
+					if (PosicaoY > 0)
+					{
+						verticedestino = verticeorigem - 1;
+						TMapa_InserirCaminho(Mapa, verticeorigem, verticedestino);
+					}
+					if (PosicaoX > 0)
+					{
+						verticedestino = verticeorigem - TamanhoLinha;
+						TMapa_InserirCaminho(Mapa, verticeorigem, verticedestino);
+					}
+					Info->Tipo = mtPorta;
+					Info->Chave = t[0] + 32;
+				break;
 				case '.':
 					Mapa->PodeCaminhar[verticeorigem] = 1;
 					if (PosicaoY > 0)
@@ -151,10 +166,8 @@ void TMapa_ProcessarLinha(TMapa* Mapa, char* Linha, int PosicaoX, int TamanhoLin
 						verticedestino = verticeorigem - TamanhoLinha;
 						TMapa_InserirCaminho(Mapa, verticeorigem, verticedestino);
 					}
-					Info = TMapaInfo_Criar(PosicaoX, PosicaoY);
 					Info->Tipo = mtCaminhavel;
 					Info->Chave = '\0';
-					TGrafo_DefinirVertice(Mapa->Grafo, verticeorigem, Info);
 				break;
 				case 'V':
 					Mapa->PodeCaminhar[verticeorigem] = 1;
@@ -169,10 +182,8 @@ void TMapa_ProcessarLinha(TMapa* Mapa, char* Linha, int PosicaoX, int TamanhoLin
 						verticedestino = verticeorigem - TamanhoLinha;
 						TMapa_InserirCaminho(Mapa, verticeorigem, verticedestino);
 					}
-					Info = TMapaInfo_Criar(PosicaoX, PosicaoY);
 					Info->Tipo = mtInicio;
 					Info->Chave = '\0';
-					TGrafo_DefinirVertice(Mapa->Grafo, verticeorigem, Info);
 				break;
 				case 'E':
 					Mapa->PodeCaminhar[verticeorigem] = 1;
@@ -187,13 +198,12 @@ void TMapa_ProcessarLinha(TMapa* Mapa, char* Linha, int PosicaoX, int TamanhoLin
 						verticedestino = verticeorigem - TamanhoLinha;
 						TMapa_InserirCaminho(Mapa, verticeorigem, verticedestino);
 					}
-					Info = TMapaInfo_Criar(PosicaoX, PosicaoY);
 					Info->Tipo = mtFim;
 					Info->Chave = '\0';
-					TGrafo_DefinirVertice(Mapa->Grafo, verticeorigem, Info);
 				break;
 			}
 		}
+		TGrafo_DefinirVertice(Mapa->Grafo, verticeorigem, Info);
 		PosicaoY++;
 		t = strtok(NULL, " ");
 	}
@@ -202,10 +212,10 @@ void TMapa_ProcessarLinha(TMapa* Mapa, char* Linha, int PosicaoX, int TamanhoLin
 bool TMapa_ProcessarEntrada(TMapa* Mapa)
 {
 	size_t i;
-	size_t altura, largura, capacidade_chaves;
+	size_t altura, largura;
 	char linha[20];
 
-	scanf("%lu %lu %lu", &altura, &largura, &capacidade_chaves);
+	scanf("%lu %lu %hu", &altura, &largura, &Mapa->CapacidadeChaves);
 	getchar();
 	Mapa->Grafo = TGrafo_Criar(altura*largura, true);
 	if (!Mapa->Grafo)

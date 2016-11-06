@@ -4,11 +4,12 @@
 **
 **	Algoritmo A*
 */
-#ifndef GRAFO_CAMINHAMENTO_H
-#define GRAFO_CAMINHAMENTO_H
+#ifndef MAPA_CAMINHAMENTO_H
+#define MAPA_CAMINHAMENTO_H
 
 #include "boolutils.h"
 #include "grafo.h"
+#include "mapa.h"
 
 typedef TGrafoPeso (*TFuncaoHeuristica)(TGrafo* Grafo, TGrafoVertice VerticeAtual, TGrafoVertice VerticeDestino);
 
@@ -23,6 +24,10 @@ void TVerticeDistancia_Destruir(void** PDistancia);
 
 bool TVerticeDistancia_Comparar(void* Distancia1, void* Distancia2);
 
-bool TGrafo_MenorCaminho(TGrafo* Grafo, TGrafoVertice Inicio, TGrafoVertice Final, TFuncaoHeuristica FuncaoHeuristica);
+bool TMapa_CaminhoEBuracoNegro(TGrafo* Grafo, TGrafoVertice Vertice, TGrafoVertice* Destino);
+
+TGrafoPeso TMapa_CaminhamentoHeuristica(TMapa* Mapa, TGrafoVertice VerticeAtual, TGrafoVertice VerticeDestino);
+
+bool TMapa_MenorCaminho(TMapa* Mapa);
 
 #endif

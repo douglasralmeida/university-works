@@ -19,7 +19,6 @@ typedef struct _TGrafo {
 	TGrafoItem* Itens;
 	bool Direcionado;
 	size_t* Adjacencias;
-	size_t CustoCaminhamento;
 	size_t NumArestas;
 	size_t NumVertices;
 	size_t PesquisaOffset;

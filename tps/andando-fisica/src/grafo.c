@@ -31,7 +31,6 @@ TGrafo* TGrafo_Criar(size_t NumVertices, bool Direcionado)
 		free(NovoGrafo);
 		return NULL;
 	}
-	NovoGrafo->CustoCaminhamento = 0;
 	NovoGrafo->Itens = malloc(total_itens * sizeof(TGrafoItem));
 	for (i = 0; i < total_itens; i++)
 	{
