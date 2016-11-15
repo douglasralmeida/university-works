@@ -1,0 +1,5 @@
+# Ignorar o conteudo desta pasta exceto este arquivo
+!.gitignore
+
+# Ignorar o executavel
+tp3
