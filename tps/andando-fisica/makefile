@@ -9,7 +9,7 @@ CFLAGS=-c -Wall -Wextra -Werror -pedantic -std=c99 $(DEFS) -Iinclude/
 DBGFLAGS=-ggdb -fno-inline -fno-omit-frame-pointer 
 BINDIR=bin
 OBJDIR=obj
-OBJFILES=filaprior.o grafo_item.o grafo.o mapa.o mapa_caminhamento.o principal.o
+OBJFILES=list.o filaprior.o grafo_item.o grafo.o mapa.o mapa_caminhamento.o principal.o
 OBJECTS=$(addprefix $(OBJDIR)/, $(OBJFILES))
 SOURCEDIR=src
 ARGS=
@@ -55,7 +55,7 @@ deploy:
 
 .PHONY: memcheck
 memcheck:
-	valgrind -v --leak-check=yes --track-origins=yes $(BINDIR)/$(PROJECTNAME) $(ARGS)
+	valgrind -v --leak-check=full --track-origins=yes --show-leak-kinds=all $(BINDIR)/$(PROJECTNAME) $(ARGS)
 
 .PHONY: run
 run:

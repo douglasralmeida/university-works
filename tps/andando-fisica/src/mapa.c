@@ -7,8 +7,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "filaprior.h"
 #include "mapa.h"
 #include "mapa_caminhamento.h"
+
+TMapaCaminho* TMapaCaminho_Criar(TMapaChave Chave, TGrafoVertice Vertice)
+{
+	TMapaCaminho* NovoCaminho;
+
+	NovoCaminho = malloc(sizeof(TMapaCaminho));
+	NovoCaminho->Chave = Chave;
+	NovoCaminho->LocalChave = Vertice;
+
+	return NovoCaminho;
+}
+
+void TMapaCaminho_Destruir(void** PCaminho)
+{
+	free(*PCaminho);
+	*PCaminho = NULL;
+}
 
 TMapaInfo* TMapaInfo_Criar(TMapaPos PosicaoX, TMapaPos PosicaoY)
 {
@@ -40,10 +58,12 @@ TMapa* TMapa_Criar(void)
 		return NULL;
 	NovoMapa->Grafo = NULL;
 	NovoMapa->CapacidadeChaves = 0;
+	NovoMapa->Chaves = TLista_Criar(4);
 	NovoMapa->PontoFinal = 0;
 	NovoMapa->PontoInicial = 0;
 	NovoMapa->TemSaida = false;
 	NovoMapa->CustoCaminhamento = 0;
+	NovoMapa->CustoFinal = 0;
 
 	return NovoMapa;
 }
@@ -52,19 +72,49 @@ void TMapa_Destruir(TMapa** PMapa)
 {
 	if ((*PMapa)->Grafo)
 		TGrafo_Destruir(&(*PMapa)->Grafo);
+	if ((*PMapa)->Chaves)
+		TLista_Destruir(&(*PMapa)->Chaves, &TMapaCaminho_Destruir);
 	free(*PMapa);
 	*PMapa = NULL;
 }
 
 void TMapa_EncontrarMenorCaminho(TMapa* Mapa)
 {
-	Mapa->TemSaida = TMapa_MenorCaminho(Mapa);
+	int i;
+	bool achousaida;
+	TMapaCaminho* Caminho;
+
+	Mapa->Bolso = malloc((Mapa->CapacidadeChaves + 1) * sizeof(char));
+	Mapa->Bolso[0] = '\0';
+	Mapa->CustoCaminhamento = 0;
+	Mapa->TemSaida = TMapa_Caminhar(Mapa, Mapa->PontoInicial, Mapa->PontoFinal);
+	if (Mapa->TemSaida)
+		Mapa->CustoFinal = Mapa->CustoCaminhamento;
+	for (i = 0; i < TLista_Tamanho(Mapa->Chaves); i++)
+	{
+		Caminho = TLista_Item(Mapa->Chaves, i);
+		Mapa->CustoCaminhamento = 0;
+		achousaida = TMapa_Caminhar(Mapa, Mapa->PontoInicial, Caminho->LocalChave);
+		if (achousaida)
+		{
+			achousaida = TMapa_Caminhar(Mapa, Caminho->LocalChave, Mapa->PontoFinal);
+			if (achousaida)
+			{
+				if (Mapa->CustoCaminhamento < Mapa->CustoFinal || Mapa->CustoFinal == 0)
+				{
+					Mapa->CustoFinal = Mapa->CustoCaminhamento;
+					Mapa->TemSaida = true;
+				}
+			}
+		}
+	}
+	free(Mapa->Bolso);
 }
 
 void TMapa_ImprimirResultado(TMapa* Mapa)
 {
 	if (Mapa->TemSaida)
-		printf("%lu", Mapa->CustoCaminhamento);
+		printf("%lu", Mapa->CustoFinal);
 	else
 		printf("-1");
 }
@@ -78,12 +128,14 @@ void TMapa_InserirCaminho(TMapa* Mapa, TGrafoVertice Origem, TGrafoVertice Desti
 	}
 }
 
-void TMapa_ProcessarLinha(TMapa* Mapa, char* Linha, int PosicaoX, int TamanhoLinha)
+void TMapa_ProcessarLinha(TMapa* Mapa, char* Linha, int PosicaoX, int TamanhoLinha, int Altura)
 {
 	int PosicaoY;
 	char* t;
 	TGrafoVertice verticedestino, verticeorigem;
+	TMapaCaminho* Caminho;
 	TMapaInfo* Info;
+	int i;
 
 	PosicaoY = 0;
 	t = strtok(Linha, " ");
@@ -92,7 +144,7 @@ void TMapa_ProcessarLinha(TMapa* Mapa, char* Linha, int PosicaoX, int TamanhoLin
 		Info = TMapaInfo_Criar(PosicaoX, PosicaoY);
 		verticeorigem = PosicaoX * TamanhoLinha + PosicaoY;
 		if (t[0] >= '0' && t[0] <= '9')
-		{		
+		{
 			Mapa->PodeCaminhar[verticeorigem] = 1;
 			if (PosicaoY > 0)
 			{
@@ -106,7 +158,8 @@ void TMapa_ProcessarLinha(TMapa* Mapa, char* Linha, int PosicaoX, int TamanhoLin
 			}	
 			Info->Tipo = mtBuracoNegro;
 			Info->Chave = '\0';
-			verticedestino = (t[0] - '0') * TamanhoLinha + t[1] - '0';
+			i = (Altura - 1 - t[0] + '0') *  TamanhoLinha + t[1] - '0';
+			verticedestino = (TGrafoVertice)i;
 			Info->DestinoBuraco = verticedestino;
 		}
 		else
@@ -135,6 +188,8 @@ void TMapa_ProcessarLinha(TMapa* Mapa, char* Linha, int PosicaoX, int TamanhoLin
 					}
 					Info->Tipo = mtChave;
 					Info->Chave = t[0];
+					Caminho = TMapaCaminho_Criar(Info->Chave, verticeorigem);
+					TLista_Adicionar(Mapa->Chaves, Caminho);
 				break;
 				case 'C':
 				case 'D':
@@ -229,7 +284,7 @@ bool TMapa_ProcessarEntrada(TMapa* Mapa)
 	for (i = 0; i < altura; i++)
 	{
 		fgets(linha, 3*largura+1, stdin);
-		TMapa_ProcessarLinha(Mapa, linha, i, largura);
+		TMapa_ProcessarLinha(Mapa, linha, i, largura, altura);
 	}
 	free(Mapa->PodeCaminhar);
 
