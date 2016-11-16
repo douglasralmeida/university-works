@@ -11,9 +11,10 @@ LDFLAGS=
 BINDIR=bin
 DEPLOYDIR=deploy
 DOCDIR=doc
+INCDIR=include
 OBJDIR=obj
 SOURCEDIR=src
-OBJFILES=principal.o
+OBJFILES=mundo.o principal.o
 OBJECTS=$(addprefix $(OBJDIR)/, $(OBJFILES))
 ARGS=
 
@@ -49,8 +50,8 @@ debug:
 deploy:
 	@echo 
 	@echo Gerando arquivo compactado...
-	cp -r $(SOURCEDIR) $(INCLUDEDIR) $(DOCDIR)/documentacao.pdf $(DEPLOYDIR)
-	zip -r $(DEPLOYDIR)/$(PROJECTNAME).zip $(DEPLOYDIR)
+	cp $(SOURCEDIR)/* $(INCDIR)/* $(DOCDIR)/documentacao.pdf $(DEPLOYDIR)
+	zip -j $(DEPLOYDIR)/$(PROJECTNAME).zip $(DEPLOYDIR)/*
 	rm $(DEPLOYDIR)/*.c $(DEPLOYDIR)/*.h $(DEPLOYDIR)/*.pdf
 
 .PHONY: memcheck
