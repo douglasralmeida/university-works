@@ -35,6 +35,16 @@ void TMundo_Destruir(TMundo** PMundo)
 	*PMundo = NULL;
 }
 
+void TMundo_ExibirMatriz(TMundo* Mundo)
+{
+	total = Mundo->Altura * Mundo->Largura;
+	while (contador < total)
+	{
+		scanf("%llu", Mundo->Cidades + contador);
+		contador++;
+	}	
+}
+
 void TMundo_ExibirResultado(TMundo* Mundo)
 {
 	printf("%llu", Mundo->PopulacaoTotal);
