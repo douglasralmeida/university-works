@@ -1,0 +1,48 @@
+#include <windows.h>
+#include "recursos.h"
+// Icone do aplicativo.
+IDI_APPICON ICON                       "appicone.ico"
+
+// Manifesto do aplicativo.
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "Application.manifest"
+
+//Tabela de strings
+STRINGTABLE
+BEGIN
+IDS_OLAMUNDO L"Ol\x00E1, mundo!"
+IDS_JOGONAOINICIA L"N\x00E3o foi poss\x00EDvel iniciar o jogo."
+IDS_ERROINITALLEGRO L"O NomeDoJogo n\x00E3o conseguiu iniciar a biblioteca Allegro."
+IDS_ERROINITDISPLAY L"O NomeDoJogo n\x00E3o conseguiu criar a tela do jogo."
+IDS_ERROJANELHANDLE L"O identificador da janela do jogo n\x00E3o foi reconhecido."
+IDS_ERROICORESOURCE L"O NomeDoJogo n\x00E3o conseguiu carregar seus recursos de janela."
+END
+
+// Informacoes de versao do executavel.
+VS_VERSION_INFO    VERSIONINFO
+FILEVERSION        1,0,160
+PRODUCTVERSION     1,0,160
+FILEFLAGSMASK      0
+FILEFLAGS          0
+FILEOS             VOS_NT_WINDOWS32
+FILETYPE           VFT_APP
+FILESUBTYPE        VFT2_UNKNOWN
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "041604b0"
+    BEGIN
+      VALUE "CompanyName", "Douglas R. Almeida"
+      VALUE "FileDescription", "Executável do Jogo Ameaça Terrorista"
+      VALUE "FileVersion", "1.0.0160"
+      VALUE "InternalName", "ATERROR"
+      VALUE "LegalCopyright", "©2016 Douglas R. Almeida"
+      VALUE "OriginalFilename", "aterror.exe"
+      VALUE "ProductName", "Ameaça Terrorista"
+      VALUE "ProductVersion", "1.0"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x0416, 1200
+  END
+END

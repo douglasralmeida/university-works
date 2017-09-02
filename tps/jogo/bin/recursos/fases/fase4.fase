@@ -1,0 +1,24 @@
+:ARQUIVOFASE
+Versao 1
+:DEFINICOES
+Prologo fase4.jpg
+ArquivoMapa mapa4.mapa
+MusicaAmbiente fase4.wav
+PosJogadorInicial 60 90
+PosJogadorFinal 1120 512
+:JOGADOR
+ArquivoPele j1.bmp
+:CHEFAO
+ArquivoPele c1.bmp
+PosChefao 1100 500
+:INIMIGOS
+QuantInimigos 6
+ArquivoPele i1.bmp
+:POSINIMIGOS
+PosInimigo 500 300
+PosInimigo 220 50
+PosInimigo 560 500
+PosInimigo 1050 150
+PosInimigo 850 450
+PosInimigo 900 50
+:FIM

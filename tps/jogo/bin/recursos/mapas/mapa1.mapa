@@ -1,0 +1,107 @@
+:ARQUIVOMAPA
+Versao 1
+:DEFINICOES
+AlturaMapa 19
+AudiosPassadas 1
+CursorArquivo alvo2.png
+CursorFoco 14 14
+LarguraMapa 38
+NumeroMascaras 12
+QuadrantesInformados 11
+QuadranteFinal 11
+:MASCARAS
+c1.bmp
+c2.bmp
+c3.bmp
+bdir.bmp
+besq.bmp
+bindir.bmp
+binesq.bmp
+binf.bmp
+bsudir.bmp
+bsuesq.bmp
+bsup.bmp
+esc.bmp
+:PASSADAS
+passo1.wav
+:BORDAS
+BordaS 10
+BordaI 7
+BordaE 4
+BordaD 3
+BordaSE 9
+BordaSD 8
+BordaID 5
+BordaIE 6
+:QUADRANTEPADRAO
+Colisao 0
+Mascara 0
+TemSangue 0
+Passada 0
+:QUADRANTE
+Posicao 1 2
+Colisao 0
+Mascara 1
+TemSangue 0
+Passada 0
+:QUADRANTE
+Posicao 1 3
+Colisao 0
+Mascara 1
+TemSangue 0
+Passada 0
+:QUADRANTE
+Posicao 11 11
+Colisao 1
+Mascara 2
+TemSangue 0
+Passada 0
+:QUADRANTE
+Posicao 2 16
+Colisao 1
+Mascara 2
+TemSangue 0
+Passada 0
+:QUADRANTE
+Posicao 5 6
+Colisao 1
+Mascara 2
+TemSangue 0
+Passada 0
+:QUADRANTE
+Posicao 1 4
+Colisao 0
+Mascara 1
+TemSangue 0
+Passada 0
+:QUADRANTE
+Posicao 2 4
+Colisao 0
+Mascara 1
+TemSangue 0
+Passada 0
+:QUADRANTE
+Posicao 3 2
+Colisao 0
+Mascara 1
+TemSangue 0
+Passada 0
+:QUADRANTE
+Posicao 3 3
+Colisao 0
+Mascara 1
+TemSangue 0
+Passada 0
+:QUADRANTE
+Posicao 3 4
+Colisao 0
+Mascara 1
+TemSangue 0
+Passada 0
+:QUADRANTE
+Posicao 18 37
+Colisao 0
+Mascara 1
+TemSangue 0
+Passada 0
+:FIM

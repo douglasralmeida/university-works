@@ -1,0 +1,59 @@
+<NotepadPlus>
+    <Project name="Jogo">
+        <Folder name="Game" />
+        <Folder name="Includes">
+            <File name="include\arquivo.h" />
+            <File name="include\audio.h" />
+            <File name="include\colisoes.h" />
+            <File name="include\fase.h" />
+            <File name="include\fisica.h" />
+            <File name="include\fonte.h" />
+            <File name="include\funcoes.h" />
+            <File name="include\graficos.h" />
+            <File name="include\janela.h" />
+            <File name="include\janelas.h" />
+            <File name="include\jogo.h" />
+            <File name="include\mapa.h" />
+            <File name="include\matematica.h" />
+            <File name="include\menu.h" />
+            <File name="include\mouse.h" />
+            <File name="include\painelstatus.h" />
+            <File name="include\personagem.h" />
+            <File name="include\projetil.h" />
+            <File name="include\recursos.h" />
+            <File name="include\teclado.h" />
+            <File name="include\tipos.h" />
+            <File name="include\objetos.h" />
+            <File name="include\vetor.h" />
+            <File name="include\video.h" />
+        </Folder>
+        <Folder name="Source">
+            <File name="source\audio.c" />
+            <File name="source\arquivo.c" />
+            <File name="source\colisoes.c" />
+            <File name="source\fase.c" />
+            <File name="source\fisica.c" />
+            <File name="source\fonte.c" />
+            <File name="source\funcoes.c" />
+            <File name="source\janela.c" />
+            <File name="source\janelas.c" />
+            <File name="source\jogo.c" />
+            <File name="source\graficos.c" />
+            <File name="source\mapa.c" />
+            <File name="source\matematica.c" />
+            <File name="source\menu.c" />
+            <File name="source\mouse.c" />
+            <File name="source\painelstatus.c" />
+            <File name="source\personagem.c" />
+            <File name="source\principal.c" />
+            <File name="source\projetil.c" />
+            <File name="source\teclado.c" />
+            <File name="source\vetor.c" />
+            <File name="source\video.c" />
+        </Folder>
+        <Folder name="Test">
+            <File name="test\teste.c" />
+        </Folder>
+        <File name="makefile" />
+    </Project>
+</NotepadPlus>

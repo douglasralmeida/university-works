@@ -1,0 +1,13 @@
+:ARQUIVOJOGO
+Versao 1
+:DEFINICOES
+CursorMouse cursor1.png
+MaxParticulas 256
+MaxProjetis 32
+QuantidadeFases 4
+:FASES
+fase1.fase
+fase2.fase
+fase3.fase
+fase4.fase
+:FIM
