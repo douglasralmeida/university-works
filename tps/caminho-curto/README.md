@@ -9,4 +9,6 @@ Bibliotecas necessárias: Nenhuma
 
 Compilador: GCC
 
+Ambiente: Linux
+
 Disciplina: AEDS2
