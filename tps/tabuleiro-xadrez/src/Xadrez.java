@@ -38,8 +38,8 @@ public class Xadrez {
 	}
 	Point SortearProximaCasa(Point casaatual) {
 		Random gerador = new Random();
-		int x;
-		int y;
+		int x = 0;
+		int y = 0;
 		int p;
 		
 		p = gerador.nextInt(4);
