@@ -29,23 +29,48 @@ public class Xadrez {
 		 * @param x: posição x
 		 * @param y: posição y
 		 */
-		boolean Podevisitar(int x, int y) {
-			return (visitas[x][y] == 0);
+		boolean PodeVisitar(Point casa) {
+			return (visitas[casa.x][casa.y] == 0);
 		}
-		void Visitar(int x, int y) {
-			visitas[x][y] = 1;
+		void Visitar(Point casa, byte jogada) {
+			visitas[casa.x][casa.y] = jogada;
 		}
+	}
+	Point SortearProximaCasa(Point casaatual) {
+		Random gerador = new Random();
+		int x;
+		int y;
+		int p;
+		
+		p = gerador.nextInt(4);
+		switch (p) {
+		case 0:
+			
+			break;
+		case 1:
+			
+			break;
+		case 2:
+			
+			break;
+			
+		case 3:
+			
+			break;
+		}
+		
+		return new Point(x, y);
 	}
 	/**
 	 * Sortea a proxima posicao da peça
 	 */	
-	private Point Sortearposicao(int limitex, int limitey) {
+	private Point SortearInicio(int limitex, int limitey) {
 		Random gerador = new Random();
 		int x;
 		int y;
 		
-		x = gerador.nextInt(limitex + 1);
-		y = gerador.nextInt(limitey + 1);
+		x = gerador.nextInt(limitex);
+		y = gerador.nextInt(limitey);
 		return new Point(x, y);
 	}
 	/**
