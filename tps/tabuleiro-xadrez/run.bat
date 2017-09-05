@@ -1,0 +1,1 @@
+java -cp bin\ Xadrez.Simulador

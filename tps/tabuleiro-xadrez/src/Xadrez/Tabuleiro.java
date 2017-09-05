@@ -7,7 +7,6 @@
 package Xadrez;
 
 import java.awt.Point;
-import java.util.Random;
 
 public class Tabuleiro {
 	private int altura;
