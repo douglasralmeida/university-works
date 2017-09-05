@@ -7,6 +7,7 @@
 package Xadrez;
 
 import java.awt.Point;
+import java.util.Random;
 
 public class Tabuleiro {
 	private int altura;
@@ -32,6 +33,40 @@ public class Tabuleiro {
 	public int getLargura() {
 		return largura;
 	}
+	void Inserir(Peca peca, Point posicao) {
+		casas[posicao.x][posicao.y] = numvisitas+1;
+		peca.setPosicao(posicao);
+		numvisitas++;
+	}
+	
+	void Movimentar(Peca peca) {
+		casas[peca.getProxPosicao().x][peca.getProxPosicao().y] = numvisitas+1;
+		peca.setPosicao(peca.getProxPosicao());
+		numvisitas++;
+	}
+	
+	/**
+	 * Checa se um casa pode ser visitada
+	 * @param casa: posicao da casa
+	 */		
+	boolean PodeMovimentar(Peca peca) {
+		int movimentospossiveis;
+		int proxmovimento;
+		Point novaposicao;
+		Random gerador;
+		
+		gerador = new Random();
+		movimentospossiveis = peca.getQtMovimentos();
+		proxmovimento = gerador.nextInt(movimentospossiveis);
+		peca.setProxPosicao(proxmovimento);
+		novaposicao = peca.getProxPosicao();
+				
+		return ((novaposicao.x < getLargura()) &&
+				(novaposicao.y < getAltura()) &&
+				(novaposicao.x >= 0) &&
+				(novaposicao.y >= 0) &&
+				(casas[novaposicao.x][novaposicao.y] == 0));
+	}
 	
 	public void setAltura(int altura) {
 		this.altura = altura;
@@ -50,7 +85,7 @@ public class Tabuleiro {
 		for (i = getAltura() - 1; i >= 0; i--) {
 			for (j = 0; j < getLargura(); j++) {
 				if (casas[i][j] < 10)
-					System.out.print(0);
+					System.out.print(' ');
 				System.out.print(casas[i][j]);
 				System.out.print(' ');
 			}
@@ -60,22 +95,5 @@ public class Tabuleiro {
 	
 	void ImprmirDetalhes() {
 		System.out.println(numvisitas);
-	}
-	
-	/**
-	 * Checa se um casa pode ser visitada
-	 * @param casa: posicao da casa
-	 */		
-	boolean PodeVisitar(Point casa) {
-		return ((casa.x < getLargura()) &&
-				(casa.y < getAltura()) &&
-				(casa.x >= 0) &&
-				(casa.y >= 0) &&
-				(casas[casa.x][casa.y] == 0));
-	}
-	
-	void Visita(Point casa) {
-		casas[casa.x][casa.y] = numvisitas+1;
-		numvisitas++;
 	}
 }

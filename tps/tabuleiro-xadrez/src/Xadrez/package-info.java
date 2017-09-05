@@ -1,5 +1,5 @@
 /**
- * Classe utilizada pelo TP1 de PM. 
+ * TP1 de PM. 
  * <p>
  * Implementa um tabuleiro de xadrez.
  *
