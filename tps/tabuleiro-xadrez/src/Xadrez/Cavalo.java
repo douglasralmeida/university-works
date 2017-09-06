@@ -23,6 +23,11 @@ public class Cavalo implements Peca {
 	}
 
 	@Override
+	public Point getMovimento(int i) {
+		return movimentos[i];
+	}
+	
+	@Override
 	public int getQtMovimentos() {
 		return movimentos.length;
 	}

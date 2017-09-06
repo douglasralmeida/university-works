@@ -1,13 +1,19 @@
 package Xadrez;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class Simulador {
-	private Tabuleiro T;
+	private Tabuleiro tab;
 	
+	/**
+	 * Construtor do simulador
+	 */
 	public Simulador() {
-		T = new Tabuleiro(8, 8);
+		tab = new Tabuleiro(8, 8);
 	}
 	/**
 	 * Sortea a posicao inicial da peça
@@ -17,55 +23,49 @@ public class Simulador {
 		int x;
 		int y;
 		
-		x = gerador.nextInt(T.getLargura());
-		y = gerador.nextInt(T.getAltura());
+		x = gerador.nextInt(tab.getLargura());
+		y = gerador.nextInt(tab.getAltura());
 		return new Point(x, y);
 	}
+	
+	/**
+	 * Escolhe um movimento aleatorio daqueles possiveis
+	 */
 	private boolean EscolheProxMovimento(Peca peca) {
-		int i, j, quantmovimentos, proxmovimento;
-		Point novaposicao;
-		Point[] movimentospossiveis;
-		Random gerador;
-		
-		gerador = new Random();
-		j = 0;
+		int i, quantmovimentos, proxmovimento;		
+		List<Integer> movimentospossiveis;
+
 		quantmovimentos = peca.getQtMovimentos();
-		movimentospossiveis = new Point[quantmovimentos];
+		movimentospossiveis = new ArrayList<>();
 		for (i = 0; i < quantmovimentos; i++) {
-			if (T.PodeMovimentar(peca.getMovimento(i))) {
-			  movimentospossiveis[j] = peca.getQtMovimentos(i);
-			  j++;
-			 }
+			if (tab.PodeMovimentar(new Point(peca.getMovimento(i).x + peca.getPosicao().x, peca.getMovimento(i).y + peca.getPosicao().y)))
+				movimentospossiveis.add(i);
 		}
-		if (j > 0)
-			proxmovimento = gerador.nextInt(j);
+		if (movimentospossiveis.size() > 0) {
+			Collections.shuffle(movimentospossiveis);
+			proxmovimento = movimentospossiveis.get(0);
+			peca.setProxPosicao(proxmovimento);
+			return true;
+		}
 		else
 			return false;
-		;;;;;;
-		peca.setProxPosicao(proxmovimento);
-		novaposicao = peca.getProxPosicao();		
-		return true;
 	}
+	
 	/**
-	 * Funcao Main
-	 * @param args: Argumentos do aplicativo
+	 * Realiza uma simulacao de movimentos aleatorios
 	 */
 	private void Simular() {
 		Peca pecaatual;
 		Point casainicial;
-		int x = 1024;
 		
 		pecaatual = new Cavalo();
 		casainicial = SortearInicio();
-		T.Inserir(pecaatual, casainicial);
-		while (x > 0) {
-			if (T.PodeMovimentar(pecaatual)) {
-				T.Movimentar(pecaatual);
-			}
-			x--;
+		tab.Inserir(pecaatual, casainicial);
+		while (EscolheProxMovimento(pecaatual)) {
+			tab.Movimentar(pecaatual);
 		}
-		T.Imprimir();
-		T.ImprmirDetalhes();
+		tab.Imprimir();
+		tab.ImprmirDetalhes();
 	}
 	
 	public static void main(String[] args) {

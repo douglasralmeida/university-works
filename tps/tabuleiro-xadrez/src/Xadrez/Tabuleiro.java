@@ -6,7 +6,6 @@
 package Xadrez;
 
 import java.awt.Point;
-import java.util.Random;
 
 public class Tabuleiro {
 	private int altura;
@@ -74,22 +73,12 @@ public class Tabuleiro {
 	 * Checa se um casa pode ser visitada
 	 * @param casa: posicao da casa
 	 */		
-	boolean PodeMovimentar(Peca peca) {
-		int movimentospossiveis;
-		int proxmovimento;
-		Point novaposicao;
-		Random gerador;
-		
-		gerador = new Random();
-		movimentospossiveis = peca.getQtMovimentos();
-		proxmovimento = gerador.nextInt(movimentospossiveis);
-		peca.setProxPosicao(proxmovimento);
-		novaposicao = peca.getProxPosicao();
-		return ((novaposicao.x < getLargura()) &&
-				(novaposicao.y < getAltura()) &&
-				(novaposicao.x >= 0) &&
-				(novaposicao.y >= 0) &&
-				(casas[novaposicao.x][novaposicao.y] == 0));
+	boolean PodeMovimentar(Point p) {				
+		return ((p.x < getLargura()) &&
+				(p.y < getAltura()) &&
+				(p.x >= 0) &&
+				(p.y >= 0) &&
+				(casas[p.x][p.y] == 0));
 	}
 	
 	public void setAltura(int altura) {
