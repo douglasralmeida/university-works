@@ -7,7 +7,7 @@ Linguagem: Java
 
 Bibliotecas necessárias: Nenhuma
 
-Compilador: Java 8
+Compilador: Eclipse Compiler for Java
 
 Ambiente: Windows
 

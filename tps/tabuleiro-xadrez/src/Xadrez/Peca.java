@@ -3,7 +3,7 @@ package Xadrez;
 import java.awt.Point;
 
 public interface Peca {
-	public Point getMovimento(int i);
+	Point getMovimento(int i);
 	
 	Point getPosicao();
 	

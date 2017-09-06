@@ -15,6 +15,7 @@ public class Simulador {
 	public Simulador() {
 		tab = new Tabuleiro(8, 8);
 	}
+	
 	/**
 	 * Sortea a posicao inicial da peça
 	 */	
@@ -68,6 +69,9 @@ public class Simulador {
 		tab.ImprmirDetalhes();
 	}
 	
+	/**
+	 * Funcao Main
+	 */
 	public static void main(String[] args) {
 		Simulador S;
 		

@@ -50,6 +50,9 @@ public class Tabuleiro {
 		}
 	}
 	
+	/**
+	 * Imprime detalhes do tabuleiro
+	 */
 	void ImprmirDetalhes() {
 		System.out.println(numvisitas);
 	}
@@ -63,6 +66,9 @@ public class Tabuleiro {
 		numvisitas++;
 	}
 	
+	/**
+	 * Movimento uma peca no tabuleiro
+	 */
 	void Movimentar(Peca peca) {
 		casas[peca.getProxPosicao().x][peca.getProxPosicao().y] = numvisitas+1;
 		peca.setPosicao(peca.getProxPosicao());
@@ -79,13 +85,5 @@ public class Tabuleiro {
 				(p.x >= 0) &&
 				(p.y >= 0) &&
 				(casas[p.x][p.y] == 0));
-	}
-	
-	public void setAltura(int altura) {
-		this.altura = altura;
-	}
-	
-	public void setLargura(int largura) {
-		this.largura = largura;
 	}
 }
