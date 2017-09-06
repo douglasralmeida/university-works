@@ -22,18 +22,29 @@ public class Simulador {
 		return new Point(x, y);
 	}
 	private boolean EscolheProxMovimento(Peca peca) {
-		int movimentospossiveis;
-		int proxmovimento;
+		int i, j, quantmovimentos, proxmovimento;
 		Point novaposicao;
+		Point[] movimentospossiveis;
 		Random gerador;
-		/* TODO */
-		gerador = new Random();
-		movimentospossiveis = peca.getQtMovimentos();
-		proxmovimento = gerador.nextInt(movimentospossiveis);
-		peca.setProxPosicao(proxmovimento);
-		novaposicao = peca.getProxPosicao();
 		
-		return false;
+		gerador = new Random();
+		j = 0;
+		quantmovimentos = peca.getQtMovimentos();
+		movimentospossiveis = new Point[quantmovimentos];
+		for (i = 0; i < quantmovimentos; i++) {
+			if (T.PodeMovimentar(peca.getMovimento(i))) {
+			  movimentospossiveis[j] = peca.getQtMovimentos(i);
+			  j++;
+			 }
+		}
+		if (j > 0)
+			proxmovimento = gerador.nextInt(j);
+		else
+			return false;
+		;;;;;;
+		peca.setProxPosicao(proxmovimento);
+		novaposicao = peca.getProxPosicao();		
+		return true;
 	}
 	/**
 	 * Funcao Main
