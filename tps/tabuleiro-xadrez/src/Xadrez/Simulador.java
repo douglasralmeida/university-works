@@ -17,19 +17,6 @@ public class Simulador {
 	}
 	
 	/**
-	 * Sortea a posicao inicial da peça
-	 */	
-	private Point SortearInicio() {
-		Random gerador = new Random();
-		int x;
-		int y;
-		
-		x = gerador.nextInt(tab.getLargura());
-		y = gerador.nextInt(tab.getAltura());
-		return new Point(x, y);
-	}
-	
-	/**
 	 * Escolhe um movimento aleatorio daqueles possiveis
 	 */
 	private boolean EscolheProxMovimento(Peca peca) {
@@ -52,10 +39,28 @@ public class Simulador {
 			return false;
 	}
 	
+	private void Imprime(){
+		tab.Imprimir();
+		tab.ImprmirDetalhes();
+	}
+	
+	/**
+	 * Sortea a posicao inicial da peça
+	 */	
+	private Point SortearInicio() {
+		Random gerador = new Random();
+		int x;
+		int y;
+		
+		x = gerador.nextInt(tab.getLargura());
+		y = gerador.nextInt(tab.getAltura());
+		return new Point(x, y);
+	}	
+	
 	/**
 	 * Realiza uma simulacao de movimentos aleatorios
 	 */
-	private void Simular() {
+	private void Simula() {
 		Peca pecaatual;
 		Point casainicial;
 		
@@ -65,8 +70,6 @@ public class Simulador {
 		while (EscolheProxMovimento(pecaatual)) {
 			tab.Movimentar(pecaatual);
 		}
-		tab.Imprimir();
-		tab.ImprmirDetalhes();
 	}
 	
 	/**
@@ -74,9 +77,14 @@ public class Simulador {
 	 */
 	public static void main(String[] args) {
 		Simulador S;
+		Instant tempoInicial;
+		Duration tempoTotal;
 		
+		tempoInicial = Instant.now();	
 		S = new Simulador();
-		S.Simular();		
-		System.out.println("<tempo_gasto>");
+		S.Simula();
+		tempoTotal = Duration.between(tempoInicial, Instant.now());
+		S.Imprime();
+		System.out.println(tempoTotal);
 	}
 }
