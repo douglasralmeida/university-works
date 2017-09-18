@@ -25,18 +25,24 @@ public class Tabuleiro {
 		largura = largurainicial;
 	}
 	
+	/**
+	 * Obtem a altura do tabuleiro
+	 */
 	public int getAltura() {
 		return altura;
 	}
 	
+	/**
+	 * Obtem a largura do tabuleiro
+	 */
 	public int getLargura() {
 		return largura;
 	}
 	
 	/**
-	 * Imprime o tabuleiro
+	 * Imprime o tabuleiro na tela
 	 */
-	void Imprimir() {
+	void imprimir() {
 		int i, j;
 		
 		for (i = getAltura() - 1; i >= 0; i--) {
@@ -51,35 +57,38 @@ public class Tabuleiro {
 	}
 	
 	/**
-	 * Imprime detalhes do tabuleiro
+	 * Imprime detalhes do tabuleiro na tela
 	 */
-	void ImprmirDetalhes() {
+	void imprmirDetalhes() {
 		System.out.println(numvisitas);
 	}
 	
 	/**
 	 *  Insere uma peça no tabuleiro na posição indicada
+	 *  @param peca: peca que será inserida
+	 *  @param posicao: posicao onde será inserida
 	 */
-	void Inserir(Peca peca, Point posicao) {
+	void inserir(Peca peca, Point posicao) {
 		casas[posicao.x][posicao.y] = numvisitas+1;
 		peca.setPosicao(posicao);
 		numvisitas++;
 	}
 	
 	/**
-	 * Movimento uma peca no tabuleiro
+	 * Movimenta uma peca no tabuleiro para a posicao indicada
+	 * @param peca: peca que está sendo movimentada
 	 */
-	void Movimentar(Peca peca) {
+	void movimentar(Peca peca) {
 		casas[peca.getProxPosicao().x][peca.getProxPosicao().y] = numvisitas+1;
 		peca.setPosicao(peca.getProxPosicao());
 		numvisitas++;
 	}
 	
 	/**
-	 * Checa se um casa pode ser visitada
-	 * @param casa: posicao da casa
+	 * Checa se um casa do tabuleiro pode ser visitada
+	 * @param p: posicao da casa
 	 */		
-	boolean PodeMovimentar(Point p) {				
+	boolean podeMovimentar(Point p) {				
 		return ((p.x < getLargura()) &&
 				(p.y < getAltura()) &&
 				(p.x >= 0) &&

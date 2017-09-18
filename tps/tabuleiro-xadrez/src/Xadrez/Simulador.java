@@ -1,3 +1,8 @@
+/**
+ *	Simulador do tabuleiro de xadrez
+ *
+ *	@author Douglas Rodrigues 
+ */
 package Xadrez;
 
 import java.awt.Point;
@@ -23,6 +28,7 @@ public class Simulador {
 	
 	/**
 	 * Escolhe um movimento aleatorio daqueles possiveis
+	 * @peca: Peça que será movimentada
 	 */
 	private boolean escolheProxMovimento(Peca peca) {
 		int i, quantmovimentos, proxmovimento;		
@@ -31,7 +37,7 @@ public class Simulador {
 		quantmovimentos = peca.getQtMovimentos();
 		movimentospossiveis = new ArrayList<>();
 		for (i = 0; i < quantmovimentos; i++) {
-			if (tab.PodeMovimentar(new Point(peca.getMovimento(i).x + peca.getPosicao().x, peca.getMovimento(i).y + peca.getPosicao().y)))
+			if (tab.podeMovimentar(new Point(peca.getMovimento(i).x + peca.getPosicao().x, peca.getMovimento(i).y + peca.getPosicao().y)))
 				movimentospossiveis.add(i);
 		}
 		if (movimentospossiveis.size() > 0) {
@@ -44,9 +50,12 @@ public class Simulador {
 			return false;
 	}
 	
+	/**
+	 * Imprime o tabuleiro e os detalhes da simulacao na tela
+	 */
 	private void imprime(){
-		tab.Imprimir();
-		tab.ImprmirDetalhes();
+		tab.imprimir();
+		tab.imprmirDetalhes();
 		System.out.println(tempoTotal.toMillis() + " ms");
 	}
 	
@@ -64,7 +73,7 @@ public class Simulador {
 	}	
 	
 	/**
-	 * Realiza uma simulacao de movimentos aleatorios
+	 * Realiza uma simulacao com movimentos aleatorios
 	 */
 	private void simula() {
 		Point casaInicial;
@@ -72,9 +81,9 @@ public class Simulador {
 		
 		pecaAtual = new Cavalo();
 		casaInicial = sortearInicio();
-		tab.Inserir(pecaAtual, casaInicial);
+		tab.inserir(pecaAtual, casaInicial);
 		while (escolheProxMovimento(pecaAtual)) {
-			tab.Movimentar(pecaAtual);
+			tab.movimentar(pecaAtual);
 		}
 		tempoTotal = Duration.between(tempoInicial, Instant.now());		
 	}
