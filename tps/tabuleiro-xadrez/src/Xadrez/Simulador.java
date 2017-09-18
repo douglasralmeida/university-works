@@ -1,6 +1,8 @@
 package Xadrez;
 
 import java.awt.Point;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,18 +10,21 @@ import java.util.Random;
 
 public class Simulador {
 	private Tabuleiro tab;
+	private Instant tempoInicial;
+	private Duration tempoTotal;
 	
 	/**
 	 * Construtor do simulador
 	 */
 	public Simulador() {
+		tempoInicial = Instant.now();
 		tab = new Tabuleiro(8, 8);
 	}
 	
 	/**
 	 * Escolhe um movimento aleatorio daqueles possiveis
 	 */
-	private boolean EscolheProxMovimento(Peca peca) {
+	private boolean escolheProxMovimento(Peca peca) {
 		int i, quantmovimentos, proxmovimento;		
 		List<Integer> movimentospossiveis;
 
@@ -39,15 +44,16 @@ public class Simulador {
 			return false;
 	}
 	
-	private void Imprime(){
+	private void imprime(){
 		tab.Imprimir();
 		tab.ImprmirDetalhes();
+		System.out.println(tempoTotal.toMillis() + " ms");
 	}
 	
 	/**
 	 * Sortea a posicao inicial da peça
 	 */	
-	private Point SortearInicio() {
+	private Point sortearInicio() {
 		Random gerador = new Random();
 		int x;
 		int y;
@@ -60,31 +66,27 @@ public class Simulador {
 	/**
 	 * Realiza uma simulacao de movimentos aleatorios
 	 */
-	private void Simula() {
-		Peca pecaatual;
-		Point casainicial;
+	private void simula() {
+		Point casaInicial;
+		Peca pecaAtual;		
 		
-		pecaatual = new Cavalo();
-		casainicial = SortearInicio();
-		tab.Inserir(pecaatual, casainicial);
-		while (EscolheProxMovimento(pecaatual)) {
-			tab.Movimentar(pecaatual);
+		pecaAtual = new Cavalo();
+		casaInicial = sortearInicio();
+		tab.Inserir(pecaAtual, casaInicial);
+		while (escolheProxMovimento(pecaAtual)) {
+			tab.Movimentar(pecaAtual);
 		}
+		tempoTotal = Duration.between(tempoInicial, Instant.now());		
 	}
 	
 	/**
 	 * Funcao Main
 	 */
 	public static void main(String[] args) {
-		Simulador S;
-		Instant tempoInicial;
-		Duration tempoTotal;
+		Simulador s;
 		
-		tempoInicial = Instant.now();	
-		S = new Simulador();
-		S.Simula();
-		tempoTotal = Duration.between(tempoInicial, Instant.now());
-		S.Imprime();
-		System.out.println(tempoTotal);
+		s = new Simulador();
+		s.simula();		
+		s.imprime();
 	}
 }
