@@ -1,6 +1,5 @@
 /**
  *	Simulador do tabuleiro de xadrez
-
  *
  *	@author Douglas Rodrigues 
  */
@@ -14,7 +13,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Simulador de movimentos das peças do xadrez 
+ */
 class Simulador {
+	/**
+	 * Interface para uma peça qualquer do tabuleiro 
+	 */
 	interface Peca {
 		Point getMovimento(int i);
 		Point getPosicao();
@@ -22,10 +27,12 @@ class Simulador {
 		void setPosicao(Point posicao);
 	}
 	
+	/**
+	 * Representa a peça 'cavalo' do xadrez 
+	 */
 	class Cavalo implements Peca {
-		public final Point[] movimentos;
+		private Point[] movimentos;
 		private Point posicao;
-		private Point proxposicao;
 		
 		/**
 		 * Construtor do Cavalo
@@ -42,7 +49,6 @@ class Simulador {
 					new Point(-1, 2)
 			};
 			this.posicao = new Point(-1, -1);
-			this.proxposicao = new Point(-1, -1);
 		}
 		
 		/**
@@ -70,7 +76,8 @@ class Simulador {
 		}
 		
 		/**
-		 * Altera a posição da peça 
+		 * Altera a posição da peça
+		 * @param posicao: Nova posição da peça
 		 */
 		@Override
 		public void setPosicao(Point posicao) {
@@ -78,6 +85,9 @@ class Simulador {
 		}
 	}
 	
+	/**
+	 * Representa o tabuleiro do xadrez 
+	 */
 	class Tabuleiro {
 		private int altura;
 		private int largura;
@@ -94,6 +104,21 @@ class Simulador {
 			casas = new int[largurainicial][alturainicial];
 			altura = alturainicial;
 			largura = largurainicial;
+		}
+		
+		/**
+		 * Testa se a posicao ja foi ocupada
+		 * @param p: Posição a ser testada
+		 */
+		public boolean ehPosicaoOcupavel(Point p) {
+			return (casas[p.x][p.y] == 0);
+		}
+		
+		/**
+		 * Verifica se o tabuleiro foi completamente percorido
+		 */
+		public boolean foiPercorrido() {
+			return (numvisitas == getAltura() * getLargura());
 		}
 		
 		/**
@@ -147,6 +172,7 @@ class Simulador {
 		/**
 		 * Movimenta uma peca no tabuleiro para a posicao indicada
 		 * @param peca: peca que está sendo movimentada
+		 * @param movimento: ID válido do movimento a ser utilizado
 		 */
 		void movimentar(Peca peca, int movimento) {
 			casas[peca.getPosicao().x + peca.getMovimento(movimento).x][peca.getPosicao().y + peca.getMovimento(movimento).y] = ++numvisitas;
@@ -162,7 +188,7 @@ class Simulador {
 					(p.y < getAltura()) &&
 					(p.x >= 0) &&
 					(p.y >= 0) &&
-					(casas[p.x][p.y] == 0));
+					(ehPosicaoOcupavel(p)));
 		}
 	}
 	
@@ -182,7 +208,7 @@ class Simulador {
 	 * Escolhe um movimento aleatorio daqueles possiveis
 	 * @peca: Peça que será movimentada
 	 */
-	private int escolheProxMovimento(Peca peca) {
+	private int escolheProxMovAleatorio(Peca peca) {
 		int i, quantmovimentos, proxmovimento;		
 		List<Integer> movimentospossiveis;
 
@@ -208,7 +234,36 @@ class Simulador {
 		tab.imprimir();
 		tab.imprmirDetalhes();
 		System.out.println(tempoTotal.toMillis() + " ms");
-	}	
+	}
+	
+	/**
+	 * Realiza um passeio completo com a peça pelo tabuleiro
+	 * @param peca: peca que está sendo movimentada
+	 */
+	boolean passeioCompleto(Peca peca) {
+		int i = 0;
+		boolean encontroucaminho = false;
+		Point proxmovimento, proxposicao;
+		
+		do {
+			proxmovimento = peca.getMovimento(i);
+			proxposicao = new Point(proxmovimento.x + peca.getPosicao().x, proxmovimento.y + peca.getPosicao().y);
+			if (tab.podeMovimentar(proxposicao)) {
+				tab.movimentar(peca, i);
+				if (!tab.foiPercorrido()) {
+					encontroucaminho = passeioCompleto(peca);
+					if (!encontroucaminho) {
+						tab.casas[proxposicao.x][proxposicao.y] = 0;
+						tab.numvisitas--;
+					}
+				}
+				else
+					encontroucaminho = true;
+			}
+			i++;
+		} while (!(encontroucaminho || i == peca.getQtMovimentos()));
+		return encontroucaminho;
+	}
 	
 	/**
 	 * Sortea a posicao inicial da peça
@@ -235,7 +290,7 @@ class Simulador {
 		casainicial = sortearInicio();
 		tab.inserir(pecaatual, casainicial);
 		do {
-			proxmovimento = escolheProxMovimento(pecaatual);
+			proxmovimento = escolheProxMovAleatorio(pecaatual);
 			if (proxmovimento >= 0)
 				tab.movimentar(pecaatual, proxmovimento);
 		} while (proxmovimento >= 0);
@@ -243,14 +298,32 @@ class Simulador {
 	}
 	
 	/**
+	 * Soluciona o problema de passar por todas as casas uma única vez
+	 */
+	private void soluciona() {
+		Point casainicial;
+		Peca pecaatual;
+		
+		pecaatual = new Cavalo();
+		casainicial = new Point(0, 0);
+		tab.inserir(pecaatual, casainicial);
+		passeioCompleto(pecaatual);
+		tempoTotal = Duration.between(tempoInicial, Instant.now());
+	}
+	
+	/**
 	 * Funcao Main
 	 */
 	public static void main(String[] args) {
-		Simulador s;
+		Simulador simaleatorio;
+		Simulador desafio;
 		
-		s = new Simulador();
-		s.simula();
-		//s.soluciona();
-		s.imprime();
+		simaleatorio = new Simulador();
+		simaleatorio.simula();
+		simaleatorio.imprime();
+		
+		desafio = new Simulador();
+		desafio.soluciona();
+		desafio.imprime();
 	}
 }
