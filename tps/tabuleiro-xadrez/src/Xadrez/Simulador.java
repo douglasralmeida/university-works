@@ -1,5 +1,6 @@
 /**
  *	Simulador do tabuleiro de xadrez
+
  *
  *	@author Douglas Rodrigues 
  */
@@ -17,10 +18,8 @@ class Simulador {
 	interface Peca {
 		Point getMovimento(int i);
 		Point getPosicao();
-		Point getProxPosicao();
 		int getQtMovimentos();
 		void setPosicao(Point posicao);
-		void setProxPosicao(int movimento);
 	}
 	
 	class Cavalo implements Peca {
@@ -71,28 +70,11 @@ class Simulador {
 		}
 		
 		/**
-		 * Obtem a próxima posição da peça para ser movimentada
-		 */
-		@Override
-		public Point getProxPosicao() {
-			return proxposicao;
-		}
-
-		/**
 		 * Altera a posição da peça 
 		 */
 		@Override
 		public void setPosicao(Point posicao) {
 			this.posicao = posicao;
-		}
-		
-		/**
-		 * Altera a próxima posição da peça
-		 * @param movimento: id do movimento possível 
-		 */
-		@Override
-		public void setProxPosicao(int movimento) {
-			proxposicao.setLocation(posicao.x + movimentos[movimento].x, posicao.y + movimentos[movimento].y);
 		}
 	}
 	
@@ -158,26 +140,24 @@ class Simulador {
 		 *  @param posicao: posicao onde será inserida
 		 */
 		void inserir(Peca peca, Point posicao) {
-			casas[posicao.x][posicao.y] = numvisitas+1;
+			casas[posicao.x][posicao.y] = ++numvisitas;
 			peca.setPosicao(posicao);
-			numvisitas++;
 		}
 		
 		/**
 		 * Movimenta uma peca no tabuleiro para a posicao indicada
 		 * @param peca: peca que está sendo movimentada
 		 */
-		void movimentar(Peca peca) {
-			casas[peca.getProxPosicao().x][peca.getProxPosicao().y] = numvisitas+1;
-			peca.setPosicao(peca.getProxPosicao());
-			numvisitas++;
+		void movimentar(Peca peca, int movimento) {
+			casas[peca.getPosicao().x + peca.getMovimento(movimento).x][peca.getPosicao().y + peca.getMovimento(movimento).y] = ++numvisitas;
+			peca.setPosicao(new Point(peca.getPosicao().x + peca.getMovimento(movimento).x, peca.getPosicao().y + peca.getMovimento(movimento).y));
 		}
 		
 		/**
 		 * Checa se um casa do tabuleiro pode ser visitada
 		 * @param p: posicao da casa
-		 */		
-		boolean podeMovimentar(Point p) {				
+		 */
+		boolean podeMovimentar(Point p) {
 			return ((p.x < getLargura()) &&
 					(p.y < getAltura()) &&
 					(p.x >= 0) &&
@@ -202,7 +182,7 @@ class Simulador {
 	 * Escolhe um movimento aleatorio daqueles possiveis
 	 * @peca: Peça que será movimentada
 	 */
-	private boolean escolheProxMovimento(Peca peca) {
+	private int escolheProxMovimento(Peca peca) {
 		int i, quantmovimentos, proxmovimento;		
 		List<Integer> movimentospossiveis;
 
@@ -215,11 +195,10 @@ class Simulador {
 		if (movimentospossiveis.size() > 0) {
 			Collections.shuffle(movimentospossiveis);
 			proxmovimento = movimentospossiveis.get(0);
-			peca.setProxPosicao(proxmovimento);
-			return true;
+			return proxmovimento;
 		}
 		else
-			return false;
+			return -1;
 	}
 	
 	/**
@@ -229,7 +208,7 @@ class Simulador {
 		tab.imprimir();
 		tab.imprmirDetalhes();
 		System.out.println(tempoTotal.toMillis() + " ms");
-	}
+	}	
 	
 	/**
 	 * Sortea a posicao inicial da peça
@@ -242,21 +221,24 @@ class Simulador {
 		x = gerador.nextInt(tab.getLargura());
 		y = gerador.nextInt(tab.getAltura());
 		return new Point(x, y);
-	}	
+	}
 	
 	/**
 	 * Realiza uma simulacao com movimentos aleatorios
 	 */
 	private void simula() {
-		Point casaInicial;
-		Peca pecaAtual;		
+		Point casainicial;
+		Peca pecaatual;
+		int proxmovimento;
 		
-		pecaAtual = new Cavalo();
-		casaInicial = sortearInicio();
-		tab.inserir(pecaAtual, casaInicial);
-		while (escolheProxMovimento(pecaAtual)) {
-			tab.movimentar(pecaAtual);
-		}
+		pecaatual = new Cavalo();
+		casainicial = sortearInicio();
+		tab.inserir(pecaatual, casainicial);
+		do {
+			proxmovimento = escolheProxMovimento(pecaatual);
+			if (proxmovimento >= 0)
+				tab.movimentar(pecaatual, proxmovimento);
+		} while (proxmovimento >= 0);
 		tempoTotal = Duration.between(tempoInicial, Instant.now());		
 	}
 	
@@ -267,7 +249,8 @@ class Simulador {
 		Simulador s;
 		
 		s = new Simulador();
-		s.simula();		
+		s.simula();
+		//s.soluciona();
 		s.imprime();
 	}
 }
