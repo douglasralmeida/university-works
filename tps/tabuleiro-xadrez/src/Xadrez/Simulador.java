@@ -1,7 +1,8 @@
 /**
  *	Simulador do tabuleiro de xadrez
  *
- *	@author Douglas Rodrigues 
+ *	@version 1.0	
+ *	@author Douglas Rodrigues
  */
 package Xadrez;
 
@@ -14,11 +15,11 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Simulador de movimentos das peças do xadrez 
+ * Simulador de movimentos das pecas do xadrez 
  */
 class Simulador {
 	/**
-	 * Interface para uma peça qualquer do tabuleiro 
+	 * Interface para uma peca qualquer do tabuleiro 
 	 */
 	interface Peca {
 		Point getMovimento(int i);
@@ -28,7 +29,7 @@ class Simulador {
 	}
 	
 	/**
-	 * Representa a peça 'cavalo' do xadrez 
+	 * Representa a peca 'cavalo' do xadrez 
 	 */
 	class Cavalo implements Peca {
 		private Point[] movimentos;
@@ -52,7 +53,9 @@ class Simulador {
 		}
 		
 		/**
-		 * Obtem um movimento possivel 
+		 * Obtem um movimento possivel
+		 * @param i ID do movimento
+		 * @return  um ponto (x,y) que representa a translacao do movimento
 		 */
 		@Override
 		public Point getMovimento(int i) {
@@ -60,7 +63,8 @@ class Simulador {
 		}
 
 		/**
-		 * Obtem a quantidade de movimentos possiveis 
+		 * Obtem a quantidade de movimentos possiveis do cavlo
+		 * @return a quantidade de movimentos do cavalo 
 		 */
 		@Override
 		public int getQtMovimentos() {
@@ -68,7 +72,8 @@ class Simulador {
 		}
 
 		/**
-		 * Obtem a posicao da peça no tabuleiro 
+		 * Obtem a posicao do cavalo no tabuleiro
+		 * @return um ponto (x,y) que representa a posicao do cavalo
 		 */
 		@Override
 		public Point getPosicao() {
@@ -76,8 +81,8 @@ class Simulador {
 		}
 		
 		/**
-		 * Altera a posição da peça
-		 * @param posicao: Nova posição da peça
+		 * Altera a posicao do cavalo
+		 * @param posicao ponto (x,y) que representa a nova posicao do cavalo
 		 */
 		@Override
 		public void setPosicao(Point posicao) {
@@ -96,8 +101,8 @@ class Simulador {
 		
 		/**
 		 * Construtor do Tabuleiro
-		 * @param largurainicial: Largura inicial do tabuleiro
-		 * @param alturainicial: Altura inicial do tabuleiro
+		 * @param largurainicial largura inicial do tabuleiro
+		 * @param alturainicial  altura inicial do tabuleiro
 		 */
 		public Tabuleiro(int largurainicial, int alturainicial) {
 			numvisitas = 0;			
@@ -108,14 +113,16 @@ class Simulador {
 		
 		/**
 		 * Testa se a posicao ja foi ocupada
-		 * @param p: Posição a ser testada
+		 * @param   p ponto (x,y) que representa a posicao do tabuleiro a ser testada
+		 * @return  valor booleano indicando se a posicao ja foi ocupada
 		 */
 		public boolean ehPosicaoOcupavel(Point p) {
 			return (casas[p.x][p.y] == 0);
 		}
 		
 		/**
-		 * Verifica se o tabuleiro foi completamente percorido
+		 * Verifica se o tabuleiro foi completamente percorrido
+		 * @return valor booleano indicando se o tabuleiro ja foi percorrido
 		 */
 		public boolean foiPercorrido() {
 			return (numvisitas == getAltura() * getLargura());
@@ -123,6 +130,7 @@ class Simulador {
 		
 		/**
 		 * Obtem a altura do tabuleiro
+		 * @return inteiro indicando a altura do tabuleiro
 		 */
 		public int getAltura() {
 			return altura;
@@ -130,6 +138,7 @@ class Simulador {
 		
 		/**
 		 * Obtem a largura do tabuleiro
+		 * @return inteiro indicando a largura do tabuleiro
 		 */
 		public int getLargura() {
 			return largura;
@@ -160,9 +169,9 @@ class Simulador {
 		}
 		
 		/**
-		 *  Insere uma peça no tabuleiro na posição indicada
-		 *  @param peca: peca que será inserida
-		 *  @param posicao: posicao onde será inserida
+		 *  Insere uma peca no tabuleiro na posicao indicada
+		 *  @param peca    peca que sera inserida
+		 *  @param posicao ponto (x,y) indicando a posicao onde sera inserida a peca
 		 */
 		void inserir(Peca peca, Point posicao) {
 			casas[posicao.x][posicao.y] = ++numvisitas;
@@ -171,8 +180,8 @@ class Simulador {
 		
 		/**
 		 * Movimenta uma peca no tabuleiro para a posicao indicada
-		 * @param peca: peca que está sendo movimentada
-		 * @param movimento: ID válido do movimento a ser utilizado
+		 * @param peca      peca que esta sendo movimentada
+		 * @param movimento ID (>=0) valido do movimento a ser utilizado
 		 */
 		void movimentar(Peca peca, int movimento) {
 			casas[peca.getPosicao().x + peca.getMovimento(movimento).x][peca.getPosicao().y + peca.getMovimento(movimento).y] = ++numvisitas;
@@ -180,8 +189,9 @@ class Simulador {
 		}
 		
 		/**
-		 * Checa se um casa do tabuleiro pode ser visitada
-		 * @param p: posicao da casa
+		 * Checa se um posicao do tabuleiro pode ser visitada
+		 * @param p ponto (x,y) indicando a posicao a ser testada
+		 * @return  valor booleando indicando se a posicao pode ser visitada
 		 */
 		boolean podeMovimentar(Point p) {
 			return ((p.x < getLargura()) &&
@@ -205,8 +215,9 @@ class Simulador {
 	}
 	
 	/**
-	 * Escolhe um movimento aleatorio daqueles possiveis
-	 * @peca: Peça que será movimentada
+	 * Escolhe um movimento aleatoriamente daqueles possiveis de uma peca do tabuleiro
+	 * @peca   peca que sera movimentada
+	 * @return ID (>=0) do movimento escolhido
 	 */
 	private int escolheProxMovAleatorio(Peca peca) {
 		int i, quantmovimentos, proxmovimento;		
@@ -237,10 +248,13 @@ class Simulador {
 	}
 	
 	/**
-	 * Realiza um passeio completo com a peça pelo tabuleiro
-	 * @param peca: peca que está sendo movimentada
+	 * Realiza um passeio completo com a peca pelo tabuleiro usando backtracking
+	 * <p>
+	 * Um passeio completo passa por todas as casas do tabuleiro somente uma unica vez.
+	 * @param peca peca que esta sendo movimentada
+	 * @return     valor booleando indicando que o passeio foi completado
 	 */
-	boolean passeioCompleto(Peca peca) {
+	boolean passear(Peca peca) {
 		int i = 0;
 		boolean encontroucaminho = false;
 		Point proxmovimento, proxposicao;
@@ -251,7 +265,7 @@ class Simulador {
 			if (tab.podeMovimentar(proxposicao)) {
 				tab.movimentar(peca, i);
 				if (!tab.foiPercorrido()) {
-					encontroucaminho = passeioCompleto(peca);
+					encontroucaminho = passear(peca);
 					if (!encontroucaminho) {
 						tab.casas[proxposicao.x][proxposicao.y] = 0;
 						tab.numvisitas--;
@@ -266,7 +280,8 @@ class Simulador {
 	}
 	
 	/**
-	 * Sortea a posicao inicial da peça
+	 * Sortea aleatoriamente a posicao inicial para uma peca
+	 * @return ponto (x,y) indicando a posicao escolhida
 	 */	
 	private Point sortearInicio() {
 		Random gerador = new Random();
@@ -279,7 +294,7 @@ class Simulador {
 	}
 	
 	/**
-	 * Realiza uma simulacao com movimentos aleatorios
+	 * Realiza uma simulacao com movimentos aleatorios usando uma peca
 	 */
 	private void simula() {
 		Point casainicial;
@@ -298,16 +313,16 @@ class Simulador {
 	}
 	
 	/**
-	 * Soluciona o problema de passar por todas as casas uma única vez
+	 * Soluciona o problema de passar por todas as casas do tabuleiro uma uma unica vez
 	 */
-	private void soluciona() {
+	private void solucionaDesafio() {
 		Point casainicial;
 		Peca pecaatual;
 		
 		pecaatual = new Cavalo();
 		casainicial = new Point(0, 0);
 		tab.inserir(pecaatual, casainicial);
-		passeioCompleto(pecaatual);
+		passear(pecaatual);
 		tempoTotal = Duration.between(tempoInicial, Instant.now());
 	}
 	
@@ -315,15 +330,11 @@ class Simulador {
 	 * Funcao Main
 	 */
 	public static void main(String[] args) {
-		Simulador simaleatorio;
-		Simulador desafio;
-		
-		simaleatorio = new Simulador();
-		simaleatorio.simula();
-		simaleatorio.imprime();
-		
-		desafio = new Simulador();
-		desafio.soluciona();
-		desafio.imprime();
+		Simulador s;
+				
+		s = new Simulador();
+		//s.solucionaDesafio();
+		s.simula();
+		s.imprime();
 	}
 }
