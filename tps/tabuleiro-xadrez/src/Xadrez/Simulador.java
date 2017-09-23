@@ -125,7 +125,7 @@ class Simulador {
 		 * @return valor booleano indicando se o tabuleiro ja foi percorrido
 		 */
 		public boolean foiPercorrido() {
-			return (numvisitas == getAltura() * getLargura());
+			return (numvisitas == (getAltura() * getLargura()));
 		}
 		
 		/**
@@ -190,10 +190,14 @@ class Simulador {
 		
 		/**
 		 * Checa se um posicao do tabuleiro pode ser visitada
-		 * @param p ponto (x,y) indicando a posicao a ser testada
+		 * @peca peca a ser testada
+		 * @movimento id do movimento
 		 * @return  valor booleando indicando se a posicao pode ser visitada
 		 */
-		boolean podeMovimentar(Point p) {
+		boolean podeMovimentar(Peca peca, int movimento) {
+			Point translacao = peca.getMovimento(movimento);
+			Point p = new Point(peca.getPosicao().x + translacao.x, peca.getPosicao().y + translacao.y);
+			
 			return ((p.x < getLargura()) &&
 					(p.y < getAltura()) &&
 					(p.x >= 0) &&
@@ -226,7 +230,7 @@ class Simulador {
 		quantmovimentos = peca.getQtMovimentos();
 		movimentospossiveis = new ArrayList<>();
 		for (i = 0; i < quantmovimentos; i++) {
-			if (tab.podeMovimentar(new Point(peca.getMovimento(i).x + peca.getPosicao().x, peca.getMovimento(i).y + peca.getPosicao().y)))
+			if (tab.podeMovimentar(peca, i))
 				movimentospossiveis.add(i);
 		}
 		if (movimentospossiveis.size() > 0) {
@@ -255,30 +259,30 @@ class Simulador {
 	 * @return     valor booleando indicando que o passeio foi completado
 	 */
 	boolean passear(Peca peca) {
-		int i = 0;
+		int i = 0; //seletor de movimentos
 		boolean encontroucaminho = false;
-		Point proxmovimento, proxposicao;
+		Point posicaoatual;
 		
+		posicaoatual = peca.getPosicao();
 		do {
-			proxmovimento = peca.getMovimento(i);
-			proxposicao = new Point(proxmovimento.x + peca.getPosicao().x, proxmovimento.y + peca.getPosicao().y);
-			if (tab.podeMovimentar(proxposicao)) {
+			if (tab.podeMovimentar(peca, i)) {
 				tab.movimentar(peca, i);
 				if (!tab.foiPercorrido()) {
 					encontroucaminho = passear(peca);
 					if (!encontroucaminho) {
-						tab.casas[proxposicao.x][proxposicao.y] = 0;
+						tab.casas[peca.getPosicao().x][peca.getPosicao().y] = 0; //backtracking
+						peca.setPosicao(posicaoatual);
 						tab.numvisitas--;
 					}
 				}
 				else
-					encontroucaminho = true;
+					return true;
 			}
 			i++;
-		} while (!(encontroucaminho || i == peca.getQtMovimentos()));
+		} while (!encontroucaminho && i < peca.getQtMovimentos());
 		return encontroucaminho;
 	}
-	
+
 	/**
 	 * Sortea aleatoriamente a posicao inicial para uma peca
 	 * @return ponto (x,y) indicando a posicao escolhida
@@ -333,8 +337,8 @@ class Simulador {
 		Simulador s;
 				
 		s = new Simulador();
-		//s.solucionaDesafio();
-		s.simula();
+		s.solucionaDesafio();
+		//s.simula();
 		s.imprime();
 	}
 }
