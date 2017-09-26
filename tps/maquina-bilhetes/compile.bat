@@ -1,0 +1,1 @@
+java -jar D:\eclipse\plugins\org.eclipse.jdt.core_3.13.0.v20170516-1929.jar -d bin\ src\Aplicativo\
