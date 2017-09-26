@@ -1,5 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_KtaPwKK-EeegTdM3RvIxog" name="model">
-  <packagedElement xmi:type="uml:Class" xmi:id="_NOaM4KK-EeegTdM3RvIxog" name="Maquina"/>
-  <packagedElement xmi:type="uml:Class" xmi:id="_QF-28KK-EeegTdM3RvIxog" name="Bilhete"/>
-</uml:Model>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ActionLanguage="http://www.omg.org/spec/ALF/20120827/ActionLanguage-Profile" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http://www.omg.org/spec/ALF/20120827/ActionLanguage-Profile pathmap://PAPYRUS_ACTIONLANGUAGE_PROFILE/ActionLanguage-Profile.profile.uml#_Kv8EIKFXEeS_KNX0nfvIVQ">
+  <uml:Model xmi:id="_KtaPwKK-EeegTdM3RvIxog" name="model">
+    <packagedElement xmi:type="uml:Class" xmi:id="_NOaM4KK-EeegTdM3RvIxog" name="Maquina">
+      <ownedAttribute xmi:type="uml:Property" xmi:id="_aLGzMKLGEee-4oVRuH3bOQ" name="trajeto">
+        <ownedComment xmi:type="uml:Comment" xmi:id="_h9VZYKLGEee-4oVRuH3bOQ">
+          <body>+ trajeto : &lt;int> {unique}</body>
+        </ownedComment>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_QF-28KK-EeegTdM3RvIxog" name="Bilhete"/>
+    <packagedElement xmi:type="uml:Interface" xmi:id="_rnHhoKLHEee-4oVRuH3bOQ" name="Trajeto">
+      <ownedAttribute xmi:type="uml:Property" xmi:id="_AIycoKLNEee-4oVRuH3bOQ" name="CidadeA" visibility="private">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      </ownedAttribute>
+      <ownedAttribute xmi:type="uml:Property" xmi:id="_EONZ4KLNEee-4oVRuH3bOQ" name="CidadeB" visibility="private">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_4evpcKLJEee-4oVRuH3bOQ" name="TrajetoRodoviario">
+      <generalization xmi:type="uml:Generalization" xmi:id="_4fQm0KLJEee-4oVRuH3bOQ" general="_rnHhoKLHEee-4oVRuH3bOQ"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_77hSUKLJEee-4oVRuH3bOQ" name="TrajetoFerroviario">
+      <generalization xmi:type="uml:Generalization" xmi:id="_78HIMKLJEee-4oVRuH3bOQ" general="_rnHhoKLHEee-4oVRuH3bOQ"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_DqqvUKLKEee-4oVRuH3bOQ" name="TrajetoAereo">
+      <generalization xmi:type="uml:Generalization" xmi:id="_Dq_fcKLKEee-4oVRuH3bOQ" general="_rnHhoKLHEee-4oVRuH3bOQ"/>
+    </packagedElement>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_h-geEKLGEee-4oVRuH3bOQ">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_h-i6UKLGEee-4oVRuH3bOQ" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="pathmap://PAPYRUS_ACTIONLANGUAGE_PROFILE/ActionLanguage-Profile.profile.uml#_Kv8EIKFXEeS_KNX0nfvIVQ"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="pathmap://PAPYRUS_ACTIONLANGUAGE_PROFILE/ActionLanguage-Profile.profile.uml#ActionLanguage"/>
+    </profileApplication>
+  </uml:Model>
+  <ActionLanguage:TextualRepresentation xmi:id="_iHh3MKLGEee-4oVRuH3bOQ" base_Comment="_h9VZYKLGEee-4oVRuH3bOQ" language="org.eclipse.papyrus.uml.textedit.property.xtext.UmlProperty"/>
+</xmi:XMI>
