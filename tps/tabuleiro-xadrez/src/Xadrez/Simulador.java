@@ -2,7 +2,7 @@
  *	Simulador do tabuleiro de xadrez
  *
  *	@version 1.0	
- *	@author Douglas Rodrigues
+ *	@author Douglas Rodrigues de Almeida
  */
 package Xadrez;
 
@@ -184,8 +184,10 @@ class Simulador {
 		 * @param movimento ID (>=0) valido do movimento a ser utilizado
 		 */
 		void movimentar(Peca peca, int movimento) {
-			casas[peca.getPosicao().x + peca.getMovimento(movimento).x][peca.getPosicao().y + peca.getMovimento(movimento).y] = ++numvisitas;
-			peca.setPosicao(new Point(peca.getPosicao().x + peca.getMovimento(movimento).x, peca.getPosicao().y + peca.getMovimento(movimento).y));
+			int novox = peca.getPosicao().x + peca.getMovimento(movimento).x;
+			int novoy = peca.getPosicao().y + peca.getMovimento(movimento).y;
+			casas[novox][novoy] = ++numvisitas;
+			peca.setPosicao(new Point(novox, novoy));
 		}
 		
 		/**
@@ -337,8 +339,8 @@ class Simulador {
 		Simulador s;
 				
 		s = new Simulador();
-		s.solucionaDesafio();
-		//s.simula();
+		//s.solucionaDesafio();
+		s.simula();
 		s.imprime();
 	}
 }
