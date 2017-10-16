@@ -270,7 +270,7 @@
       <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-HYLdaMBEee6vK-JcR3nFg"/>
     </children>
     <element xmi:type="uml:Enumeration" href="model.uml#_-HWWQKMBEee6vK-JcR3nFg"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-HXkYaMBEee6vK-JcR3nFg" x="60" y="-44"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-HXkYaMBEee6vK-JcR3nFg" x="80" y="-44"/>
   </children>
   <styles xmi:type="notation:StringValueStyle" xmi:id="_Kv3t4aK-EeegTdM3RvIxog" name="diagram_compatibility_version" stringValue="1.3.0"/>
   <styles xmi:type="notation:DiagramStyle" xmi:id="_Kv3t4qK-EeegTdM3RvIxog"/>

@@ -17,6 +17,7 @@
     <ownedOperation xmi:type="uml:Operation" xmi:id="_GrOEgKLxEeejVeDnSveG8g" name="comprarBilhete">
       <ownedParameter xmi:type="uml:Parameter" xmi:id="_XAmXgKLxEeejVeDnSveG8g" name="bilhete" type="_QF-28KK-EeegTdM3RvIxog" direction="out"/>
     </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_33NCwLE3Eeex4PxdPta0tA" name="exibirHorarios"/>
   </packagedElement>
   <packagedElement xmi:type="uml:Class" xmi:id="_QF-28KK-EeegTdM3RvIxog" name="Bilhete">
     <ownedAttribute xmi:type="uml:Property" xmi:id="_yEhNoKLtEeejVeDnSveG8g" name="nomePassageiro" visibility="private">
