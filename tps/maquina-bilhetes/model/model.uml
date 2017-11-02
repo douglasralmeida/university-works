@@ -14,18 +14,75 @@
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_7JBwgKLsEeejVeDnSveG8g"/>
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_7JBwgaLsEeejVeDnSveG8g" value="*"/>
     </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_Hgd6UKPJEeeXjJO4_1MpCA" name="compra" type="_GNSQoKPIEeeXjJO4_1MpCA" association="_HgbeEKPJEeeXjJO4_1MpCA">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Hgd6UaPJEeeXjJO4_1MpCA"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Hgd6UqPJEeeXjJO4_1MpCA" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_LM23EKPKEeeXjJO4_1MpCA" name="totalPassagensVendidas" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_RfjkMKPKEeeXjJO4_1MpCA" name="totalArrecadado" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_apaEoKPKEeeXjJO4_1MpCA" name="bilhetesVendidos" visibility="private" type="_QF-28KK-EeegTdM3RvIxog">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_dpX1sKPKEeeXjJO4_1MpCA"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_dpaR8KPKEeeXjJO4_1MpCA" value="*"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_pYfvQKPKEeeXjJO4_1MpCA" name="numSerie" visibility="private" isReadOnly="true">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+    </ownedAttribute>
     <ownedOperation xmi:type="uml:Operation" xmi:id="_GrOEgKLxEeejVeDnSveG8g" name="comprarBilhete">
-      <ownedParameter xmi:type="uml:Parameter" xmi:id="_XAmXgKLxEeejVeDnSveG8g" name="bilhete" type="_QF-28KK-EeegTdM3RvIxog" direction="out"/>
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_XAmXgKLxEeejVeDnSveG8g" name="venda" type="_GNSQoKPIEeeXjJO4_1MpCA"/>
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_QJ5OQKPJEeeXjJO4_1MpCA" name="bilhete" type="_QF-28KK-EeegTdM3RvIxog" direction="out"/>
     </ownedOperation>
+<<<<<<< HEAD
     <ownedOperation xmi:type="uml:Operation" xmi:id="_33NCwLE3Eeex4PxdPta0tA" name="exibirHorarios"/>
+=======
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_hqGgMKPKEeeXjJO4_1MpCA" name="encerrarVendas"/>
+>>>>>>> origin/master
   </packagedElement>
   <packagedElement xmi:type="uml:Class" xmi:id="_QF-28KK-EeegTdM3RvIxog" name="Bilhete">
     <ownedAttribute xmi:type="uml:Property" xmi:id="_yEhNoKLtEeejVeDnSveG8g" name="nomePassageiro" visibility="private">
       <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
     </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_OimOYKPLEeeXjJO4_1MpCA" name="veiculo" visibility="private" type="_K3meAKL0EeejVeDnSveG8g"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_TSY-UqPLEeeXjJO4_1MpCA" name="veiculo" type="_K3meAKL0EeejVeDnSveG8g" association="_TSYXQKPLEeeXjJO4_1MpCA">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TSY-U6PLEeeXjJO4_1MpCA"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TSY-VKPLEeeXjJO4_1MpCA" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_Z1CzAKPLEeeXjJO4_1MpCA" name="maquinaEmissora" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_xjEukKPLEeeXjJO4_1MpCA" name="dataViagem" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/EcorePrimitiveTypes.library.uml#EDate"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_9qxgMKPLEeeXjJO4_1MpCA" name="horaViagem" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_F5z-MKPMEeeXjJO4_1MpCA" name="localEmbarque" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_MOBuQKPMEeeXjJO4_1MpCA" name="idPoltrona" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_SeauQKPMEeeXjJO4_1MpCA" name="origemViagem" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_Xhm7UKPMEeeXjJO4_1MpCA" name="destinoViagem" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_es0k0KPMEeeXjJO4_1MpCA" name="docPassageiro" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_k4zl8KPMEeeXjJO4_1MpCA" name="valor" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+    </ownedAttribute>
     <ownedOperation xmi:type="uml:Operation" xmi:id="_lsXrkKL1EeejVeDnSveG8g" name="imprimir"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:Interface" xmi:id="_rnHhoKLHEee-4oVRuH3bOQ" name="Trajeto" isAbstract="true">
+  <packagedElement xmi:type="uml:Interface" xmi:id="_rnHhoKLHEee-4oVRuH3bOQ" name="ModeloTrajeto">
+    <nestedClassifier xmi:type="uml:Class" xmi:id="_rJiSQKPOEeeXjJO4_1MpCA" name="TrajetoRodoviario"/>
+    <nestedClassifier xmi:type="uml:Class" xmi:id="_x-KnwKPOEeeXjJO4_1MpCA" name="TrajetoFerroviario"/>
+    <nestedClassifier xmi:type="uml:Class" xmi:id="_zf1O0KPOEeeXjJO4_1MpCA" name="TrajetoAereo"/>
     <ownedAttribute xmi:type="uml:Property" xmi:id="_0fil8KLqEeejVeDnSveG8g" name="precoPassagem" visibility="private" isReadOnly="true">
       <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
     </ownedAttribute>
@@ -54,6 +111,10 @@
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_lRIncKL9Eee6vK-JcR3nFg" value="1"/>
     </ownedAttribute>
     <ownedAttribute xmi:type="uml:Property" xmi:id="_FQmQ4KMCEee6vK-JcR3nFg" name="tipo" visibility="private" type="_-HWWQKMBEee6vK-JcR3nFg"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_yeHFYaPJEeeXjJO4_1MpCA" name="tipotrajeto" type="_-HWWQKMBEee6vK-JcR3nFg" association="_yeF3QKPJEeeXjJO4_1MpCA">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_yeHFYqPJEeeXjJO4_1MpCA"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_yeHscKPJEeeXjJO4_1MpCA" value="1"/>
+    </ownedAttribute>
     <ownedOperation xmi:type="uml:Operation" xmi:id="_k-iWMKLqEeejVeDnSveG8g" name="adicionarHorario" isAbstract="true">
       <ownedParameter xmi:type="uml:Parameter" xmi:id="_NGV8kKLrEeejVeDnSveG8g" name="novohorario">
         <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
@@ -66,13 +127,6 @@
         <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_glGPwKL1EeejVeDnSveG8g" value="*"/>
       </ownedParameter>
     </ownedOperation>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Class" xmi:id="_4evpcKLJEee-4oVRuH3bOQ" name="TrajetoRodoviario"/>
-  <packagedElement xmi:type="uml:Class" xmi:id="_77hSUKLJEee-4oVRuH3bOQ" name="TrajetoFerroviario">
-    <generalization xmi:type="uml:Generalization" xmi:id="_78HIMKLJEee-4oVRuH3bOQ" general="_rnHhoKLHEee-4oVRuH3bOQ"/>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Class" xmi:id="_DqqvUKLKEee-4oVRuH3bOQ" name="TrajetoAereo">
-    <generalization xmi:type="uml:Generalization" xmi:id="_Dq_fcKLKEee-4oVRuH3bOQ" general="_rnHhoKLHEee-4oVRuH3bOQ"/>
   </packagedElement>
   <packagedElement xmi:type="uml:Association" xmi:id="_Y4SrMKLsEeejVeDnSveG8g" memberEnd="_Y4TSQqLsEeejVeDnSveG8g _Y4T5UqLsEeejVeDnSveG8g">
     <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_Y4TSQKLsEeejVeDnSveG8g" source="org.eclipse.papyrus">
@@ -87,7 +141,7 @@
     <ownedEnd xmi:type="uml:Property" xmi:id="_7JBwgqLsEeejVeDnSveG8g" name="maquina" type="_NOaM4KK-EeegTdM3RvIxog" association="_7JBJcKLsEeejVeDnSveG8g"/>
   </packagedElement>
   <packagedElement xmi:type="uml:Class" xmi:id="_K3meAKL0EeejVeDnSveG8g" name="Veiculo" visibility="package">
-    <ownedAttribute xmi:type="uml:Property" xmi:id="_MwXWcKL0EeejVeDnSveG8g" name="numeroSerieVeiculo" visibility="private">
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_MwXWcKL0EeejVeDnSveG8g" name="idVeiculo" visibility="private">
       <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
     </ownedAttribute>
     <ownedAttribute xmi:type="uml:Property" xmi:id="_SLwBEKL0EeejVeDnSveG8g" name="capacidade" visibility="private">
@@ -104,6 +158,40 @@
     <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_A03scKMCEee6vK-JcR3nFg" name="tpAereo"/>
     <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_Bp_WkKMCEee6vK-JcR3nFg" name="tpFerroviario"/>
     <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_CmqaMKMCEee6vK-JcR3nFg" name="tpRodoviario"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_GNSQoKPIEeeXjJO4_1MpCA" name="Venda">
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_Km0csKPIEeeXjJO4_1MpCA" name="valorPago">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_nnFt8KPIEeeXjJO4_1MpCA" name="destino">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_w1diAKPIEeeXjJO4_1MpCA" name="valorTroco">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_Cf7YoKPJEeeXjJO4_1MpCA" name="horario">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+    </ownedAttribute>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_zGrr0KPKEeeXjJO4_1MpCA" name="escolherDestino"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_3LEuUKPKEeeXjJO4_1MpCA" name="escolherHorario"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_HgbeEKPJEeeXjJO4_1MpCA" memberEnd="_Hgd6UKPJEeeXjJO4_1MpCA _Hgd6U6PJEeeXjJO4_1MpCA">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_HgcsMKPJEeeXjJO4_1MpCA" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_HgdTQKPJEeeXjJO4_1MpCA" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_Hgd6U6PJEeeXjJO4_1MpCA" name="maquina" type="_NOaM4KK-EeegTdM3RvIxog" association="_HgbeEKPJEeeXjJO4_1MpCA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_yeF3QKPJEeeXjJO4_1MpCA" memberEnd="_yeHFYaPJEeeXjJO4_1MpCA _yeHscaPJEeeXjJO4_1MpCA">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_yeGeUKPJEeeXjJO4_1MpCA" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_yeHFYKPJEeeXjJO4_1MpCA" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_yeHscaPJEeeXjJO4_1MpCA" name="trajeto" type="_rnHhoKLHEee-4oVRuH3bOQ" association="_yeF3QKPJEeeXjJO4_1MpCA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_TSYXQKPLEeeXjJO4_1MpCA" memberEnd="_TSY-UqPLEeeXjJO4_1MpCA _TSY-VaPLEeeXjJO4_1MpCA">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_TSY-UKPLEeeXjJO4_1MpCA" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_TSY-UaPLEeeXjJO4_1MpCA" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_TSY-VaPLEeeXjJO4_1MpCA" name="bilhete" type="_QF-28KK-EeegTdM3RvIxog" association="_TSYXQKPLEeeXjJO4_1MpCA"/>
   </packagedElement>
   <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_h-geEKLGEee-4oVRuH3bOQ">
     <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_h-i6UKLGEee-4oVRuH3bOQ" source="http://www.eclipse.org/uml2/2.0.0/UML">
