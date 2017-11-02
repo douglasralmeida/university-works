@@ -12,3 +12,6 @@ Compilador: Eclipse Compiler for Java
 Ambiente: Windows
 
 Disciplina: PM
+
+## Aviso
+☠️Este trabalho prático está incompleto.
