@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_MdDHgLILEeeN_vsGm0269A" name="TestCircle">
+  <packagedElement xmi:type="uml:Class" xmi:id="_ZfoNALILEeeN_vsGm0269A" name="Circle">
+    <generalization xmi:type="uml:Generalization" xmi:id="_cKUbkLJhEee94KY8UPhmGg" general="__8OqoLJfEee94KY8UPhmGg"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_c1gjsLILEeeN_vsGm0269A" name="color" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      <defaultValue xmi:type="uml:LiteralString" xmi:id="_1HgH8LILEeeN_vsGm0269A" value="red"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_HVJkILIMEeeN_vsGm0269A" name="length" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_I00AELIMEeeN_vsGm0269A" name="radius" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+      <defaultValue xmi:type="uml:LiteralReal" xmi:id="_Wx1UkLIMEeeN_vsGm0269A" value="1.0"/>
+    </ownedAttribute>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_cfaicLIMEeeN_vsGm0269A" name="Circle"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_gLEU0LIMEeeN_vsGm0269A" name="Circle">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_l2tpALIMEeeN_vsGm0269A" name="radius">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_f3ysILIPEeeN_vsGm0269A" name="getArea">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_jMgvwLIQEeeN_vsGm0269A" name="area" direction="out" effect="read">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_mYjDYLIPEeeN_vsGm0269A" name="getColor">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_vXUfwLIQEeeN_vsGm0269A" name="color" direction="out" effect="read">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_pUxj8LIPEeeN_vsGm0269A" name="getLength">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_7_bPwLIQEeeN_vsGm0269A" name="color" direction="out" effect="read">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_sr2NcLIPEeeN_vsGm0269A" name="getRadius">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_FaJdwLIREeeN_vsGm0269A" name="radius" direction="out" effect="read">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_xX2CgLIPEeeN_vsGm0269A" name="setColor">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_MVuIwLIREeeN_vsGm0269A" name="color" effect="update">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_0FQD8LIPEeeN_vsGm0269A" name="setRadius">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_SRp7sLIREeeN_vsGm0269A" name="radius" effect="update">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_giTdkLJjEee94KY8UPhmGg" name="showCentro"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_3CDMQLIPEeeN_vsGm0269A" name="toString"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="__8OqoLJfEee94KY8UPhmGg" name="Point">
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_R86B0LJgEee94KY8UPhmGg" name="x" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_bzRC8LJgEee94KY8UPhmGg" name="y" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+    </ownedAttribute>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_jU_H8LJgEee94KY8UPhmGg" name="setCoordenadas">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_vE8vALJgEee94KY8UPhmGg" name="x" effect="update">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+      </ownedParameter>
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_x99jgLJgEee94KY8UPhmGg" name="y" effect="update">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_7sjIsLJgEee94KY8UPhmGg" name="getx">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_DnmTsLJhEee94KY8UPhmGg" name="x" direction="out" effect="read">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_FxmtILJhEee94KY8UPhmGg" name="gety">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_MEIbILJhEee94KY8UPhmGg" name="y" direction="out" effect="read">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_Sei50LJhEee94KY8UPhmGg" name="toString"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_Tj-ekLJmEee94KY8UPhmGg" name="Triangulo">
+    <generalization xmi:type="uml:Generalization" xmi:id="_L-mr0LJqEee94KY8UPhmGg" general="__8OqoLJfEee94KY8UPhmGg"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="__GAToLJnEee94KY8UPhmGg" name="comprimentoa" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_P3FrMLJoEee94KY8UPhmGg" name="comprimentob" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_Yu8csLJoEee94KY8UPhmGg" name="comprimentoc" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+    </ownedAttribute>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_XUYOELJmEee94KY8UPhmGg" name="Triangulo">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_fNRc8LJmEee94KY8UPhmGg" name="comprimentoa">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+      </ownedParameter>
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_i_RH4LJmEee94KY8UPhmGg" name="comprimentob">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+      </ownedParameter>
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_l9rZwLJmEee94KY8UPhmGg" name="comprimentoc">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_oUCiQLJoEee94KY8UPhmGg" name="getPerimetro">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_8ZOH0LJoEee94KY8UPhmGg" name="perimetro" direction="out" effect="read">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_CE0_wLJpEee94KY8UPhmGg" name="getArea">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_EdK6sLJqEee94KY8UPhmGg" name="area" direction="out" effect="read">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_FBnhALJpEee94KY8UPhmGg" name="getTipo">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_JPqZULJqEee94KY8UPhmGg" name="tipo" direction="out" effect="read">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_95-TcLJpEee94KY8UPhmGg" name="toString"/>
+  </packagedElement>
+  <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_hi4417ILEeeN_vsGm0269A">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_hi442LILEeeN_vsGm0269A" source="http://www.eclipse.org/uml2/2.0.0/UML">
+      <references xmi:type="ecore:EPackage" href="pathmap://PAPYRUS_ACTIONLANGUAGE_PROFILE/ActionLanguage-Profile.profile.uml#_Kv8EIKFXEeS_KNX0nfvIVQ"/>
+    </eAnnotations>
+    <appliedProfile xmi:type="uml:Profile" href="pathmap://PAPYRUS_ACTIONLANGUAGE_PROFILE/ActionLanguage-Profile.profile.uml#ActionLanguage"/>
+  </profileApplication>
+</uml:Model>
