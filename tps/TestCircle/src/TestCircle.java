@@ -14,6 +14,7 @@ public class TestCircle {
 			System.out.println(t3);
 			
 			t4 = new Triangulo(0, 3, 4);
+			System.out.println(t4);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
