@@ -9,6 +9,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 
@@ -103,6 +104,7 @@ public class JanelaNovoQuestionario extends JDialog  {
 		radios[1] = new JRadioButton[Escolaridade.getLength()-1];
 		radios[2] = new JRadioButton[Idade.getLength()-1];
 		radios[3] = new JRadioButton[Renda.getLength()-1];
+		//Opção de seleção Sexo
 		for (i = 0; i < radios[0].length; i++) {
 			radios[0][i] = new JRadioButton(Sexo.values()[i+1].toString());
 			radios[0][i].setActionCommand(Sexo.values()[i+1].name());
@@ -111,7 +113,22 @@ public class JanelaNovoQuestionario extends JDialog  {
 					sexoEscolhido = Sexo.valueOf(ev.getActionCommand());
 				}
 			});
+			radios[0][i].addKeyListener(new KeyAdapter() {
+				public void keyReleased(KeyEvent e) {
+					switch (e.getKeyCode()) {
+					case KeyEvent.VK_UP:
+					case KeyEvent.VK_DOWN:
+					case KeyEvent.VK_LEFT:
+					case KeyEvent.VK_RIGHT:
+						sexoEscolhido = Sexo.valueOf(grupos[0].getSelection().getActionCommand());
+						break;
+					default:
+						break;
+					}
+				}
+			});
 		}
+		//Opção de seleção Escolaridade
 		for (i = 0; i < radios[1].length; i++) {
 			radios[1][i] = new JRadioButton(Escolaridade.values()[i+1].toString());
 			radios[1][i].setActionCommand(Escolaridade.values()[i+1].name());
@@ -120,7 +137,20 @@ public class JanelaNovoQuestionario extends JDialog  {
 					escolaridadeEscolhida = Escolaridade.valueOf(ev.getActionCommand());
 				}
 			});
+			radios[1][i].addKeyListener(new KeyAdapter() {
+				public void keyReleased(KeyEvent e) {
+					switch (e.getKeyCode()) {
+					case KeyEvent.VK_UP:
+					case KeyEvent.VK_DOWN:
+					case KeyEvent.VK_LEFT:
+					case KeyEvent.VK_RIGHT:
+						escolaridadeEscolhida = Escolaridade.valueOf(grupos[1].getSelection().getActionCommand());
+						break;
+					}
+				}
+			});
 		}
+		//Opção de seleção Idade
 		for (i = 0; i < radios[2].length; i++) {
 			radios[2][i] = new JRadioButton(Idade.values()[i+1].toString());
 			radios[2][i].setActionCommand(Idade.values()[i+1].name());
@@ -129,13 +159,38 @@ public class JanelaNovoQuestionario extends JDialog  {
 					idadeEscolhida = Idade.valueOf(ev.getActionCommand());
 				}
 			});
+			radios[2][i].addKeyListener(new KeyAdapter() {
+				public void keyReleased(KeyEvent e) {
+					switch (e.getKeyCode()) {
+					case KeyEvent.VK_UP:
+					case KeyEvent.VK_DOWN:
+					case KeyEvent.VK_LEFT:
+					case KeyEvent.VK_RIGHT:
+						idadeEscolhida = Idade.valueOf(grupos[2].getSelection().getActionCommand());
+						break;
+					}
+				}
+			});
 		}
+		//Opção de seleção Renda
 		for (i = 0; i < radios[3].length; i++) {
 			radios[3][i] = new JRadioButton(Renda.values()[i+1].toString());
 			radios[3][i].setActionCommand(Renda.values()[i+1].name());
 			radios[3][i].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent ev) {
 					rendaEscolhida = Renda.valueOf(ev.getActionCommand());
+				}
+			});
+			radios[3][i].addKeyListener(new KeyAdapter() {
+				public void keyReleased(KeyEvent e) {
+					switch (e.getKeyCode()) {
+					case KeyEvent.VK_UP:
+					case KeyEvent.VK_DOWN:
+					case KeyEvent.VK_LEFT:
+					case KeyEvent.VK_RIGHT:
+						rendaEscolhida = Renda.valueOf(grupos[3].getSelection().getActionCommand());
+						break;
+					}
 				}
 			});
 		}
@@ -163,7 +218,7 @@ public class JanelaNovoQuestionario extends JDialog  {
 		botoes[1].setMnemonic(KeyEvent.VK_I);
 		botoes[1].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				//popularQuestionario();
+				exibirQuestionario();
 			}
 		});
 		//Botao Cancelar
@@ -191,6 +246,21 @@ public class JanelaNovoQuestionario extends JDialog  {
 	    panelRaiz.registerKeyboardAction(actionListener, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
 	    return panelRaiz;
 	  }
+	
+	private void exibirQuestionario() {
+		Questionario novoQuestionario = new Questionario(repositorio.getSize() + 1);
+		try {
+			novoQuestionario.setCandidato(editCandidato.getText());
+			novoQuestionario.setSexo(sexoEscolhido);
+			novoQuestionario.setEscolaridade(escolaridadeEscolhida);
+			novoQuestionario.setIdade(idadeEscolhida);
+			novoQuestionario.setRenda(rendaEscolhida);
+			JOptionPane.showMessageDialog(null, novoQuestionario, "Pesquisa Eleitoral", JOptionPane.INFORMATION_MESSAGE);
+		}
+		catch (IOException ex) {
+			JOptionPane.showMessageDialog(null, ex.getMessage(), "Pesquisa Eleitoral", JOptionPane.ERROR_MESSAGE);
+		}		
+	}
 	
 	private void fecharJanela() {
 		setVisible(false);

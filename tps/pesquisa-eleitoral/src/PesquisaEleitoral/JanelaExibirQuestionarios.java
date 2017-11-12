@@ -8,15 +8,18 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
@@ -70,10 +73,25 @@ public class JanelaExibirQuestionarios extends JDialog {
 		return modelo;		
 	}
 	private void criarControles() {
+		setTitle("Questionários Cadastrados: " + repositorio.getSize() + " questionário(s)");
 		lista = new JList<Questionario>(criarModelo());
 		lista.setCellRenderer(new RenderizadorQuestionario());
-		setTitle("Questionários Cadastrados: " + repositorio.getSize() + " questionário(s)");
- 
+		lista.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent ev) {
+				if ((ev.getClickCount() == 2) && (lista.getSelectedIndex() > -1))
+					exibirQuestionario(lista.getSelectedIndex());
+			}
+		});
+		lista.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				switch (e.getKeyCode()) {
+				case KeyEvent.VK_ENTER:
+					if (lista.getSelectedIndex() > -1)
+						exibirQuestionario(lista.getSelectedIndex());
+					break;
+				}
+			}
+		});
 		JScrollPane controleLista = new JScrollPane(lista);
 		controleLista.setPreferredSize(new Dimension(200, 80));
 		add(controleLista, BorderLayout.CENTER);
@@ -88,6 +106,11 @@ public class JanelaExibirQuestionarios extends JDialog {
 		});
 		panelRodape.add(botao);
 		add(panelRodape, BorderLayout.SOUTH);
+	}
+	
+	private void exibirQuestionario(int index) {
+		Questionario questionario = repositorio.getQuestionario(index); 
+		JOptionPane.showMessageDialog(null, questionario, "Pesquisa Eleitoral", JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	private void fecharJanela() {
