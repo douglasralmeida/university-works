@@ -69,7 +69,8 @@ public class JanelaNovoQuestionario extends JDialog  {
 		getContentPane().setLayout(new BorderLayout());
 		
 		criarControles();
-		configLayout();
+		setMnemonicos();
+		setJanelaLayout();
 		
 		pack();
 		setLocationRelativeTo(Parent);
@@ -96,9 +97,7 @@ public class JanelaNovoQuestionario extends JDialog  {
 			rotulos[i] = new JLabel(strsRotulos[i]);
 			panelPrincipal.add(rotulos[i]);
 		}
-		rotulos[0].setDisplayedMnemonic('n');
 		editCandidato = new JTextField(20);
-		rotulos[0].setLabelFor(editCandidato);
 		panelPrincipal.add(editCandidato);
 		radios[0] = new JRadioButton[Sexo.getLength()-1];
 		radios[1] = new JRadioButton[Escolaridade.getLength()-1];
@@ -207,7 +206,6 @@ public class JanelaNovoQuestionario extends JDialog  {
 			panelRodape.add(botoes[i]);
 		}
 		//Botao Salvar
-		botoes[0].setMnemonic(KeyEvent.VK_S);
 		botoes[0].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				popularQuestionario();
@@ -215,14 +213,12 @@ public class JanelaNovoQuestionario extends JDialog  {
 		});
 		getRootPane().setDefaultButton(botoes[0]);
 		//Botao Imprimir
-		botoes[1].setMnemonic(KeyEvent.VK_I);
 		botoes[1].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				exibirQuestionario();
 			}
 		});
 		//Botao Cancelar
-		botoes[2].setMnemonic(KeyEvent.VK_C);
 		botoes[2].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				fecharJanela();
@@ -282,7 +278,7 @@ public class JanelaNovoQuestionario extends JDialog  {
 		}
 	}
 	
-	private void configLayout() {
+	private void setJanelaLayout() {
 		int i, j;
 		
 		for (i = 0; i < rotulos.length; i++)
@@ -304,4 +300,12 @@ public class JanelaNovoQuestionario extends JDialog  {
 		for (i = 1; i < rotulos.length; i++)
 			layout.putConstraint(SpringLayout.NORTH, rotulos[i], 4, SpringLayout.NORTH, radios[i-1][0]);
 	}
+	
+	private void setMnemonicos() {
+		rotulos[0].setDisplayedMnemonic('n');
+		rotulos[0].setLabelFor(editCandidato);
+		botoes[0].setMnemonic(KeyEvent.VK_S);
+		botoes[1].setMnemonic(KeyEvent.VK_I);
+		botoes[2].setMnemonic(KeyEvent.VK_C);
+	}	
 }

@@ -34,14 +34,14 @@ public class JanelaExibirQuestionarios extends JDialog {
 	private static final long serialVersionUID = 1143872209310784376L;
 	
 	private Repositorio repositorio;
+	private JButton botao;
 	private JList<Questionario> lista;
 
 	public JanelaExibirQuestionarios(JFrame Parent, Repositorio repositorio) {
 		super(Parent, "Questionários Cadastrados", true);
 		this.repositorio = repositorio;
-		
 		criarControles();
-		
+		setMnemonicos();		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
 		setSize(400, 300);
@@ -97,8 +97,7 @@ public class JanelaExibirQuestionarios extends JDialog {
 		add(controleLista, BorderLayout.CENTER);
 		
 		JPanel panelRodape = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		JButton botao = new JButton("OK");
-		botao.setMnemonic(KeyEvent.VK_O);
+		botao = new JButton("OK");
 		botao.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				fecharJanela();
@@ -115,5 +114,9 @@ public class JanelaExibirQuestionarios extends JDialog {
 	
 	private void fecharJanela() {
 		setVisible(false);
+	}
+	
+	private void setMnemonicos() {
+		botao.setMnemonic(KeyEvent.VK_O);
 	}
 }
