@@ -145,8 +145,7 @@ public class JanelaNovoQuestionario extends JDialog  {
 				panelPrincipal.add(radios[i][j]);
 			}
 		
-		JPanel panelRodape = new JPanel();
-		panelRodape.setLayout(new FlowLayout(FlowLayout.CENTER));
+		JPanel panelRodape = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		botoes = new JButton[strsBotoes.length];
 		for (i = 0; i < strsBotoes.length; i++) {
 			botoes[i] = new JButton(strsBotoes[i]);
@@ -184,7 +183,7 @@ public class JanelaNovoQuestionario extends JDialog  {
 	protected JRootPane createRootPane() {
 		ActionListener actionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				setVisible(false);
+				fecharJanela();
 			}
 	    };
 	    JRootPane panelRaiz = new JRootPane();
