@@ -274,7 +274,7 @@ public class JanelaNovoQuestionario extends JDialog  {
 			novoQuestionario.setEscolaridade(escolaridadeEscolhida);
 			novoQuestionario.setIdade(idadeEscolhida);
 			novoQuestionario.setRenda(rendaEscolhida);
-			repositorio.addQuestionario(novoQuestionario);
+			repositorio.adicionarQuestionario(novoQuestionario);
 			fecharJanela();
 		}
 		catch (IOException ex) {

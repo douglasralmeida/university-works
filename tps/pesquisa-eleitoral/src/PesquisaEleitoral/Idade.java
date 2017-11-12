@@ -19,7 +19,7 @@ public enum Idade {
 	
 	private Idade(String descricao) {
 		this.descricao = descricao;
-	};
+	}
 	
 	public static final int getLength() {
 		return values().length;

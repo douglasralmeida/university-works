@@ -17,7 +17,7 @@ public class Repositorio {
 		questionarios = new ArrayList<Questionario>();
 	}
 	
-	public void addQuestionario(Questionario questionario) {
+	public void adicionarQuestionario(Questionario questionario) {
 		questionarios.add(questionario);
 	}
 	
@@ -29,8 +29,8 @@ public class Repositorio {
 		return questionarios.size();
 	}
 	
-	public void removeQuestionario(int id) {
-		questionarios.remove(id-1);
+	public void removerQuestionario(int index) {
+		questionarios.remove(index);
 	}
 	
 	public String toString() {

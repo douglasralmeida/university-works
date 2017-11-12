@@ -10,8 +10,7 @@ package PesquisaEleitoral;
 public enum Sexo {
 	NENHUM(""),
 	FEMININO("Feminino"),
-	MASCULINO("Masculino"),
-	NAOINFORMADO("Não informado");
+	MASCULINO("Masculino");
 	
 	private String descricao;
 	

@@ -83,8 +83,8 @@ public class JanelaExibirQuestionarios extends JDialog {
 			}
 		});
 		lista.addKeyListener(new KeyAdapter() {
-			public void keyPressed(KeyEvent e) {
-				switch (e.getKeyCode()) {
+			public void keyPressed(KeyEvent ev) {
+				switch (ev.getKeyCode()) {
 				case KeyEvent.VK_ENTER:
 					if (lista.getSelectedIndex() > -1)
 						exibirQuestionario(lista.getSelectedIndex());
