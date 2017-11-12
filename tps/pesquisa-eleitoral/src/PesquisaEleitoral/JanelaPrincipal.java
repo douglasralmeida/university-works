@@ -64,7 +64,7 @@ public class JanelaPrincipal extends JFrame {
 	}
 	
 	private void btoListaClick() {
-		new JanelaExibirQuestionarios(this);
+		new JanelaExibirQuestionarios(this, repositorio);
 	}
 	
 	private void btoNovoClick() {

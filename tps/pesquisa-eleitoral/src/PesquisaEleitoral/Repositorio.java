@@ -21,6 +21,10 @@ public class Repositorio {
 		questionarios.add(questionario);
 	}
 	
+	public Questionario getQuestionario(int index) {
+		return questionarios.get(index);
+	}
+	
 	public int getSize() {
 		return questionarios.size();
 	}

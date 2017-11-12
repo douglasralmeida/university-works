@@ -67,15 +67,15 @@ public class JanelaNovoQuestionario extends JDialog  {
 		setResizable(false);
 		getContentPane().setLayout(new BorderLayout());
 		
-		createControls();
-		setLayoutControls();
+		criarControles();
+		configLayout();
 		
 		pack();
 		setLocationRelativeTo(Parent);
 		setVisible(true);
 	}
 	
-	private void createControls() {
+	private void criarControles() {
 		int i, j;
 		
 		JPanel panelTitulo = new JPanel(new GridLayout(0, 1));
@@ -213,7 +213,7 @@ public class JanelaNovoQuestionario extends JDialog  {
 		}
 	}
 	
-	private void setLayoutControls() {
+	private void configLayout() {
 		int i, j;
 		
 		for (i = 0; i < rotulos.length; i++)
