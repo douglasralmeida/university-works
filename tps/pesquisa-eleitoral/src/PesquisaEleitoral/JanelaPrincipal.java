@@ -19,12 +19,14 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class JanelaPrincipal extends JFrame {
 	private static final long serialVersionUID = 3956935555239378814L;
 	
+	Repositorio repositorio;
 	final private JButton btoLista;
 	final private JButton btoNovo;
 	final private JButton btoSair;
 	
-	public JanelaPrincipal() {
+	public JanelaPrincipal(Repositorio repositorio) {
 		super("Pesquisa Eleitoral");
+		this.repositorio = repositorio;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setFrameTheme();
 		getContentPane().setLayout(new GridLayout(3, 1, 0, 0));
@@ -66,14 +68,14 @@ public class JanelaPrincipal extends JFrame {
 	}
 	
 	private void btoNovoClick() {
-		new JanelaNovoQuestionario(this);
+		new JanelaNovoQuestionario(this, repositorio);
 	}
 	
 	private void btoSairClick() {
 		System.exit(0);
 	}
 	
-	private void setFrameTheme() {
+	private void setFrameTheme() {		
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException e) {

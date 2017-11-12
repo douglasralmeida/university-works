@@ -25,35 +25,47 @@ public class Questionario {
 	public String getCandidato() {
 		return candidato;
 	}
-	public void setCandidato(String candidato) throws IOException {
-		if (candidato.length() > 0)
-			this.candidato = candidato;
-		else
-			throw new IOException("O nome do candidato não foi informado.");
-	}
-	public Sexo getSexo() {
-		return sexo;
-	}
-	public void setSexo(Sexo sexo) {
-		this.sexo = sexo;
-	}
 	public Escolaridade getEscolaridade() {
 		return escolaridade;
-	}
-	public void setEscolaridade(Escolaridade escolaridade) {
-		this.escolaridade = escolaridade;
 	}
 	public Idade getIdade() {
 		return idade;
 	}
-	public void setIdade(Idade idade) {
-		this.idade = idade;
-	}
 	public Renda getRenda() {
 		return renda;
 	}
-	public void setRenda(Renda renda) {
-		this.renda = renda;
+	public Sexo getSexo() {
+		return sexo;
+	}
+	public void setCandidato(String candidato) throws IOException {
+		if (!candidato.isEmpty())
+			this.candidato = candidato;
+		else
+			throw new IOException("O nome do candidato não foi informado.");
+	}
+	public void setEscolaridade(Escolaridade escolaridade) throws IOException {
+		if (escolaridade != Escolaridade.NENHUM)
+			this.escolaridade = escolaridade;
+		else
+			throw new IOException("A escolaridade do eleitor não foi selecionada.");
+	}
+	public void setIdade(Idade idade) throws IOException {
+		if (idade != Idade.NENHUM)
+			this.idade = idade;
+		else
+			throw new IOException("A idade do eleitor não foi selecionada.");
+	}
+	public void setRenda(Renda renda) throws IOException {
+		if (renda != Renda.NENHUM)
+			this.renda = renda;
+		else
+			throw new IOException("A renda familiar do eleitor não foi selecionada.");
+	}
+	public void setSexo(Sexo sexo) throws IOException {
+		if (sexo != Sexo.NENHUM)
+			this.sexo = sexo;
+		else
+			throw new IOException("O sexo do eleitor não foi selecionado.");
 	}
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
