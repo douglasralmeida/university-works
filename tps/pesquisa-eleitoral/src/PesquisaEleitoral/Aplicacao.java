@@ -1,5 +1,8 @@
 /**
- * 
+ *	Aplicação de Pesquisa Eleitoral
+ *
+ *	@version 1.0	
+ *	@author Douglas Rodrigues de Almeida
  */
 package PesquisaEleitoral;
 
@@ -7,11 +10,13 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
- * @author Douglas
- *
+ * Aplicação da Pesquisa Eleitoral 
  */
 public class Aplicacao {
 
+	/**
+	 * Confira a aparência da aplicação tal qual utilizada pelo sistema operacional
+	 */
 	private static void setAppTheme() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -23,7 +28,7 @@ public class Aplicacao {
 	}
 	
 	/**
-	 * @param args
+	 * Função Main
 	 */
 	public static void main(String[] args) {
 		Repositorio repositorio = new Repositorio();

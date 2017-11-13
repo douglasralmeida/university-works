@@ -11,8 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 
 /**
- * @author Douglas
- *
+ *  Janela principal do programa 
  */
 public class JanelaPrincipal extends JFrame {
 	private static final long serialVersionUID = 3956935555239378814L;

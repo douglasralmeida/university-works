@@ -4,8 +4,7 @@
 package PesquisaEleitoral;
 
 /**
- * @author Douglas
- *
+ * Enumeração para o sexo do eleitor 
  */
 public enum Sexo {
 	NENHUM(""),

@@ -4,8 +4,7 @@
 package PesquisaEleitoral;
 
 /**
- * @author Douglas
- *
+ * Enumeração para escolaridade do eleitor 
  */
 public enum Escolaridade {
 	NENHUM(""),

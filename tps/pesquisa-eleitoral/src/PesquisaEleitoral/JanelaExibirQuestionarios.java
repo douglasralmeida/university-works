@@ -26,8 +26,7 @@ import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 
 /**
- * @author Douglas
- *
+ *  Janela para exibir todos os questionários 
  */
 public class JanelaExibirQuestionarios extends JDialog {
 

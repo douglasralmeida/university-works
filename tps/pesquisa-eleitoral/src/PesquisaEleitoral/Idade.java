@@ -4,8 +4,7 @@
 package PesquisaEleitoral;
 
 /**
- * @author Douglas
- *
+ * Enumeração para a idade do eleitor 
  */
 public enum Idade {
 	NENHUM(""),

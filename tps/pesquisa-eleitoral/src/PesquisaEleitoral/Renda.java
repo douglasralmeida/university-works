@@ -4,8 +4,7 @@
 package PesquisaEleitoral;
 
 /**
- * @author Douglas
- *
+ * Enumeração para a renda do eleitor 
  */
 public enum Renda {
 	NENHUM(""),

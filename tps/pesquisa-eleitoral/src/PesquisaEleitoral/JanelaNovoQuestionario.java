@@ -29,8 +29,7 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 
 /**
- * @author Douglas
- *
+ *  Janela para criar um novo questionário 
  */
 public class JanelaNovoQuestionario extends JDialog  {
 	private static final long serialVersionUID = -4644227182969398152L;
@@ -79,7 +78,7 @@ public class JanelaNovoQuestionario extends JDialog  {
 	
 	private void criarControles() {
 		int i, j;
-		
+
 		JPanel panelTitulo = new JPanel(new GridLayout(0, 1));
 		txtTitulo = new JLabel(strTitulo, SwingConstants.CENTER);
 		panelTitulo.add(txtTitulo);

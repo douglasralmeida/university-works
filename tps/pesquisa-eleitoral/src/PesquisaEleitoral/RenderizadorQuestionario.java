@@ -11,6 +11,9 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 
+/**
+ *  Classe do renderizador de questionários em uma lista de exibição 
+ */
 public class RenderizadorQuestionario extends JPanel implements ListCellRenderer<Questionario> {
 		
 	private static final long serialVersionUID = -1993026305358230021L;
@@ -20,7 +23,10 @@ public class RenderizadorQuestionario extends JPanel implements ListCellRenderer
 	private JLabel txtIdade = new JLabel();
 	private JLabel txtRenda = new JLabel();
 	private JPanel panelItem = new JPanel(new GridLayout(0, 1)); 
-	
+
+	/**
+	 *  Construtor do Renderizador do questionário
+	 */
 	public RenderizadorQuestionario() {
 		setLayout(new BorderLayout(4, 4));
 		
@@ -32,7 +38,14 @@ public class RenderizadorQuestionario extends JPanel implements ListCellRenderer
 		add(panelItem, BorderLayout.CENTER);
 	}
 	
-	Color blend( Color c1, Color c2, float ratio ) {
+	/**
+	 *  Mistura duas cores
+	 *  @param c1 Cor a ser misturada
+	 *  @param c2 Cor a ser rmisturada
+	 *  @param ratio Número entre 0 e 1 com a taxa de intensidade da mistura
+	 *  @return Cor resultante da mistura
+	 */
+	private Color blend( Color c1, Color c2, float ratio ) {
 	    if ( ratio > 1f ) ratio = 1f;
 	    else if ( ratio < 0f ) ratio = 0f;
 	    float iRatio = 1.0f - ratio;
@@ -73,7 +86,6 @@ public class RenderizadorQuestionario extends JPanel implements ListCellRenderer
 		txtIdade.setOpaque(true);
 		txtRenda.setOpaque(true);
 		txtEscolaridade.setOpaque(true);
-		
 		if (estaSelecionado) {
 			panelItem.setBorder(BorderFactory.createLineBorder(lista.getSelectionBackground()));
 			corMistura = blend(lista.getBackground(), lista.getSelectionBackground(), 0.3f);
