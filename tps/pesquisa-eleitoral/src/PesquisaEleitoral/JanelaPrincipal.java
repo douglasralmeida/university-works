@@ -32,45 +32,41 @@ public class JanelaPrincipal extends JFrame {
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
-	
-	private void btoListaClick() {
-		new JanelaExibirQuestionarios(this, repositorio);
-	}
-	
-	private void btoNovoClick() {
-		new JanelaNovoQuestionario(this, repositorio);
-	}
-	
-	private void btoSairClick() {
-		System.exit(0);
-	}
-	
+
 	private void criarControles() {
 		btoNovo = new JButton("Novo questionário...");
 		btoNovo.addActionListener(new ActionListener( ) {
 			public void actionPerformed(ActionEvent e) {
-				btoNovoClick();
+				novoQuestionario();
 			}
 		});
 		add(btoNovo);
-						
+
 		btoLista = new JButton("Exibir questionários...");
 		btoLista.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				btoListaClick();
+				exibirQuestionarios();
 			}
 		});
 		add(btoLista);
-						
+
 		btoSair = new JButton("Sair");
 		btoSair.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				btoSairClick();
+				System.exit(0);
 			}
 		});
 		add(btoSair);	
 	}
+
+	private void exibirQuestionarios() {
+		new JanelaExibirQuestionarios(this, repositorio);
+	}
 	
+	private void novoQuestionario() {
+		new JanelaNovoQuestionario(this, repositorio);
+	}
+
 	private void setMnemonicos() {
 		btoNovo.setMnemonic(KeyEvent.VK_N);
 		btoLista.setMnemonic(KeyEvent.VK_X);
