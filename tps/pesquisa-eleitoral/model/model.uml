@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_DVkvIMjUEeebyYWJnhsnxQ" name="model">
+  <packagedElement xmi:type="uml:Class" xmi:id="_motsoMjUEeebyYWJnhsnxQ" name="Aplicacao">
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_FsFeE8jVEeebyYWJnhsnxQ" name="janelaprincipal" type="_2LQNcMjUEeebyYWJnhsnxQ">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_FsFeFMjVEeebyYWJnhsnxQ" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_FsFeFcjVEeebyYWJnhsnxQ" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_Zcz2kMjVEeebyYWJnhsnxQ" name="janelaprincipal" type="_2LQNcMjUEeebyYWJnhsnxQ">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Zc0doMjVEeebyYWJnhsnxQ"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Zc1EsMjVEeebyYWJnhsnxQ" value="1"/>
+    </ownedAttribute>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_rA504MjUEeebyYWJnhsnxQ" name="main"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_s-mQoMjUEeebyYWJnhsnxQ" name="setAppTheme" visibility="private"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_2LQNcMjUEeebyYWJnhsnxQ" name="JanelaPrincipal">
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_-lAtsMjUEeebyYWJnhsnxQ" name="aplicacao" type="_motsoMjUEeebyYWJnhsnxQ">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_-lB70MjUEeebyYWJnhsnxQ"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_-lB70cjUEeebyYWJnhsnxQ" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_c9i88MjWEeebyYWJnhsnxQ" name="btoLista" visibility="private" type="_5bBqMMjWEeebyYWJnhsnxQ">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_753EIMjWEeebyYWJnhsnxQ" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_76TwEMjWEeebyYWJnhsnxQ" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="__FcPUMjWEeebyYWJnhsnxQ" name="btoNovo" visibility="private" type="_5bBqMMjWEeebyYWJnhsnxQ">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="__FcPUcjWEeebyYWJnhsnxQ" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="__FcPUsjWEeebyYWJnhsnxQ" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="__Oig8MjWEeebyYWJnhsnxQ" name="btoSair" visibility="private" type="_5bBqMMjWEeebyYWJnhsnxQ">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="__Oig8cjWEeebyYWJnhsnxQ" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="__Oig8sjWEeebyYWJnhsnxQ" value="1"/>
+    </ownedAttribute>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="__jeEkMjVEeebyYWJnhsnxQ" name="JanelaPrincipal"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_EPIicMjWEeebyYWJnhsnxQ" name="criarControles" visibility="private"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_NCRzEMjWEeebyYWJnhsnxQ" name="exibirQuestionarios" visibility="private"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_PK0z8MjWEeebyYWJnhsnxQ" name="novoQuestionario" visibility="private"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_QluEoMjWEeebyYWJnhsnxQ" name="setMnemonicos" visibility="private"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_jDHpgMjVEeebyYWJnhsnxQ" client="_motsoMjUEeebyYWJnhsnxQ" supplier="_2LQNcMjUEeebyYWJnhsnxQ"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_7xV2wMjVEeebyYWJnhsnxQ" name="JanelaNovoQuestionario">
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_VRPGoMjYEeebyYWJnhsnxQ" name="botoes" visibility="private" type="_5bBqMMjWEeebyYWJnhsnxQ">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_gURWQMjYEeebyYWJnhsnxQ" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_gUoioMjYEeebyYWJnhsnxQ" value="*"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_iPUtsMjYEeebyYWJnhsnxQ" name="editCandidato" visibility="private" type="_pshfEMjYEeebyYWJnhsnxQ"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_wW_zAMjYEeebyYWJnhsnxQ" name="grupos" visibility="private" type="_4_MX4MjYEeebyYWJnhsnxQ">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_6AEmEMjYEeebyYWJnhsnxQ" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_6AXhAMjYEeebyYWJnhsnxQ" value="*"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_7cSFYMjYEeebyYWJnhsnxQ" name="radios" visibility="private" type="_DkQ5IMjZEeebyYWJnhsnxQ">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_-nv70MjYEeebyYWJnhsnxQ" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_-n6T4MjYEeebyYWJnhsnxQ" value="*"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_FwjKgMjZEeebyYWJnhsnxQ" name="rotulos" visibility="private" type="_LrmzsMjZEeebyYWJnhsnxQ">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_NQFeMMjZEeebyYWJnhsnxQ" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_NQS5kMjZEeebyYWJnhsnxQ" value="*"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_SQljoMjZEeebyYWJnhsnxQ" name="txtTitulo" visibility="private" type="_LrmzsMjZEeebyYWJnhsnxQ"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_jqYrkMjaEeebyYWJnhsnxQ" name="repositorio" visibility="private" type="_UJNcsMjaEeebyYWJnhsnxQ"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_Lny8o8jXEeebyYWJnhsnxQ" name="JanelaNovoQuestionario"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_Lny8osjXEeebyYWJnhsnxQ" name="criarControles" visibility="private"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_Lny8ocjXEeebyYWJnhsnxQ" name="exibirQuestionario" visibility="private"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_Lny8oMjXEeebyYWJnhsnxQ" name="setMnemonicos" visibility="private"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_l5o4wMjXEeebyYWJnhsnxQ" name="createRootPane" visibility="protected"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_HSpE0MjYEeebyYWJnhsnxQ" name="popularQuestionario" visibility="private"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_J3m78MjYEeebyYWJnhsnxQ" name="fecharJanela" visibility="private"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_LLSKUMjYEeebyYWJnhsnxQ" name="setJanelaLayout" visibility="private"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_5bBqMMjWEeebyYWJnhsnxQ" name="JButton"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_pshfEMjYEeebyYWJnhsnxQ" name="JTextField"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_4_MX4MjYEeebyYWJnhsnxQ" name="ButtonGroup"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_DkQ5IMjZEeebyYWJnhsnxQ" name="JRadioButton"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_LrmzsMjZEeebyYWJnhsnxQ" name="JLabel"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_dbcSgMjZEeebyYWJnhsnxQ" client="_2LQNcMjUEeebyYWJnhsnxQ" supplier="_7xV2wMjVEeebyYWJnhsnxQ"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_lEOBwMjZEeebyYWJnhsnxQ" name="JanelaExibirQuestionario">
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_s54WcMjZEeebyYWJnhsnxQ" name="botao" visibility="private" type="_5bBqMMjWEeebyYWJnhsnxQ"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_C66ksMjaEeebyYWJnhsnxQ" name="lista" visibility="private" type="_IWqbsMjaEeebyYWJnhsnxQ"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_KoR5AMjaEeebyYWJnhsnxQ" name="repositorio" visibility="private" type="_UJNcsMjaEeebyYWJnhsnxQ"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_nzj84MjZEeebyYWJnhsnxQ" name="JanelaExibirQuestionario"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_pNlq4MjZEeebyYWJnhsnxQ" name="createRootPane" visibility="protected"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_uVJakMjZEeebyYWJnhsnxQ" name="criarControles" visibility="private"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_v0V8cMjZEeebyYWJnhsnxQ" name="criarModelo" visibility="private"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_w8X7gMjZEeebyYWJnhsnxQ" name="exibirQuestionario" visibility="private"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_ya-AcMjZEeebyYWJnhsnxQ" name="fecharJanela" visibility="private"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_0JjpMMjZEeebyYWJnhsnxQ" name="setMnemonicos" visibility="private"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_IWqbsMjaEeebyYWJnhsnxQ" name="JLst"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_OkOKIMjaEeebyYWJnhsnxQ" client="_2LQNcMjUEeebyYWJnhsnxQ" supplier="_lEOBwMjZEeebyYWJnhsnxQ"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_RJ2IkMjaEeebyYWJnhsnxQ" name="Questionario">
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_267n0MjdEeebyYWJnhsnxQ" name="candidato" type="_-LH38MjdEeebyYWJnhsnxQ"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_AYoRUMjeEeebyYWJnhsnxQ" name="ID" type="_GTfGMMjeEeebyYWJnhsnxQ"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_HpM78MjeEeebyYWJnhsnxQ" name="escolaridade" type="_NY6QwMjeEeebyYWJnhsnxQ"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_Ok6w4MjeEeebyYWJnhsnxQ" name="idade" type="_bTwbAMjeEeebyYWJnhsnxQ"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_UWvlkMjeEeebyYWJnhsnxQ" name="renda" type="_TFIMsMjeEeebyYWJnhsnxQ"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_b8SaoMjeEeebyYWJnhsnxQ" name="sexo" type="_iTlT4MjeEeebyYWJnhsnxQ"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_01VpwMjcEeebyYWJnhsnxQ" name="Questionario"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_2XxF0MjcEeebyYWJnhsnxQ" name="getCandidato"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_3wsnoMjcEeebyYWJnhsnxQ" name="getEscolaridade"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_6WKOAMjcEeebyYWJnhsnxQ" name="getID"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_7g6J4MjcEeebyYWJnhsnxQ" name="getIdade"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_82PlIMjcEeebyYWJnhsnxQ" name="getRenda"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_91gCsMjcEeebyYWJnhsnxQ" name="getSexo"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_-e3v0MjcEeebyYWJnhsnxQ" name="setCandidato"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="__YJhMMjcEeebyYWJnhsnxQ" name="setEscolaridade"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_AMnEAMjdEeebyYWJnhsnxQ" name="setIdade"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_AxKikMjdEeebyYWJnhsnxQ" name="setRenda"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_BjvPAMjdEeebyYWJnhsnxQ" name="setSexo"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_CHNIcMjdEeebyYWJnhsnxQ" name="toString"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_UJNcsMjaEeebyYWJnhsnxQ" name="Repositorio">
+    <ownedAttribute xmi:type="uml:Property" xmi:id="__n1_gMjbEeebyYWJnhsnxQ" name="questionarios" visibility="private" type="_RJ2IkMjaEeebyYWJnhsnxQ" aggregation="composite">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_FB-F4MjcEeebyYWJnhsnxQ"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_FCLhQMjcEeebyYWJnhsnxQ" value="*"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_N85ZgcjcEeebyYWJnhsnxQ" name="questionario" type="_RJ2IkMjaEeebyYWJnhsnxQ">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_N85ZgsjcEeebyYWJnhsnxQ"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_N85Zg8jcEeebyYWJnhsnxQ" value="1"/>
+    </ownedAttribute>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_pDdXIMjcEeebyYWJnhsnxQ" name="Repositorio"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_qO0XAMjcEeebyYWJnhsnxQ" name="adicionarQuestionario"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_rX1NgMjcEeebyYWJnhsnxQ" name="getQuestionario"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_sGH24MjcEeebyYWJnhsnxQ" name="getSize"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_tV748MjcEeebyYWJnhsnxQ" name="removerQuestionario"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_uXkVEMjcEeebyYWJnhsnxQ" name="toString"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_fqCbkMjaEeebyYWJnhsnxQ" client="_C66ksMjaEeebyYWJnhsnxQ" supplier="_UJNcsMjaEeebyYWJnhsnxQ"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_qHTEoMjaEeebyYWJnhsnxQ" client="_7xV2wMjVEeebyYWJnhsnxQ" supplier="_UJNcsMjaEeebyYWJnhsnxQ"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_cx9JQMjcEeebyYWJnhsnxQ" client="_UJNcsMjaEeebyYWJnhsnxQ" supplier="_RJ2IkMjaEeebyYWJnhsnxQ"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_f2xlIMjcEeebyYWJnhsnxQ" client="_2LQNcMjUEeebyYWJnhsnxQ" supplier="_UJNcsMjaEeebyYWJnhsnxQ"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_jhqigMjcEeebyYWJnhsnxQ" client="_motsoMjUEeebyYWJnhsnxQ" supplier="_UJNcsMjaEeebyYWJnhsnxQ"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_-LH38MjdEeebyYWJnhsnxQ" name="String"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_GTfGMMjeEeebyYWJnhsnxQ" name="int"/>
+  <packagedElement xmi:type="uml:AssociationClass" xmi:id="_NY6QwMjeEeebyYWJnhsnxQ" name="Escolaridade"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_TFIMsMjeEeebyYWJnhsnxQ" name="Renda"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_bTwbAMjeEeebyYWJnhsnxQ" name="Idade"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_c_nf4MjeEeebyYWJnhsnxQ" name="RenderizadorQuestionario">
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_pYs8cMjeEeebyYWJnhsnxQ" name="RenderizadorQuestionario"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_rBT5AMjeEeebyYWJnhsnxQ" name="blend" visibility="private"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_ukIfgMjeEeebyYWJnhsnxQ" name="getListCellRendererComponent"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_iTlT4MjeEeebyYWJnhsnxQ" name="Sexo"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_2wgEAMjeEeebyYWJnhsnxQ" client="_lEOBwMjZEeebyYWJnhsnxQ" supplier="_RJ2IkMjaEeebyYWJnhsnxQ"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_4QWtMMjeEeebyYWJnhsnxQ" client="_lEOBwMjZEeebyYWJnhsnxQ" supplier="_c_nf4MjeEeebyYWJnhsnxQ"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_8V-ewMjeEeebyYWJnhsnxQ" client="_c_nf4MjeEeebyYWJnhsnxQ" supplier="_RJ2IkMjaEeebyYWJnhsnxQ"/>
+</uml:Model>
