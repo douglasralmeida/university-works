@@ -1,0 +1,76 @@
+.content,
+#app {
+    height: 100%;
+}
+
+#app .win-splitview-contentwrapper {
+    overflow-y: auto;
+    margin-bottom: 48px;
+}
+
+#app .win-h2 {
+    margin-bottom: 16px;
+}
+
+input[type=text], input[type=number], input[type=url], select {
+    display: block;
+}
+
+.adicimagem {
+    color: white;
+    left: 0px;
+    text-align: center;
+    width: 100%;
+}
+
+.filepicker {
+    left: -999px;
+    visibility: hidden;
+    position: absolute;
+    z-index: 99;
+}
+
+.imgfilme {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+    display: table-cell;   
+    height: 298px;
+    vertical-align: middle;
+    width: 201px;
+}
+
+.imgfilme:hover {
+    background-color: #2b2b2b;
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+.imgpessoa {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+    display: table-cell;   
+    height: 100px;
+    vertical-align: middle;
+    width: 100px;
+}
+
+.imgpessoa:hover {
+    background-color: #2b2b2b;
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+.listaimagens {
+    border-style: solid;
+    border-width: 2px;
+    display: block;
+    height: 200px;
+    margin: 0px 0px 10px 0px;
+    width: 400px;
+    border-color: rgba(255, 255, 255, 0.4);
+}

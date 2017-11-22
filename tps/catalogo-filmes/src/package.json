@@ -1,0 +1,20 @@
+{
+  "name": "catalogo-filmes",
+  "version": "1.0.0",
+  "description": "Aplicação do Projeto do TP2 de IBD",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/douglasralmeida/uw",
+  "keywords": [
+    "Electron",
+    "movie",
+    "mysql"
+  ],
+  "author": "Douglas Rodrigues de Almeida",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "~1.7.9"
+  }
+}
