@@ -14,6 +14,13 @@
   ],
   "author": "Douglas Rodrigues de Almeida",
   "license": "CC0-1.0",
+  "dependencies": {
+    "angular": "1.4.9",
+    "angular-ui-router": "0.2.18",
+    "winjs": "4.4.3",
+    "angular-winjs": "4.4.0",
+    "mysql2": "1.5.1"
+  },
   "devDependencies": {
     "electron": "~1.7.9"
   }
