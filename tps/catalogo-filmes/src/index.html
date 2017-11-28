@@ -9,7 +9,6 @@
         <script src="js/angular-1.4.9.js"></script>
 		<script src="js/angular-ui-router-1.0.11.js"></script>
         <script src="js/angular-winjs-4.4.0.js"></script>
-        <script src="js/require.js"></script>
         <script src="js/app.js"></script>
     </head>
     <body class="win-type-body">
@@ -22,65 +21,9 @@
 			    	<win-split-view-command label="'Adicionar filme'" icon="'video'" on-invoked="irParaAdicFilme()"></win-split-view-command>
                 </win-split-view-pane>
                 <win-split-view-content style="margin-left: 16px;">
-    				<ui-view>
-	    			</ui-view>
+    				<div ui-view></div>
 		    	</win-split-view-content>
             </win-split-view>
-            <!-- Painel da página inicial -->
-            <script type="text/ng-template" id="/inicio.html">
-                <h2 class="win-h2">Top10</h2>
-            </script>
-            <!-- Painel para adicionar pessoas -->
-            <script type="text/ng-template" id="/adpessoa.html">
-                <h2 class="win-h2">Adicionar nova pessoa</h2>
-                <form>
-                    <button class="imgpessoa" ng-click="carregarImagem()">
-                        <div class="adicimagem win-type-body">Adicionar foto</div>
-                    </button>
-                    <input class="win-textbox filepicker" id="pessoafp" type="file"/>
-                    <p>Nome de nasicmento: <input type="text" class="win-textbox" name="nomeoriginal" maxlength="128"/></p>
-                    <p>Nome artístico: <input type="text" class="win-textbox" name="nomeoriginal" maxlength="64"/></p>
-          
-                    <p>Local de nascimento: <input type="text" class="win-textbox" name="nomeoriginal" maxlength="64"/></p>
-                    <p>País de nascimento: <select class="win-dropdown" name="pais">
-                        
-                        </select>
-                    </p>
-                    <h3 class="win-h3">Funções da pessoa</h3>
-                    
-                    <p>Uma pessoa pode ser um ator, um diretor ou ambos.</p>
-                    <input class="win-checkbox" type="checkbox" style="vertical-align: middle;"/>Ator
-                    <input class="win-checkbox" type="checkbox" style="vertical-align: middle;"/>Diretor
-                    <h3 class="win-h3">Imagens da pessoa</h3>
-                    <button class="win-button" style="margin-top: 10px;">Adicionar foto</button>
-                    <div class="listaimagens">
-
-                    </div>
-                    <input class="win-button win-button-primary" type="submit" value="Adicionar pessoa" />
-                </form>
-            </script>
-            <!-- Painel para adicionar filmes -->
-            <script type="text/ng-template" id="/adfilme.html">
-                <h2 class="win-h2">Adicionar novo filme</h2>
-                <form>
-                    <button class="imgfilme" ng-click="carregarPoster()">
-                        <div class="adicimagem win-type-body">Adicionar pôster</div>
-                    </button>
-                    <input class="win-textbox filepicker" id="filmefp" type="file"/>
-                    <p>Nome original: <input type="text" class="win-textbox" name="nomeoriginal" maxlength="128"/></p>
-                    <p>Nome traduzido: <input type="text" class="win-textbox" name="nometraduzido" maxlength="128"/></p>
-                    <p>Ano: <input type="number" class="win-textbox" name="nota" min="1880" max="2099" maxlength="4" /></p>
-                    <p>Nota: <input type="number" class="win-textbox" name="nota" min="0" max="10" maxlength="2" /></p>
-                    <p>URL do trailer: <input type="url" class="win-textbox" name="url" maxlength="256"/></p>
-                    <p>Código do IMDB: <input type="number" class="win-textbox" name="url" maxlength="7" /></p>
-                    <h3 class="win-h3">Imagens do filme</h3>
-                    <button class="win-button" style="margin-top: 10px;">Adicionar imagem</button>
-                    <div class="listaimagens">
-
-                    </div>
-                    <input class="win-button win-button-primary" type="submit" value="Adicionar filme" />
-                </form>
-            </script>
         </div>
 	</body>
 </html>
