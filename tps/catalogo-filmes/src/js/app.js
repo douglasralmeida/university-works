@@ -40,10 +40,12 @@ FilmesApp.controller('appController', function ($scope, $state, $location) {
     $scope.carregarFilmes();
 });
 
-FilmesApp.controller('addFilmeController', function($scope, $timeout) {
+FilmesApp.controller('addFilmeController', function($scope, $location, $timeout) {
     var Filme = require('./js/filme');
-    $scope.formTitulo = 'Adicionar novo filme';
 
+    $scope.filmeData = null;
+    $scope.formTitulo = 'Adicionar filme';
+    $scope.imagemEscolhida = false;
     Filme.criar().then(function(Obj) {
         $timeout(function() {
             $scope.filmeData = Obj;
@@ -51,34 +53,75 @@ FilmesApp.controller('addFilmeController', function($scope, $timeout) {
     }).catch(e => {
         console.log(e);
     });
+    document.getElementById("filmefp").addEventListener("change", function() {
+        if (this.files && this.files[0]) {
+            var FR= new FileReader();
+            FR.addEventListener("load", function(e) {
+                document.getElementById("filmeposter").src = e.target.result;
+                $scope.filmeData.poster = btoa(e.target.result);
+                $scope.imagemEscolhida = true;
+                $scope.$apply();
+            });   
+            FR.readAsDataURL( this.files[0] );
+        };
+    });
 
-    $scope.carregarImagem = function() {
-        var fp = document.getElementById('pessoafp');
+    $scope.carregarPoster = function() {
+        var fp = document.getElementById('filmefp');
         fp.click();
     };
     $scope.processarForm = function() {
-        alert('manda tudo pro SQL Server!');
+        Filme.salvar($scope.filmeData).then(function() {
+            $timeout(function() {
+                $location.path('/');
+            }, 0);
+        }).catch(e => {
+            console.log(e);
+        });
     };
 });
 
-FilmesApp.controller('editFilmeController', function($scope, $stateParams, $timeout) {
+FilmesApp.controller('editFilmeController', function($scope, $location, $stateParams, $timeout) {
     var Filme = require('./js/filme');
     $scope.formTitulo = 'Editar filme';
-    
+    $scope.imagemEscolhida = false;
+    $scope.filmeData = null;
     Filme.abrir($stateParams.id).then(function(Obj) {
         $timeout(function() {
             $scope.filmeData = Obj;
+            if ($scope.filmeData.poster) {
+                document.getElementById("filmeposter").src = atob($scope.filmeData.poster);
+                $scope.imagemEscolhida = true;
+            }
         }, 0);
     }).catch(e => {
         console.log(e);
     });
+    document.getElementById("filmefp").addEventListener("change", function() {
+        if (this.files && this.files[0]) {
+            var FR= new FileReader();
+            FR.addEventListener("load", function(e) {
+                document.getElementById("filmeposter").src = e.target.result;
+                $scope.filmeData.poster = btoa(e.target.result);
+                $scope.imagemEscolhida = true;
+                $scope.$apply();
+            });   
+            FR.readAsDataURL( this.files[0] );
+        };
+    });
 
-    $scope.carregarImagem = function() {
-        var fp = document.getElementById('pessoafp');
+    $scope.carregarPoster = function() {
+        var fp = document.getElementById('filmefp');
         fp.click();
     };
     $scope.processarForm = function() {
-        alert('manda tudo pro SQL Server!');
+        Filme.salvar($scope.filmeData).then(function() {
+            $timeout(function() {
+                $location.path('/');
+            }, 0);
+        }).catch(e => {
+            console.log(e);
+        });
     };
 });
 
@@ -88,6 +131,9 @@ FilmesApp.controller('verFilmeController', function($scope, $stateParams, $timeo
     Filme.abrir($stateParams.id).then(function(Obj) {
         $timeout(function() {
             $scope.filmeData = Obj;
+            if ($scope.filmeData.poster) {
+                document.getElementById("filmeposter").src = atob($scope.filmeData.poster);
+            }
         }, 0);
     }).catch(e => {
         console.log(e);

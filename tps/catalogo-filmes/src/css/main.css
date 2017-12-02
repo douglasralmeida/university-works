@@ -38,6 +38,7 @@ input[type=text], input[type=number], input[type=url], select {
     cursor: pointer;
     display: table-cell;   
     height: 298px;
+    padding: 0px;
     vertical-align: middle;
     width: 201px;
 }
@@ -64,6 +65,11 @@ input[type=text], input[type=number], input[type=url], select {
 .imgpessoa:hover {
     background-color: #2b2b2b;
     border-color: rgba(255, 255, 255, 0.6);
+}
+
+.filmeposter{
+    height: 298px;
+    width: 201px;
 }
 
 .pessoafoto {
@@ -96,6 +102,7 @@ input[type=text], input[type=number], input[type=url], select {
     cursor: pointer;
     display: table-cell;
     height: 225px;
+    padding: 0px;
     vertical-align: middle;
     width: 165px;
 }

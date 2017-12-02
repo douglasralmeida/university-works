@@ -1,0 +1,34 @@
+<!-- UI para Visualizar Filme -->
+
+<P>FILME</P>
+<table>
+    <tbody>
+        <tr>
+            <td>
+                <img id="filmeposter" class="posterfilme">
+            </td>
+            <td>
+                <div>
+                    <h2 class="win-h2" ng-bind="filmeData.nometraduzido"></h2>
+                </div>
+                <div style="float: right;">
+                    <win-rating max-rating="10" user-rating="filmeData.nota"></win-rating>
+                </div>
+                <div>
+                    <p>Nome original: <span ng-bind="filmeData.nomeoriginal"></span></p>
+                    <p>Ano: <span ng-bind="filmeData.ano"></span></p>
+                    <button class="win-button">Ver trailer</button>
+                    <button class="win-button">Abrir página no IMBD</button>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div>
+    <a class="win-link" href="#/editfilme/{{filmeData.idfilme}}">Editar filme</a>
+    <p>Diretor(es): </p>
+    <p>Elenco: </p>
+</div>
+<div>
+    <p class="win-h4">Imagens</p>
+</div>

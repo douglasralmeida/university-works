@@ -1,0 +1,34 @@
+<!-- UI para Adicionar Filme -->
+
+<h2 class="win-h2" ng-bind="formTitulo"></h2>
+<form name="formFilme" id="formFilme" novalidate>
+    <button class="imgfilme" ng-click="carregarPoster()">
+        <img id="filmeposter" class="filmeposter" ng-show="imagemEscolhida">
+        <div class="adicimagem win-type-body" ng-hide="imagemEscolhida">Adicionar pôster</div>
+    </button>
+    <p>Nome original: <input type="text" class="win-textbox" name="nomeoriginal" maxlength="128" ng-model="filmeData.nomeoriginal" required/></p>
+    <p>Nome traduzido: <input type="text" class="win-textbox" name="nometraduzido" maxlength="128" ng-model="filmeData.nometraduzido" required/></p>
+    <p>Ano: <input type="number" class="win-textbox" min="1880" max="2099" maxlength="4" name="ano" ng-model="filmeData.ano" required/></p>
+    <p>Nota: <input type="number" class="win-textbox" name="nota" min="0" max="10" maxlength="2" ng-model="filmeData.nota"/></p>
+    <p>URL do trailer: <input type="url" class="win-textbox" name="url" maxlength="256" ng-model="filmeData.linktrailer"/></p>
+    <p>Código do IMDB: <input type="number" class="win-textbox" name="imdb" maxlength="7" ng-model="filmeData.imdb"/></p>
+    <h3 class="win-h3">Diretores do filme</h3>
+    <button class="win-button" style="margin-top: 10px;">Adicionar diretor</button>
+    <win-list-view item-data-source="filmeData.diretores" selection="diretores">
+        <win-item-template>{{item.data.nome}}</win-item-template>
+    </win-list-view>
+    <h3 class="win-h3">Atores do filme</h3>
+    <button class="win-button" style="margin-top: 10px;">Adicionar ator</button>
+    <win-list-view item-data-source="filmeData.atores" selection="diretores">
+        <win-item-template>{{item.data.nome}}</win-item-template>
+    </win-list-view>
+    <h3 class="win-h3">Imagens do filme</h3>
+    <button class="win-button" style="margin-top: 10px;">Adicionar imagem</button>
+    <div class="listaimagens">
+
+    </div>
+    <input class="win-button win-button-primary" type="submit" value="Salvar" ng-disabled="formFilme.$dirty && formFilme.$invalid" ng-click="processarForm()"/>
+</form>
+
+<!-- Controle para carregar imagens -->
+<input class="win-textbox filepicker" id="filmefp" type="file"/>
