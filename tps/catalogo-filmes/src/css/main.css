@@ -99,3 +99,8 @@ input[type=text], input[type=number], input[type=url], select {
     vertical-align: middle;
     width: 165px;
 }
+
+.pessoaposter {
+    max-height: 200px;
+    max-width: 200px;
+}

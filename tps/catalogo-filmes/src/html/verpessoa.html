@@ -1,8 +1,33 @@
 <!-- UI para Visualizar Pessoa -->
 
 <P>PESSOA</P>
-<h2 class="win-h2" ng-bind="pessoaData.nomeartistico"></h2>
-<a class="win-link" href="#/editpessoa/{{pessoaData.idpessoa}}">Editar pessoa</a>
-<p>Nome de nascimento: <span ng-bind="pessoaData.nomenascimento"></span></p>
-<p>Local de nascimento: <span ng-bind="pessoaData.localnascimento"></span></p>
-<p>País de nascimento: <span ng-bind="pessoaData.nomepais"></span></p>
+<div>
+    <table style="border: 0px;">
+        <tbody>
+            <tr>
+                <td>
+                    <img id="pessoaposter" class="pessoaposter">
+                </td>
+                <td>
+                    <h2 class="win-h2" ng-bind="pessoaData.nomeartistico"></h2>
+                    <p>Nome de nascimento: <span ng-bind="pessoaData.nomenascimento"></span></p>
+                    <p>Local de nascimento: <span ng-bind="pessoaData.localnascimento"></span></p>
+                    <p>País de nascimento: <span ng-bind="pessoaData.nomepais"></span></p>
+                    <a class="win-link" href="#/editpessoa/{{pessoaData.idpessoa}}" style="margin-top: 8px">Editar pessoa</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div>
+    <p class="win-h4">Imagens</p>
+</div>
+<div>
+    <p class="win-h4">Filmografia</p>
+    <div>
+        <p class="win-h5">Atuações</p>
+    </div>
+    <div>
+        <p class="win-h5">Direção</p>
+    </div>            
+</div>

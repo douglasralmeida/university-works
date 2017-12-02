@@ -96,9 +96,14 @@ FilmesApp.controller('verFilmeController', function($scope, $stateParams, $timeo
 
 FilmesApp.controller('addPessoaController', function($scope, $location, $timeout) {
     var Pessoa = require('./js/pessoa');
-    $scope.formTitulo = 'Editar pessoa';
+    $scope.formTitulo = 'Adicionar pessoa';
     $scope.imagemEscolhida = false;
     $scope.pessoaData = null;
+    Pessoa.criar(function(Obj) {
+        $timeout(function() {
+            $scope.pessoaData = Obj;
+        }, 0);
+    });
     document.getElementById("pessoafp").addEventListener("change", function() {
         if (this.files && this.files[0]) {
             var FR= new FileReader();
@@ -112,19 +117,11 @@ FilmesApp.controller('addPessoaController', function($scope, $location, $timeout
         };
     });
 
-    Pessoa.criar(function(Obj) {
-        $timeout(function() {
-            $scope.pessoaData = Obj;
-        }, 0);
-    });
-
     $scope.carregarImagem = function() {
         var fp = document.getElementById('pessoafp');
         fp.click();
     };
     $scope.processarForm = function() {
-        if ($scope.pessoaData == null)
-            alert('Erro');
         Pessoa.salvar($scope.pessoaData).then(function() {
             $timeout(function() {
                 $location.path('/');
@@ -135,10 +132,11 @@ FilmesApp.controller('addPessoaController', function($scope, $location, $timeout
     };
 });
 
-FilmesApp.controller('editPessoaController', function($scope, $stateParams, $timeout) {
+FilmesApp.controller('editPessoaController', function($scope, $stateParams, $timeout, $location) {
     var Pessoa = require('./js/pessoa');
     $scope.formTitulo = 'Editar pessoa';
-    
+    $scope.imagemEscolhida = false;
+    $scope.pessoaData = null;
     Pessoa.abrir($stateParams.id).then(function(Obj) {
         $timeout(function() {
             $scope.pessoaData = Obj;
@@ -150,13 +148,31 @@ FilmesApp.controller('editPessoaController', function($scope, $stateParams, $tim
     }).catch(e => {
         console.log(e);
     });
+    document.getElementById("pessoafp").addEventListener("change", function() {
+        if (this.files && this.files[0]) {
+            var FR= new FileReader();
+            FR.addEventListener("load", function(e) {
+                document.getElementById("pessoafoto").src = e.target.result;
+                $scope.pessoaData.foto = btoa(e.target.result);
+                $scope.imagemEscolhida = true;
+                $scope.$apply();
+            });   
+            FR.readAsDataURL( this.files[0] );
+        };
+    });
 
     $scope.carregarImagem = function() {
         var fp = document.getElementById('pessoafp');
         fp.click();
     };
     $scope.processarForm = function() {
-        alert('manda tudo pro SQL Server!');
+        Pessoa.salvar($scope.pessoaData).then(function() {
+            $timeout(function() {
+                $location.path('/');
+            }, 0);
+        }).catch(e => {
+            console.log(e);
+        });
     };
 });
 
@@ -166,6 +182,9 @@ FilmesApp.controller('verPessoaController', function($scope, $stateParams, $time
     Pessoa.abrir($stateParams.id).then(function(Obj) {
         $timeout(function() {
             $scope.pessoaData = Obj;
+            if ($scope.pessoaData.foto) {
+                document.getElementById("pessoaposter").src = atob($scope.pessoaData.foto);
+            }
         }, 0);
     }).catch(e => {
         console.log(e);

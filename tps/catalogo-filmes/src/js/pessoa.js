@@ -17,7 +17,7 @@ module.exports.criar = function(callback) {
 };
 
 module.exports.abrir = function(id) {
-    var sql = 'SELECT idpessoa, nomenascimento, nomeartistico, localnascimento, ator, diretor, foto, paises.nome AS nomepais FROM pessoas JOIN paises ON pais = idpais WHERE idpessoa = ?;';
+    var sql = 'SELECT idpessoa, nomenascimento, nomeartistico, localnascimento, ator, diretor, foto, pais, paises.nome AS nomepais FROM pessoas JOIN paises ON pais = idpais WHERE idpessoa = ?;';
 
     return new Promise (function(resolve, reject) {
         bancodados.abrirItemRelacao(sql, id).then(function(dataPessoa) {
@@ -39,12 +39,19 @@ module.exports.salvar = function(dataPessoa) {
             diretor: dataPessoa.diretor,
             foto: dataPessoa.foto
         };
-
-        bancodados.inserirItem('pessoas', Pessoa).then(function(id) {
-            dataPessoa.id = id;
-            resolve();
-        }).catch(e => {
-            reject(e);
-        });
+        if (dataPessoa.idpessoa === undefined) {
+            bancodados.inserirItem('pessoas', Pessoa).then(function(id) {
+                dataPessoa.idpessoa = id;
+                resolve();
+            }).catch(e => {
+                reject(e);
+            });
+        } else {
+            bancodados.alterarItem('pessoas', {idpessoa: dataPessoa.idpessoa}, Pessoa).then(function() {
+                resolve();
+            }).catch(e => {
+                reject(e);
+            });
+        }
     });
 };
