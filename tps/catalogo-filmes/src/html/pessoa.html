@@ -1,0 +1,41 @@
+<!-- UI para Adicionar Pessoa -->
+
+<h2 class="win-h2" ng-bind="formTitulo"></h2>
+<form name="formPessoa" id="formPessoa" novalidate>
+    <button class="imgpessoa" ng-click="carregarImagem()">        
+        <img id="pessoafoto" class="pessoafoto" ng-show="imagemEscolhida">
+        <div class="adicimagem win-type-body">
+            <span ng-hide="imagemEscolhida">Adicionar foto</span>
+        </div>
+    </button>
+    <p>Nome de nasicmento: <input type="text" class="win-textbox" name="nomenascimento" maxlength="128" ng-model="pessoaData.nomenascimento" required />
+        <span style="color:white" ng-show="formPessoa.nomenascimento.$dirty && formPessoa.nomenascimento.$invalid">
+            <span ng-show="formPessoa.nomenascimento.$error.required">O nome de nascimento é obrigatório.</span>
+        </span>
+    </p>
+    <p>Nome artístico: <input type="text" class="win-textbox" name="nomeoriginal" maxlength="64" ng-model="pessoaData.nomeartistico" required/>
+        <span style="color:white" ng-show="formPessoa.nomeartistico.$dirty && formPessoa.nomeartistico.$invalid">
+            <span ng-show="formPessoa.nomeartistico.$error.required">O nome artístico é obrigatório.</span>
+        </span>
+    </p>
+
+    <p>Local de nascimento: <input type="text" class="win-textbox" name="localnascimento" maxlength="64" ng-model="pessoaData.localnascimento"/></p>
+    <p>País de nascimento: <select class="win-dropdown" name="pais" required>
+        
+        </select>
+    </p>
+    <h3 class="win-h3">Funções da pessoa</h3>
+    
+    <p>Uma pessoa pode ser um ator, um diretor ou ambos.</p>
+    <input type="checkbox" class="win-checkbox" style="vertical-align: middle;" ng-model="pessoaData.ator"/>Ator
+    <input type="checkbox" class="win-checkbox"style="vertical-align: middle;" ng-model="pessoaData.diretor"/>Diretor
+    <h3 class="win-h3">Imagens da pessoa</h3>
+    <button class="win-button" style="margin-top: 10px;">Adicionar imagem</button>
+    <div class="listaimagens">
+
+    </div>
+    <input class="win-button win-button-primary" type="submit" value="Salvar" ng-disabled="formPessoa.$dirty && formPessoa.$invalid" ng-click="processarForm()"/>
+</form>
+
+<!-- Controle para carregar imagens -->
+<input class="win-textbox filepicker" id="pessoafp" type="file"/>

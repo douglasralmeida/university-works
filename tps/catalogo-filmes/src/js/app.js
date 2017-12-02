@@ -96,6 +96,7 @@ FilmesApp.controller('verFilmeController', function($scope, $stateParams, $timeo
 
 FilmesApp.controller('addPessoaController', function($scope, $location, $timeout) {
     var Pessoa = require('./js/pessoa');
+    $scope.formTitulo = 'Editar pessoa';
     $scope.imagemEscolhida = false;
     $scope.pessoaData = null;
     document.getElementById("pessoafp").addEventListener("change", function() {
@@ -132,6 +133,43 @@ FilmesApp.controller('addPessoaController', function($scope, $location, $timeout
             console.log(e);
         });
     };
+});
+
+FilmesApp.controller('editPessoaController', function($scope, $stateParams, $timeout) {
+    var Pessoa = require('./js/pessoa');
+    $scope.formTitulo = 'Editar pessoa';
+    
+    Pessoa.abrir($stateParams.id).then(function(Obj) {
+        $timeout(function() {
+            $scope.pessoaData = Obj;
+            if ($scope.pessoaData.foto) {
+                document.getElementById("pessoafoto").src = atob($scope.pessoaData.foto);
+                $scope.imagemEscolhida = true;
+            }
+        }, 0);
+    }).catch(e => {
+        console.log(e);
+    });
+
+    $scope.carregarImagem = function() {
+        var fp = document.getElementById('pessoafp');
+        fp.click();
+    };
+    $scope.processarForm = function() {
+        alert('manda tudo pro SQL Server!');
+    };
+});
+
+FilmesApp.controller('verPessoaController', function($scope, $stateParams, $timeout) {
+    var Pessoa = require('./js/pessoa');
+    
+    Pessoa.abrir($stateParams.id).then(function(Obj) {
+        $timeout(function() {
+            $scope.pessoaData = Obj;
+        }, 0);
+    }).catch(e => {
+        console.log(e);
+    });
 });
 
 FilmesApp.controller('pesquisaController', function($scope, $stateParams, $timeout) {
@@ -185,5 +223,15 @@ angular.module('FilmesApp').config(['$stateProvider', function($stateProvider){
         url:'/adpessoa',
         templateUrl: 'html/pessoa.html',
         controller: 'addPessoaController'
+      })
+      .state('editpessoa', {
+        url: '/editpessoa/:id',
+        templateUrl: 'html/pessoa.html',
+        controller: 'editPessoaController'
+      })
+      .state('verpessoa', {
+        url: '/verpessoa/:id',
+        templateUrl: 'html/verpessoa.html',
+        controller: 'verPessoaController'
       });
 }]);

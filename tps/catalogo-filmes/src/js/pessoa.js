@@ -16,10 +16,32 @@ module.exports.criar = function(callback) {
     callback(Pessoa);
 };
 
-module.exports.salvar = function(Pessoa) {
+module.exports.abrir = function(id) {
+    var sql = 'SELECT idpessoa, nomenascimento, nomeartistico, localnascimento, ator, diretor, foto, paises.nome AS nomepais FROM pessoas JOIN paises ON pais = idpais WHERE idpessoa = ?;';
+
+    return new Promise (function(resolve, reject) {
+        bancodados.abrirItemRelacao(sql, id).then(function(dataPessoa) {
+            resolve(dataPessoa);
+        }).catch(e => {
+            reject(e);
+        });
+    });
+};
+
+module.exports.salvar = function(dataPessoa) {
     return new Promise  (function(resolve, reject) {
+        var Pessoa = {
+            nomenascimento: dataPessoa.nomenascimento,
+            nomeartistico: dataPessoa.nomeartistico,
+            localnascimento: dataPessoa.localnascimento,
+            pais: dataPessoa.pais,
+            ator: dataPessoa.ator,
+            diretor: dataPessoa.diretor,
+            foto: dataPessoa.foto
+        };
+
         bancodados.inserirItem('pessoas', Pessoa).then(function(id) {
-            Pessoa.id = id;
+            dataPessoa.id = id;
             resolve();
         }).catch(e => {
             reject(e);
