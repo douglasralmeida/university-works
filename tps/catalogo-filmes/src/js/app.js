@@ -1,6 +1,6 @@
 var FilmesApp = angular.module('FilmesApp', ['winjs', 'ui.router']);
 
-FilmesApp.controller('appController', function ($scope, $state) {
+FilmesApp.controller('appController', function ($scope, $state, $location) {
     $scope.splitViewElement = document.getElementById('splitView');
 	
 	 $scope.irParaInicio = function() {
@@ -30,6 +30,11 @@ FilmesApp.controller('appController', function ($scope, $state) {
               });
             $scope.$apply();
         });
+    };
+
+    $scope.aoConsultar = function($event) {
+        var queryText = $event.detail.queryText;
+        $location.path('/pesquisa/' + queryText);
     };
 
     $scope.carregarFilmes();
@@ -129,12 +134,39 @@ FilmesApp.controller('addPessoaController', function($scope, $location, $timeout
     };
 });
 
+FilmesApp.controller('pesquisaController', function($scope, $stateParams, $timeout) {
+    var Pesquisador = require('./js/pesquisa');
+
+    $scope.iniciarPesquisa = function(consulta) {
+        $scope.consultaTexto = consulta;
+
+        Pesquisador.executar(consulta).then(function(Obj) {
+            $timeout(function() {
+                $scope.pesquisaData = Obj;
+            }, 0);
+        }).catch(e => {
+            console.log(e);
+        });
+    };
+
+    $scope.aoConsultar = function($event) {
+        $scope.iniciarPesquisa($event.detail.queryText);
+    };
+
+    $scope.iniciarPesquisa($stateParams.consultaTexto);
+});
+
 angular.module('FilmesApp').config(['$stateProvider', function($stateProvider){
     $stateProvider.state('inicio', {
         url: '/',
         templateUrl: 'html/home.html'
       })
-      .state('adfilme',{
+      .state('pesquisa', {
+        url: '/pesquisa/:consultaTexto',
+        templateUrl: 'html/pesquisa.html',
+        controller: 'pesquisaController'
+      })
+      .state('adfilme', {
         url:'/adfilme',
         templateUrl: 'html/filme.html',
         controller: 'addFilmeController'

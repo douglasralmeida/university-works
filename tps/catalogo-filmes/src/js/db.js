@@ -19,6 +19,16 @@ module.exports.abrirItem = function (entidade, nomechave, id) {
     });
 };
 
+module.exports.pesquisar = function (consulta) {
+    return new Promise(function(resolve, reject) {
+        bd.execute('SELECT * FROM pesquisagenerica WHERE nome LIKE ?;', ['%'+consulta+'%'], function(err, res) {
+            if (err)
+                return reject(err);
+            resolve(res);
+        });
+    });
+};
+
 module.exports.executarConsulta = function (consulta, param, callback) {
     bd.execute(consulta, param, callback);
 };

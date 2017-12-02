@@ -54,7 +54,8 @@ input[type=text], input[type=number], input[type=url], select {
     border-style: solid;
     border-width: 1px;
     cursor: pointer;
-    display: table-cell;   
+    display: table-cell; 
+    padding: 0px;
     height: 100px;
     vertical-align: middle;
     width: 100px;
@@ -65,6 +66,12 @@ input[type=text], input[type=number], input[type=url], select {
     border-color: rgba(255, 255, 255, 0.6);
 }
 
+.pessoafoto {
+    border-radius: 50%;
+    max-width: 100px;
+    max-height: 100px;
+}
+
 .listaimagens {
     border-style: solid;
     border-width: 2px;
@@ -73,4 +80,22 @@ input[type=text], input[type=number], input[type=url], select {
     margin: 0px 0px 10px 0px;
     width: 400px;
     border-color: rgba(255, 255, 255, 0.4);
+}
+
+.container {
+    float: left;
+    margin-right: 16px;
+    min-width: 225px;
+}
+
+.posterfilme {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+    display: table-cell;
+    height: 225px;
+    vertical-align: middle;
+    width: 165px;
 }

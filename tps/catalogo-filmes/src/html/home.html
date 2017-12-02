@@ -1,3 +1,9 @@
 <!-- UI para Página Inicial -->
-
+<win-auto-suggest-box placeholder-text="'Pesquisar'" style="margin-right: 8px; float: right;" on-query-submitted="aoConsultar($event)"></win-auto-suggest-box>
 <h2 class="win-h2">Top10</h2>
+<div ng-repeat="x in resultado" class="container">
+    <a class="win-h2" href="#/verfilme/{{x.id}}">
+        <div class="posterfilme"></div>
+    </a>
+    <p ng-bind="x.nome"></p>
+</div>
