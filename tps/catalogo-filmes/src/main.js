@@ -23,6 +23,8 @@ function createWindow () {
     slashes: true
   }))
 
+  mainWindow.webContents.openDevTools();
+
   // Evento quando a a janela for fechada
   mainWindow.on('closed', function () {
     mainWindow = null
