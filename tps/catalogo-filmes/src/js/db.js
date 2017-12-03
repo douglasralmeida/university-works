@@ -6,7 +6,8 @@ const bd = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     database: 'catalogo',
-    password: 'mswin98'
+    password: 'abcdef',
+    charset : 'utf8'
 });
 
 module.exports.abrirItem = function (entidade, nomechave, id) {
@@ -35,6 +36,16 @@ module.exports.alterarItem = function (entidade, filtro, param) {
             if (err)
                 return reject(err);
             resolve();
+        });
+    });
+};
+
+module.exports.listar = function (entidade, param) {
+    return new Promise(function(resolve, reject) {
+        bd.execute('SELECT '+ param.toString() +' FROM '+entidade+';', function(err, res) {
+            if (err)
+                return reject(err);
+            resolve(res);
         });
     });
 };

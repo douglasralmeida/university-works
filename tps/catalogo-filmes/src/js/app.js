@@ -1,9 +1,11 @@
 var FilmesApp = angular.module('FilmesApp', ['winjs', 'ui.router']);
 
-FilmesApp.controller('appController', function ($scope, $state, $location) {
+FilmesApp.controller('appController', function ($scope, $state, $location, $timeout) {
+    var Pesquisa = require('./js/pesquisa');
+    $scope.resultado = [];
     $scope.splitViewElement = document.getElementById('splitView');
 	
-	 $scope.irParaInicio = function() {
+	$scope.irParaInicio = function() {
         $state.go('inicio');
     };
 	$scope.irParaAdicFilme = function() {
@@ -17,21 +19,18 @@ FilmesApp.controller('appController', function ($scope, $state, $location) {
         var fp = document.getElementById('filmefp');
         fp.click();
     };
-
-    $scope.resultado = [];
     $scope.carregarFilmes = function() {
         $scope.resultado = [];
-        var db = require('./js/db').executarConsulta('SELECT * FROM `filmes`;', [], function(err, res) {
-            res.forEach( (filme) => {
-                var obj = {};
-                obj['id'] = filme.idfilme;
-                obj['nome'] = filme.nometraduzido;
-                $scope.resultado.push(obj);
-              });
-            $scope.$apply();
+
+        Pesquisa.listar('filmes', ['idfilme', 'nometraduzido', 'poster']).then(function(res) {
+            $timeout(function() {         
+                $scope.resultado = res;
+                res.forEach(r => r.poster = atob(r.poster));
+            }, 0);
+        }).catch(e => {
+            console.log(e);
         });
     };
-
     $scope.aoConsultar = function($event) {
         var queryText = $event.detail.queryText;
         $location.path('/pesquisa/' + queryText);
@@ -40,7 +39,7 @@ FilmesApp.controller('appController', function ($scope, $state, $location) {
     $scope.carregarFilmes();
 });
 
-FilmesApp.controller('addFilmeController', function($scope, $location, $timeout) {
+FilmesApp.controller('addFilmeController', function($scope, $window, $timeout) {
     var Filme = require('./js/filme');
 
     $scope.filmeData = null;
@@ -73,7 +72,7 @@ FilmesApp.controller('addFilmeController', function($scope, $location, $timeout)
     $scope.processarForm = function() {
         Filme.salvar($scope.filmeData).then(function() {
             $timeout(function() {
-                $location.path('/');
+                $window.location.href = '#/';
             }, 0);
         }).catch(e => {
             console.log(e);
@@ -81,7 +80,7 @@ FilmesApp.controller('addFilmeController', function($scope, $location, $timeout)
     };
 });
 
-FilmesApp.controller('editFilmeController', function($scope, $location, $stateParams, $timeout) {
+FilmesApp.controller('editFilmeController', function($scope, $location, $stateParams, $window) {
     var Filme = require('./js/filme');
     $scope.formTitulo = 'Editar filme';
     $scope.imagemEscolhida = false;
@@ -117,7 +116,7 @@ FilmesApp.controller('editFilmeController', function($scope, $location, $statePa
     $scope.processarForm = function() {
         Filme.salvar($scope.filmeData).then(function() {
             $timeout(function() {
-                $location.path('/');
+                $window.location.href = '#/';
             }, 0);
         }).catch(e => {
             console.log(e);
@@ -262,7 +261,8 @@ FilmesApp.controller('pesquisaController', function($scope, $stateParams, $timeo
 angular.module('FilmesApp').config(['$stateProvider', function($stateProvider){
     $stateProvider.state('inicio', {
         url: '/',
-        templateUrl: 'html/home.html'
+        templateUrl: 'html/home.html',
+        controller: 'appController'
       })
       .state('pesquisa', {
         url: '/pesquisa/:consultaTexto',
