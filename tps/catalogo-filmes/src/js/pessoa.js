@@ -9,18 +9,46 @@ module.exports.criar = function(callback) {
         localnascimento: null,
         pais: null,
         nomepais: null,
-        foto: null
+        foto: null,
+        imagens: []
     };
 
     callback(Pessoa);
 };
 
 module.exports.abrir = function(id) {
-    var sql = 'SELECT idpessoa, nomenascimento, nomeartistico, localnascimento, foto, pais, paises.nome AS nomepais FROM pessoas LEFT JOIN paises ON pais = idpais WHERE idpessoa = ?;';
+    var sqlPessoa = 'SELECT idpessoa, nomenascimento, nomeartistico, localnascimento, foto, pais, paises.nome AS nomepais FROM pessoas LEFT JOIN paises ON pais = idpais WHERE idpessoa = ?;';
+    var sqlAtuacoes = 'SELECT nometraduzido AS nomefilme, idfilme, poster, indicadooscar, ganhouoscar, indicadoglobo, ganhouglobo FROM filme_ator JOIN filmes ON filmes_idfilme = idfilme WHERE pessoas_idpessoa = ?;'
+    var sqlDirecao = 'SELECT nometraduzido AS nomefilme, idfilme, poster, indicadooscar, ganhouoscar, indicadoglobo, ganhouglobo FROM filme_diretor JOIN filmes ON filmes_idfilme = idfilme WHERE pessoas_idpessoa = ?;'
+    var sqlImagens = 'SELECT imagem FROM pessoa_imagem WHERE pessoas_idpessoa = ?;'
+    var dataAtuacoes = [];
+    var dataDirecao = [];
 
+    //Abre a pessoa
     return new Promise (function(resolve, reject) {
-        bancodados.abrirItemRelacao(sql, id).then(function(dataPessoa) {
-            resolve(dataPessoa);
+        bancodados.abrirItem(sqlPessoa, id).then(function(dataPessoa) {
+            //Abre a relação filme-ator
+            bancodados.abrirItems(sqlAtuacoes, id).then(function(dataAtuacoes) {
+                dataPessoa.Atuacoes = dataAtuacoes;
+                
+                //Abre a relação filme-diretor
+                bancodados.abrirItems(sqlDirecao, id).then(function(dataDirecao) {
+                    dataPessoa.Direcao = dataDirecao;
+
+                    //Abre as imgens da pessoa
+                    bancodados.abrirItems(sqlImagens, id).then(function(dataImagens) {
+                        dataPessoa.imagens = dataImagens;
+    
+                        resolve(dataPessoa);
+                    }).catch(e => {
+                        reject(e);
+                    });
+                }).catch(e => {
+                    reject(e);
+                });
+            }).catch(e => {
+                reject(e);
+            });
         }).catch(e => {
             reject(e);
         });

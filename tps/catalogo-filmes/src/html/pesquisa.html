@@ -1,6 +1,8 @@
 <!-- UI para Página de Pesquisa -->
 <h2 class="win-h2">Resultado da Pesquisa</h2>
-<win-auto-suggest-box query-text="consultaTexto" placeholder-text="Pesquisar" on-query-submitted="aoConsultar($event)"></win-auto-suggest-box>
+<div style="border-bottom: 1px solid #666; padding-bottom: 16px;">
+    <win-auto-suggest-box query-text="consultaTexto" placeholder-text="Pesquisar" on-query-submitted="aoConsultar($event)"></win-auto-suggest-box>
+</div>
 <div>
     <p>
         <span ng-bind="pesquisaData.length"></span> resultado(s).

@@ -13,7 +13,7 @@
                     <p>Nome de nascimento: <span ng-bind="pessoaData.nomenascimento"></span></p>
                     <p>Local de nascimento: <span ng-bind="pessoaData.localnascimento"></span></p>
                     <p>País de nascimento: <span ng-bind="pessoaData.nomepais"></span></p>
-                    <a class="win-link" href="#/editpessoa/{{pessoaData.idpessoa}}" style="margin-top: 8px">Editar pessoa</a>
+                    <a class="win-link" href="#/editpessoa/{{pessoaData.idpessoa}}" style="margin-top: 16px">Editar pessoa</a>
                 </td>
             </tr>
         </tbody>
@@ -21,13 +21,47 @@
 </div>
 <div>
     <p class="win-h4">Imagens</p>
-</div>
-<div>
-    <p class="win-h4">Filmografia</p>
     <div>
-        <p class="win-h5">Atuações</p>
+        <div ng-repeat="x in pessoaData.imagens | limitTo: 5" style="height: 120px; float: left;">
+            <img class="imagpessoa" ng-src="{{x.imagem}}"/>
+        </div>
     </div>
-    <div>
+    <div style="clear: both;">
+        <a class="win-link" href="">Ver mais imagems</a>
+    </div>
+</div>
+<div style="padding-top: 16px;">
+    <p class="win-h4">Filmografia</p>
+    <div ng-show="pessoaData.Atuacoes.length > 0">
+        <p class="win-h5">Atuações</p>
+        <table style="padding-left: 8px;">
+            <tbody>
+                <tr ng-repeat="x in pessoaData.Atuacoes">
+                    <td>
+                        <img class="imagpesquisa" ng-src="{{x.poster}}" />
+                    </td>
+                    <td>
+                        <a class="win-link" href="#/verfilme/{{x.idfilme}}" ng-bind="x.nomefilme"></a>
+                        <p ng-bind="x.descricaotipo"></p>
+                    </td>
+                    </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-show="pessoaData.Direcao.length > 0">
         <p class="win-h5">Direção</p>
-    </div>            
+        <table style="padding-left: 8px;">
+            <tbody>
+                <tr ng-repeat="x in pessoaData.Direcao">
+                    <td>
+                        <img class="imagpesquisa" ng-src="{{x.poster}}" />
+                    </td>
+                    <td>
+                        <a class="win-link" href="#/verfilme/{{x.idfilme}}" ng-bind="x.nomefilme"></a>
+                        <p ng-bind="x.descricaotipo"></p>
+                    </td>
+                    </tr>
+            </tbody>
+        </table>
+    </div>      
 </div>

@@ -23,12 +23,17 @@
     <p>Local de nascimento: <input type="text" class="win-textbox" name="localnascimento" maxlength="64" ng-model="pessoaData.localnascimento"/></p>
     <p>País de nascimento: <win-auto-suggest-box query-text="" placeholder-text="'País'" on-suggestions-requested="onPaisSuggestionsRequested($event)" on-query-submitted="onPaisQuerySubmitted($event)"></win-auto-suggest-box></p>
     <h3 class="win-h3">Imagens da pessoa</h3>
-    <button class="win-button" style="margin-top: 10px;">Adicionar imagem</button>
+    <button class="win-button" style="margin-top: 10px;" ng-disabled="podeAddImagem == false" ng-click="clicarAddImg()">Adicionar imagem</button>
     <div class="listaimagens">
-
+        <win-flip-view item-data-source="pessoaData.imagens" style="height: 100%; width: 100%;">
+            <win-item-template>
+                <img ng-src="{{item.data.imagem}}" style="max-width: 100%; max-height: 100%;">
+            </win-item-template>
+        </win-flip-view>
     </div>
     <input class="win-button win-button-primary" type="submit" value="Salvar" ng-disabled="formPessoa.$dirty && formPessoa.$invalid" ng-click="processarForm()"/>
 </form>
 
 <!-- Controle para carregar imagens -->
 <input class="win-textbox filepicker" id="pessoafp" type="file"/>
+<input class="win-textbox filepicker" id="imagemfp" type="file"/>

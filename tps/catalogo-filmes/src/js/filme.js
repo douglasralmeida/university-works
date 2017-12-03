@@ -11,14 +11,10 @@ module.exports.criar = function() {
             nota: null,
             linktrailer: null,
             imdb: null,
-            diretores: [
-                { nome: "João da Silva", id: "122"},
-                { nome: "Maria da Silva", id: "123",}
-            ],
-            atores: [
-                { nome: "José da Silva", id: "121"},
-                { nome: "Antônio da Silva", id: "124",}
-            ],
+            diretores: [],
+            atores: [],
+            imagens: [],
+            generos: [],
             poster: null
         };
         resolve(Filme);
@@ -29,15 +25,11 @@ module.exports.abrir = function (id) {
     var sql = 'SELECT idfilme, nometraduzido, nomeoriginal, ano, linktrailer, imdb, poster, nota FROM filmes WHERE idfilme = ?;';
 
     return new Promise(function(resolve, reject) {
-        bancodados.abrirItemRelacao(sql, id).then(function (res) {
-            res.diretores = [
-                { nome: "João da Silva", id: "122"},
-                { nome: "Maria da Silva", id: "123"}
-            ];
-            res.atores = [
-                { nome: "José da Silva", id: "121"},
-                { nome: "Antônio da Silva", id: "124"}
-            ];
+        bancodados.abrirItem(sql, id).then(function (res) {
+            res.diretores = [];
+            res.atores = [];
+            res.generos = [];
+            res.imagens = [];
             resolve(res);
         }).catch(e => {
             reject(e);

@@ -91,6 +91,7 @@ input[type=text], input[type=number], input[type=url], select {
 .container {
     float: left;
     margin-right: 16px;
+    margin-bottom: 8px;
     min-width: 225px;
 }
 
@@ -102,6 +103,7 @@ input[type=text], input[type=number], input[type=url], select {
     cursor: pointer;
     display: table-cell;
     height: 225px;
+    margin: 4px auto;
     padding: 0px;
     vertical-align: middle;
     width: 165px;
@@ -121,4 +123,10 @@ input[type=text], input[type=number], input[type=url], select {
 
 .imgrendonda {
     border-radius: 50px;
+}
+
+.imagpessoa {
+    max-height: 100%; 
+    max-width: 100%;
+    margin-right: 8px;
 }
