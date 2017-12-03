@@ -21,15 +21,7 @@
     </p>
 
     <p>Local de nascimento: <input type="text" class="win-textbox" name="localnascimento" maxlength="64" ng-model="pessoaData.localnascimento"/></p>
-    <p>País de nascimento: <select class="win-dropdown" name="pais" required>
-        
-        </select>
-    </p>
-    <h3 class="win-h3">Funções da pessoa</h3>
-    
-    <p>Uma pessoa pode ser um ator, um diretor ou ambos.</p>
-    <input type="checkbox" class="win-checkbox" style="vertical-align: middle;" ng-model="pessoaData.ator"/>Ator
-    <input type="checkbox" class="win-checkbox"style="vertical-align: middle;" ng-model="pessoaData.diretor"/>Diretor
+    <p>País de nascimento: <win-auto-suggest-box query-text="" placeholder-text="'País'" on-suggestions-requested="onPaisSuggestionsRequested($event)" on-query-submitted="onPaisQuerySubmitted($event)"></win-auto-suggest-box></p>
     <h3 class="win-h3">Imagens da pessoa</h3>
     <button class="win-button" style="margin-top: 10px;">Adicionar imagem</button>
     <div class="listaimagens">

@@ -14,7 +14,6 @@ FilmesApp.controller('appController', function ($scope, $state, $location, $time
 	$scope.irParaAdicPessoa = function() {
         $state.go('adpessoa');
     };
-
     $scope.carregarPoster = function() {
         var fp = document.getElementById('filmefp');
         fp.click();
@@ -140,14 +139,23 @@ FilmesApp.controller('verFilmeController', function($scope, $stateParams, $timeo
 });
 
 FilmesApp.controller('addPessoaController', function($scope, $location, $timeout) {
+    var Pesquisa = require('./js/pesquisa');
     var Pessoa = require('./js/pessoa');
     $scope.formTitulo = 'Adicionar pessoa';
     $scope.imagemEscolhida = false;
+    $scope.paises = [];
     $scope.pessoaData = null;
     Pessoa.criar(function(Obj) {
         $timeout(function() {
             $scope.pessoaData = Obj;
         }, 0);
+    });
+    Pesquisa.listar('paises', ['idpais', 'nome']).then(function(res) {
+        $timeout(function() {         
+            $scope.paises = res;
+        }, 0);
+    }).catch(e => {
+        console.log(e);
     });
     document.getElementById("pessoafp").addEventListener("change", function() {
         if (this.files && this.files[0]) {
@@ -161,11 +169,33 @@ FilmesApp.controller('addPessoaController', function($scope, $location, $timeout
             FR.readAsDataURL( this.files[0] );
         };
     });
-
     $scope.carregarImagem = function() {
         var fp = document.getElementById('pessoafp');
         fp.click();
     };
+    $scope.onPaisSuggestionsRequested = function($event) {
+        var queryText = $event.detail.queryText,
+
+        query = queryText.toLowerCase(),
+        suggestionCollection = $event.detail.searchSuggestionCollection;
+        if (queryText.length > 2) {
+            for (var i = 0, len = $scope.paises.length; i < len; i++) {
+                if ($scope.paises[i].nome.substr(0, query.length).toLowerCase() === query) {
+                    suggestionCollection.appendQuerySuggestion($scope.paises[i].nome);
+                }
+            }
+        }
+    };
+    $scope.onPaisQuerySubmitted = function($event) {
+        var queryText = $event.detail.queryText;
+        $scope.pessoaData.nomepais = queryText;
+
+        query = queryText.toLowerCase();
+        for (var i = 0, l = $scope.paises.length; i < l; i++)
+            if ($scope.paises[i].nome.toLowerCase() === query) {
+                $scope.pessoaData.pais = i+1;
+            }
+    }
     $scope.processarForm = function() {
         Pessoa.salvar($scope.pessoaData).then(function() {
             $timeout(function() {
@@ -182,6 +212,7 @@ FilmesApp.controller('editPessoaController', function($scope, $stateParams, $tim
     $scope.formTitulo = 'Editar pessoa';
     $scope.imagemEscolhida = false;
     $scope.pessoaData = null;
+    $scope.paises = [];
     Pessoa.abrir($stateParams.id).then(function(Obj) {
         $timeout(function() {
             $scope.pessoaData = Obj;
