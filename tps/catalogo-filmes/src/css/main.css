@@ -111,3 +111,14 @@ input[type=text], input[type=number], input[type=url], select {
     max-height: 200px;
     max-width: 200px;
 }
+
+.imagpesquisa {
+    display: block;
+    margin: auto;
+    max-height: 64px;
+    max-width: 64px;
+}
+
+.imgrendonda {
+    border-radius: 50px;
+}

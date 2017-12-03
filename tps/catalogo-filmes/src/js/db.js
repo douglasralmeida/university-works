@@ -52,7 +52,7 @@ module.exports.listar = function (entidade, param) {
 
 module.exports.pesquisar = function (consulta) {
     return new Promise(function(resolve, reject) {
-        bd.execute('SELECT * FROM pesquisagenerica WHERE nome LIKE ?;', ['%'+consulta+'%'], function(err, res) {
+        bd.execute('SELECT id, tipo, nome1 AS nome, imagem FROM pesquisagenerica WHERE nome1 LIKE ? OR nome2 LIKE ?;', ['%'+consulta+'%', '%'+consulta+'%'], function(err, res) {
             if (err)
                 return reject(err);
             resolve(res);

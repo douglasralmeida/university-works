@@ -245,6 +245,7 @@ FilmesApp.controller('pesquisaController', function($scope, $stateParams, $timeo
         Pesquisador.executar(consulta).then(function(Obj) {
             $timeout(function() {
                 $scope.pesquisaData = Obj;
+                Obj.forEach(r => r.imagem = atob(r.imagem));
             }, 0);
         }).catch(e => {
             console.log(e);

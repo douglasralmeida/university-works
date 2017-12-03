@@ -6,7 +6,16 @@
         <span ng-bind="pesquisaData.length"></span> resultado(s).
     </p>
 </div>
-<div ng-repeat="x in pesquisaData">
-    <a class="win-h4 win-link" href="#/{{x.nomeview}}/{{x.id}}" ng-bind="x.nome"></a>
-    <p ng-bind="x.descricaotipo"></p>
-</div>
+<table>
+    <tbody>
+        <tr ng-repeat="x in pesquisaData">
+            <td>
+                <img class="imagpesquisa" ng-src="{{x.imagem}}" ng-class="{'imgrendonda': x.tipo == 1}"/>
+            </td>
+            <td>
+                <a class="win-h4 win-link" href="#/{{x.nomeview}}/{{x.id}}" ng-bind="x.nome"></a>
+                <p ng-bind="x.descricaotipo"></p>
+            </td>
+        </tr>
+    </tbody>
+</table>
