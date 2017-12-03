@@ -16,6 +16,7 @@
                 </div>
                 <div>
                     <p>Nome original: <span ng-bind="filmeData.nomeoriginal"></span></p>
+                    <p>Gêneros: <span ng-bind="filmeData.generos"></span></p>
                     <p>Ano: <span ng-bind="filmeData.ano"></span></p>
                     <button class="win-button">Ver trailer</button>
                     <button class="win-button">Abrir página no IMBD</button>
@@ -26,9 +27,37 @@
 </table>
 <div>
     <a class="win-link" href="#/editfilme/{{filmeData.idfilme}}">Editar filme</a>
-    <p>Diretor(es): </p>
-    <p>Elenco: </p>
+    <p>
+        Diretor(es):
+        <span ng-repeat="x in filmeData.diretores">
+            <a class="win-link" href="#/verpessoa/{{x.idpessoa}}" ng-bind="x.nomediretor"></a>
+        </span>
+        <span ng-show="filmeData.diretores.length == 0">(não informado)</span>
+    </p>
+</div>
+<div>
+    <p class="win-h4">Elenco</p>
+    <table style="padding-left: 8px;">
+        <tbody>
+            <tr ng-repeat="x in filmeData.atores">
+                <td>
+                    <img class="imagpesquisa imgrendonda" ng-src="{{x.foto}}" />
+                </td>
+                <td>
+                    <a class="win-link" href="#/verpessoa/{{x.idpessoa}}" ng-bind="x.nomeator"></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 <div>
     <p class="win-h4">Imagens</p>
+    <div>
+        <div ng-repeat="x in filmeData.imagens | limitTo: 5" style="height: 120px; float: left;">
+            <img class="imagpessoa" ng-src="{{x.imagem}}"/>
+        </div>
+    </div>
+    <div style="clear: both;">
+        <a class="win-link" href="">Ver mais imagems</a>
+    </div>
 </div>

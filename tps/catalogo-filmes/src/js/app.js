@@ -45,13 +45,23 @@ FilmesApp.controller('appController', function ($scope, $state, $location, $time
 
 FilmesApp.controller('addFilmeController', function($scope, $window, $timeout) {
     var Filme = require('./js/filme');
-
+    var Pesquisa = require('./js/pesquisa');
     $scope.filmeData = null;
     $scope.formTitulo = 'Adicionar filme';
+    $scope.generos = [];
     $scope.imagemEscolhida = false;
+    $scope.podeAddRelacoes = false;
+    $scope.dialogoAdicAtorOculto = true;
     Filme.criar().then(function(Obj) {
         $timeout(function() {
             $scope.filmeData = Obj;
+        }, 0);
+    }).catch(e => {
+        console.log(e);
+    });
+    Pesquisa.listar('generos', ['idgenero', 'descricao']).then(function(res) {
+        $timeout(function() {         
+            $scope.generos = res;
         }, 0);
     }).catch(e => {
         console.log(e);
@@ -86,9 +96,14 @@ FilmesApp.controller('addFilmeController', function($scope, $window, $timeout) {
 
 FilmesApp.controller('editFilmeController', function($scope, $timeout, $stateParams, $window) {
     var Filme = require('./js/filme');
+    var Pesquisa = require('./js/pesquisa');
     $scope.formTitulo = 'Editar filme';
     $scope.imagemEscolhida = false;
     $scope.filmeData = null;
+    $scope.pesquisaTextoPessoas = '';
+    $scope.podeAddRelacoes = true;
+    $scope.dialogoAdicAtorOculto = true;
+    $scope.atoreselecionados = [];
     Filme.abrir($stateParams.id).then(function(Obj) {
         $timeout(function() {
             $scope.filmeData = Obj;
@@ -96,6 +111,7 @@ FilmesApp.controller('editFilmeController', function($scope, $timeout, $statePar
                 document.getElementById("filmeposter").src = atob($scope.filmeData.poster);
                 $scope.imagemEscolhida = true;
             }
+            $scope.filmeData.imagens.forEach(i => i.imagem = atob(i.imagem));
         }, 0);
     }).catch(e => {
         console.log(e);
@@ -112,11 +128,53 @@ FilmesApp.controller('editFilmeController', function($scope, $timeout, $statePar
             FR.readAsDataURL( this.files[0] );
         };
     });
+    document.getElementById("imagemfp").addEventListener("change", function() {
+        var bdados =  require('./js/db');
 
+        if (this.files && this.files[0]) {
+            var FR= new FileReader();
+            FR.addEventListener("load", function(e) {
+                var Data = {
+                    filmes_idfilme: $scope.filmeData.idfilme,
+                    imagem: btoa(e.target.result)
+                };
+                var Img = {
+                    imagem: e.target.result
+                };
+                bdados.inserirItem('filme_imagem', Data).then(function(id) {
+                    $scope.filmeData.imagens.push(Img);
+                    $scope.$apply();
+                }).catch(e => {
+                    console.log(e);
+                });
+            });   
+            FR.readAsDataURL( this.files[0] );
+        };
+    });
     $scope.carregarPoster = function() {
         var fp = document.getElementById('filmefp');
         fp.click();
     };
+    $scope.clicarAddImg = function() {
+        var fp = document.getElementById('imagemfp');
+        fp.click();
+    };
+    $scope.exibirdialogoAdicAtor = function () {
+        $scope.pessoas = [];
+        $scope.pesquisaTextoPessoas = '';
+        $scope.dialogoAdicAtorOculto = false;
+    };
+    $scope.pesquisarPessoas = function(consulta) {
+        if (consulta.length > 2) {
+            Pesquisa.filtrar('pessoas', ['idpessoa', 'nomeartistico'], 'nomeartistico', consulta).then(function(res) {
+                $timeout(function() {
+                    $scope.pessoas = res;
+                }, 0);
+            }).catch(e => {
+                console.log(e);
+            });     
+        }
+    }
     $scope.processarForm = function() {
         Filme.salvar($scope.filmeData).then(function() {
             $timeout(function() {
@@ -143,6 +201,9 @@ FilmesApp.controller('verFilmeController', function($scope, $stateParams, $timeo
                 document.getElementById("filmeposter").src = 'img/filme.png';
                 $scope.temImagem = true;
             }
+            $scope.filmeData.atores.forEach(a => a.foto = atob(a.foto));
+            $scope.filmeData.diretores.forEach(d => d.foto = atob(d.foto));
+            $scope.filmeData.imagens.forEach(i => i.imagem = atob(i.imagem));
         }, 0);
     }).catch(e => {
         console.log(e);
@@ -312,6 +373,7 @@ FilmesApp.controller('editPessoaController', function($scope, $stateParams, $tim
         var fp = document.getElementById('pessoafp');
         fp.click();
     };
+    $scope.pesquisarPessoas
     $scope.processarForm = function() {
         Pessoa.salvar($scope.pessoaData).then(function() {
             $timeout(function() {

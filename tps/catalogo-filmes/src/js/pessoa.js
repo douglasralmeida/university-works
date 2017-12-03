@@ -23,6 +23,7 @@ module.exports.abrir = function(id) {
     var sqlImagens = 'SELECT imagem FROM pessoa_imagem WHERE pessoas_idpessoa = ?;'
     var dataAtuacoes = [];
     var dataDirecao = [];
+    var dataImagens = [];
 
     //Abre a pessoa
     return new Promise (function(resolve, reject) {

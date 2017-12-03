@@ -10,7 +10,7 @@ const bd = mysql.createConnection({
     charset : 'utf8'
 });
 
-module.exports.abrirItem = function (entidade, nomechave, id) {
+module.exports.abrirItemSimples = function (entidade, nomechave, id) {
     return new Promise(function(resolve, reject) {
         bd.execute('SELECT * FROM ' + entidade + ' WHERE ? = ?;', [nomechave, id], function(err, res) {
             if (err)
@@ -20,12 +20,22 @@ module.exports.abrirItem = function (entidade, nomechave, id) {
     });
 };
 
-module.exports.abrirItemRelacao = function (consulta, id) {
+module.exports.abrirItem = function (consulta, id) {
     return new Promise(function(resolve, reject) {
         bd.execute(consulta, [id], function(err, res) {
             if (err)
                 return reject(err);
             resolve(res[0]);
+        });
+    });
+};
+
+module.exports.abrirItems = function (consulta, id) {
+    return new Promise(function(resolve, reject) {
+        bd.execute(consulta, [id], function(err, res) {
+            if (err)
+                return reject(err);
+            resolve(res);
         });
     });
 };
@@ -36,6 +46,16 @@ module.exports.alterarItem = function (entidade, filtro, param) {
             if (err)
                 return reject(err);
             resolve();
+        });
+    });
+};
+
+module.exports.filtrar = function (entidade, param, campo, filtro) {
+    return new Promise(function(resolve, reject) {
+        bd.execute('SELECT '+ param.toString() +' FROM '+entidade+' WHERE '+campo+' LIKE ' + mysql.escape('%'+filtro+'%')+';', function(err, res) {
+            if (err)
+                return reject(err);
+            resolve(res);
         });
     });
 };

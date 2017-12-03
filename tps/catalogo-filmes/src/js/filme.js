@@ -22,15 +22,56 @@ module.exports.criar = function() {
 }
 
 module.exports.abrir = function (id) {
-    var sql = 'SELECT idfilme, nometraduzido, nomeoriginal, ano, linktrailer, imdb, poster, nota FROM filmes WHERE idfilme = ?;';
+    var sqlFilme = 'SELECT idfilme, nometraduzido, nomeoriginal, ano, linktrailer, imdb, poster, nota FROM filmes WHERE idfilme = ?;';
+    var sqlElenco = 'SELECT nomeartistico AS nomeator, idpessoa, foto, indicadooscar, ganhouoscar, indicadoglobo, ganhouglobo FROM filme_ator JOIN pessoas ON pessoas_idpessoa = idpessoa WHERE filmes_idfilme = ?;'
+    var sqlDirecao = 'SELECT nomeartistico AS nomediretor, idpessoa, foto, indicadooscar, ganhouoscar, indicadoglobo, ganhouglobo FROM filme_diretor JOIN pessoas ON pessoas_idpessoa = idpessoa WHERE filmes_idfilme = ?;'
+    var sqlImagens = 'SELECT imagem FROM filme_imagem WHERE filmes_idfilme = ?;'
+    var sqlGeneros = 'SELECT descricao FROM filme_genero JOIN generos ON generos_idgenero = idgenero WHERE filmes_idfilme = ?;'
+    var dataElenco = [];
+    var dataDirecao = [];
+    var dataImagens = [];
+    var dataGeneros = [];
 
     return new Promise(function(resolve, reject) {
-        bancodados.abrirItem(sql, id).then(function (res) {
-            res.diretores = [];
-            res.atores = [];
-            res.generos = [];
-            res.imagens = [];
-            resolve(res);
+        //Abre o filme
+        bancodados.abrirItem(sqlFilme, id).then(function (dataFilme) {
+            //Abre a relação filme-ator
+            bancodados.abrirItems(sqlElenco, id).then(function(dataElenco) {
+                dataFilme.atores = dataElenco;
+                
+                //Abre a relação filme-diretor
+                bancodados.abrirItems(sqlDirecao, id).then(function(dataDirecao) {
+                    dataFilme.diretores = dataDirecao;
+
+                    //Abre as imgens do filme
+                    bancodados.abrirItems(sqlImagens, id).then(function(dataImagens) {
+                        dataFilme.imagens = dataImagens;
+
+                        //Abre os generos do filme
+                        bancodados.abrirItems(sqlGeneros, id).then(function(dataGeneros) {
+                            dataFilme.generos = dataGeneros;
+                            dataFilme.generos.toString = function() {
+                                var s = '';
+                                this.forEach((g, index) => {
+                                    s += g.descricao;
+                                    if (index < this.length - 1)
+                                        s += ', ';
+                                });
+                                return s;
+                            };
+                            resolve(dataFilme);
+                        }).catch(e => {
+                            reject(e);
+                        });
+                    }).catch(e => {
+                        reject(e);
+                    });
+                }).catch(e => {
+                    reject(e);
+                });
+            }).catch(e => {
+                reject(e);
+            }); 
         }).catch(e => {
             reject(e);
         });

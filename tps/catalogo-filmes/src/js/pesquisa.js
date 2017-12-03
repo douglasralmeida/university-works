@@ -18,6 +18,16 @@ module.exports.executar = function(consulta) {
     });
 };
 
+module.exports.filtrar = function(entidade, param, campo, filtro) {
+    return new Promise  (function(resolve, reject) {
+        bancodados.filtrar(entidade, param, campo, filtro).then(function(res) {
+            resolve(res);
+        }).catch(e => {
+            reject(e);
+        });
+    });
+};
+
 module.exports.listar = function(entidade, param) {
     return new Promise  (function(resolve, reject) {
         bancodados.listar(entidade, param).then(function(res) {

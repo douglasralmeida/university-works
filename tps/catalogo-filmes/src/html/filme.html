@@ -12,23 +12,47 @@
     <p>Nota: <input type="number" class="win-textbox" name="nota" min="0" max="10" maxlength="2" ng-model="filmeData.nota"/></p>
     <p>URL do trailer: <input type="url" class="win-textbox" name="url" maxlength="256" ng-model="filmeData.linktrailer"/></p>
     <p>Código do IMDB: <input type="number" class="win-textbox" name="imdb" maxlength="7" ng-model="filmeData.imdb"/></p>
+    <h3 class="win-h3">Gêneros do filme</h3>
+    <div>
+        <div ng-repeat="x in generos">
+            <win-toggle-switch checked="false" disabled="false" label-on="x.descricao" label-off="x.descricao"></win-toggle-switch>
+        </div>
+    </div>
     <h3 class="win-h3">Diretores do filme</h3>
-    <button class="win-button" style="margin-top: 10px;">Adicionar diretor</button>
+    <button class="win-button" style="margin-top: 10px;" ng-disabled="podeAddRelacoes == false">Adicionar diretor</button>
     <win-list-view item-data-source="filmeData.diretores" selection="diretores">
-        <win-item-template>{{item.data.nome}}</win-item-template>
+        <win-item-template>{{item.data.nomediretor}}</win-item-template>
     </win-list-view>
     <h3 class="win-h3">Atores do filme</h3>
-    <button class="win-button" style="margin-top: 10px;">Adicionar ator</button>
+    <button class="win-button" style="margin-top: 10px;" ng-disabled="podeAddRelacoes == false" ng-click="exibirdialogoAdicAtor()">Adicionar ator</button>
     <win-list-view item-data-source="filmeData.atores" selection="diretores">
-        <win-item-template>{{item.data.nome}}</win-item-template>
+        <win-item-template>{{item.data.nomeator}}</win-item-template>
     </win-list-view>
     <h3 class="win-h3">Imagens do filme</h3>
-    <button class="win-button" style="margin-top: 10px;">Adicionar imagem</button>
+    <button class="win-button" style="margin-top: 10px;" ng-disabled="podeAddRelacoes == false" ng-click="clicarAddImg()">Adicionar imagem</button>
     <div class="listaimagens">
-
+        <win-flip-view item-data-source="filmeData.imagens" style="height: 100%; width: 100%;">
+            <win-item-template>
+                <img ng-src="{{item.data.imagem}}" style="max-width: 100%; max-height: 100%;">
+            </win-item-template>
+        </win-flip-view>
     </div>
     <input class="win-button win-button-primary" type="submit" value="Salvar" ng-disabled="formFilme.$dirty && formFilme.$invalid" ng-click="processarForm()"/>
 </form>
 
 <!-- Controle para carregar imagens -->
 <input class="win-textbox filepicker" id="filmefp" type="file"/>
+<input class="win-textbox filepicker" id="imagemfp" type="file"/>
+
+<!-- Diálogo para adidionar ator -->
+<win-content-dialog primary-command-text="'Sair'" title="'Adicionar ator'" hidden="dialogoAdicAtorOculto">
+    Pesquise o nome de um ator e clique em seu nome para adicionar ao filme.
+    <input class="win-textbox" type="text" ng-model="pesquisaTextoPessoas"/>
+    <button class="win-button" ng-click="pesquisarPessoas(pesquisaTextoPessoas)">Pesquisar</button>
+    <div style="height: 300px; padding-top: 8px;">
+        <div ng-repeat="x in pessoas">
+            <a class="win-link" href="#" ng-bind="x.nomeartistico"></a>
+        </div>
+    </div>
+    Selecao: <span ng-bind="atoreselecionados"></span>
+</win-content-dialog>
