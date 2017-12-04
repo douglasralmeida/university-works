@@ -21,7 +21,7 @@ FilmesApp.controller('appController', function ($scope, $state, $location, $time
     $scope.carregarFilmes = function() {
         $scope.resultado = [];
 
-        Pesquisa.listar('filmes', ['idfilme', 'nometraduzido', 'poster']).then(function(res) {
+        Pesquisa.listarLimitado('filmes', ['idfilme', 'nometraduzido', 'poster'], 10).then(function(res) {
             $timeout(function() {         
                 $scope.resultado = res;
                 res.forEach(r => {

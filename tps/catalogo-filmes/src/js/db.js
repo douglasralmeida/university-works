@@ -70,6 +70,16 @@ module.exports.listar = function (entidade, param) {
     });
 };
 
+module.exports.listarLimitado = function (entidade, param, limite) {
+    return new Promise(function(resolve, reject) {
+        bd.execute('SELECT '+ param.toString() +' FROM '+entidade+' LIMIT '+limite+';', function(err, res) {
+            if (err)
+                return reject(err);
+            resolve(res);
+        });
+    });
+};
+
 module.exports.pesquisar = function (consulta) {
     return new Promise(function(resolve, reject) {
         bd.execute('SELECT id, tipo, nome1 AS nome, imagem FROM pesquisagenerica WHERE nome1 LIKE ? OR nome2 LIKE ?;', ['%'+consulta+'%', '%'+consulta+'%'], function(err, res) {
