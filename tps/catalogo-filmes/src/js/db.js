@@ -6,7 +6,7 @@ const bd = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     database: 'catalogo',
-    password: 'abcdef',
+    password: 'mswin98',
     charset : 'utf8'
 });
 
