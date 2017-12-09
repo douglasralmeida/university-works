@@ -1,13 +1,12 @@
-package Pessoa;
+package pessoa;
+import sistema.ArgumentoInvalidoException;
+import sistema.Validadores;
 
-import Excecoes.ArgumentoInvalidoException;
-import Sistema.Validadores;
-
-public class Core {
+public class Pessoa {
 	private String cpf;
 	private String nome;
 	
-	public Core() {
+	public Pessoa() {
 	}
 	
 	public String getCpf() {

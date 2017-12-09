@@ -1,4 +1,4 @@
-package Excecoes;
+package sistema;
 public class ArgumentoInvalidoException extends IllegalArgumentException {
 
 	private static final long serialVersionUID = 2917178681935810241L;
