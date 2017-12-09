@@ -1,5 +1,5 @@
-package Entidades;
-import Excecoes.ArgumentoInvalidoException;
+package entidades;
+import sistema.ArgumentoInvalidoException;
 
 public class Endereco {
 	private String logradouro;

@@ -1,6 +1,6 @@
-package Pessoa;
+package pessoa;
 
-public class Funcionario extends Core {
+public class Funcionario extends Pessoa {
 	int matricula;
 	
 	public Funcionario(int matricula) {

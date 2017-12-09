@@ -1,10 +1,9 @@
-package Pessoa;
+package pessoa;
 import java.time.LocalDate;
+import entidades.Endereco;
+import sistema.ArgumentoInvalidoException;
 
-import Entidades.Endereco;
-import Excecoes.ArgumentoInvalidoException;
-
-public class Cliente extends Core{
+public class Cliente extends Pessoa{
 	private LocalDate dataNascimento;
 	private String identidade;
 	private Endereco endereco;

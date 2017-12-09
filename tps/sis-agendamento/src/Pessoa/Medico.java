@@ -1,10 +1,9 @@
-package Pessoa;
+package pessoa;
 
 public class Medico extends Atendente {
 
 	public Medico(int matricula) {
 		super(matricula);
-		// TODO Auto-generated constructor stub
 	}
 
 }

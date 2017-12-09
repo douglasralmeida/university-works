@@ -1,4 +1,4 @@
-package Sistema;
+package sistema;
 public class Validadores {
 	private static final int[] pesoCpf = {11, 10, 9, 8, 7, 6, 5, 4, 3, 2};
 
