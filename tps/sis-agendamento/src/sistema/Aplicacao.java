@@ -1,26 +1,32 @@
 package sistema;
-/**
- * 
- */
+
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
- * @author Douglas
- *
+ * Aplicação da Pesquisa Eleitoral 
  */
 public class Aplicacao {
 
 	/**
-	 * 
+	 * Confira a aparência da aplicação tal qual utilizada pelo sistema operacional
 	 */
-	public Aplicacao() {
-		// TODO Auto-generated constructor stub
+	private static void setAppTheme() {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e1) {
+			e1.printStackTrace();
+			return;
+		}
 	}
-
+	
 	/**
-	 * @param args
+	 * Função Main
 	 */
 	public static void main(String[] args) {
-		System.out.println("Sistema");
+		setAppTheme();
+		new JanelaPrincipal();
 	}
 
 }
