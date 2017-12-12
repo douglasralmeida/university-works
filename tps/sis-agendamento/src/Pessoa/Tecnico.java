@@ -1,10 +1,10 @@
 package pessoa;
 
-public class Tecnico extends Atendente {
+import entidades.Servico;
 
-	public Tecnico(int matricula) {
-		super(matricula);
-		// TODO Auto-generated constructor stub
+public class Tecnico extends Atendente {
+	public Tecnico(int matricula, Servico servico) {
+		super(matricula, servico);
 	}
 
 }

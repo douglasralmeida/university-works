@@ -3,6 +3,8 @@ package janelas;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -12,22 +14,28 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
 
 import componentes.AppPanel;
+import pessoa.Atendente;
+import sistema.Aplicacao;
 
-public class PainelGestao extends AppPanel
-						  implements ActionListener {
+public class PainelFuncionarios extends AppPanel
+						        implements ActionListener {
 	
 	private static final long serialVersionUID = -435738107568975424L;
-	String[] nomeColunas = {"Nome do funcionário", "Atividade"}; 
+	DefaultTableModel data = new DefaultTableModel();
+	String[] nomeColunas = {"Nome do funcionário", "Atividade", "Serviço"};
+	JTable tabela;
 	JPanel painel = new JPanel(new BorderLayout());
 	JFrame parent = null;
 	
-	public PainelGestao(JFrame parent) {
-		super("Gestão da Clínica");
+	public PainelFuncionarios(JFrame parent) {
+		super("Gestão de Funcionários");
 		this.parent = parent;
 		add(painel, BorderLayout.CENTER);
 		criarBarraFerramentas();
+		atualizarLista();
 		criarControles();
 	}
 	
@@ -39,8 +47,10 @@ public class PainelGestao extends AppPanel
 		botao = criarBotaoFerramenta("botaoNovo", "AD_FUNCIONARIO", "Novo funcionário");
 		barraFerramentas.add(botao);
 		botao = criarBotaoFerramenta("botaoEditar", "EDIT_FUNCIONARIO", "Editar funcionário");
+		botao.setEnabled(false);
 		barraFerramentas.add(botao);
 		botao = criarBotaoFerramenta("botaoExcluir", "EXC_FUNCIONARIO", "Excluir funcionário");
+		botao.setEnabled(false);
 		barraFerramentas.add(botao);
 		barraFerramentas.addSeparator();
 		
@@ -66,18 +76,67 @@ public class PainelGestao extends AppPanel
 	}
 
 	private void criarControles() {
-		String[][] dataFuncionarios = {{"Maria José da Silva", "Médico"},
-									 {"João Antônia da Silva", "Técnico"}};
-		JTable tabela = new JTable(dataFuncionarios, nomeColunas);
+		tabela = new JTable(data);
+		data.setColumnIdentifiers(nomeColunas);
 		JScrollPane listaScroll = new JScrollPane(tabela);
-
 		tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		painel.add(listaScroll, BorderLayout.CENTER);
 	}
 
+	private void atualizarLista() {
+		int i;
+		int max = data.getRowCount();
+		Atendente pessoa;
+		
+		for (i = 0; i < max; i++)
+			data.removeRow(i);
+		max = Aplicacao.getPessoas().getSize();
+		for (i = 0; i < max; i++) {
+			if (Aplicacao.getPessoas().getPessoa(i) instanceof Atendente) {
+				pessoa = (Atendente) Aplicacao.getPessoas().getPessoa(i);
+				String[] item = {pessoa.getNome(), pessoa.getClass().getSimpleName(), pessoa.getServico().toString()};
+				data.addRow(item);
+			}
+		}
+		data.fireTableDataChanged();
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand() == "AD_FUNCIONARIO")
-			new JanelaFuncionario(parent);
+		if (e.getActionCommand() == "AD_FUNCIONARIO") {
+			JanelaFuncionario janelaFuncionario = new JanelaFuncionario(parent);
+			janelaFuncionario.addWindowListener(new WindowListener() {
+
+				@Override
+				public void windowActivated(WindowEvent arg0) {
+				}
+
+				@Override
+				public void windowClosed(WindowEvent arg0) {
+					atualizarLista();
+				}
+
+				@Override
+				public void windowClosing(WindowEvent arg0) {
+				}
+
+				@Override
+				public void windowDeactivated(WindowEvent arg0) {
+				}
+
+				@Override
+				public void windowDeiconified(WindowEvent arg0) {
+				}
+
+				@Override
+				public void windowIconified(WindowEvent arg0) {
+				}
+
+				@Override
+				public void windowOpened(WindowEvent arg0) {					
+				}
+			});
+		}
+		
 	}
 }

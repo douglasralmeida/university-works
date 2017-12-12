@@ -1,13 +1,39 @@
 package sistema;
 
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import agendamento.Agendas;
+import entidades.Servicos;
+import janelas.JanelaPrincipal;
+import pessoa.Pessoas;
+
 /**
- * Aplicação da Pesquisa Eleitoral 
+ * Aplicação do Sistema de Agendamento
  */
 public class Aplicacao {
 
+	static Agendas agendas = new Agendas();
+	static Pessoas pessoas = new Pessoas();
+	static Servicos servicos = new Servicos();
+	
+	public static void exibirMsgErro(String msg) {
+		JOptionPane.showMessageDialog(null, msg, "Erro", JOptionPane.ERROR_MESSAGE);	
+	}
+	
+	public static Agendas getAgendas() {
+		return agendas;
+	}
+	
+	public static Pessoas getPessoas() {
+		return pessoas;
+	}
+	
+	public static Servicos getServicos() {
+		return servicos;
+	}
+	
 	/**
 	 * Confira a aparência da aplicação tal qual utilizada pelo sistema operacional
 	 */

@@ -1,10 +1,10 @@
 package entidades;
 
-public class Especialidade implements Servico {
+public class Exame implements Servico {
 
-	String nome;
+	private String nome;
 	
-	public Especialidade(String nome) {
+	public Exame(String nome) {
 		this.nome = nome;
 	}
 
@@ -12,7 +12,7 @@ public class Especialidade implements Servico {
 	public String getNome() {
 		return this.nome;
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.nome;

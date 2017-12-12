@@ -1,4 +1,4 @@
-package sistema;
+package janelas;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -6,8 +6,8 @@ import java.awt.Font;
 import java.awt.SystemColor;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -15,16 +15,16 @@ import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import janelas.PainelAgendamento;
-import janelas.PainelGestao;
-import janelas.PainelHome;
+import componentes.AgendamentoListener;
+import componentes.AppPanel;
+import sistema.Agendador;
 
 public class JanelaPrincipal extends JFrame {
 
 	private static final long serialVersionUID = 1033915334404746310L;
-	JPanel[] paineis;
+	AppPanel[] paineis;
 	JPanel painelCaderno;
-	String[] dataPaineis = {"Home", "Agendar cliente", "Agenda do Dia", "Gestão", "Configurações"};
+	String[] dataPaineis = {"Home", "Agendar cliente", "Gestão de Serviços", "Gestão de Funcionários"};
 	private BorderLayout layout = new BorderLayout();
 	private CardLayout cardLayout = new CardLayout();
 
@@ -33,7 +33,7 @@ public class JanelaPrincipal extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(layout);
-		setSize(800, 500);
+		setSize(800, 525);
 		criarPainelEsquerdo();
 		criarCards();
 		setLocationRelativeTo(null);
@@ -48,8 +48,19 @@ public class JanelaPrincipal extends JFrame {
 		lista.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-				if (lsm.getMinSelectionIndex() > -1)
-					cardLayout.show(painelCaderno, dataPaineis[lsm.getMinSelectionIndex()]);
+				int index = lsm.getMinSelectionIndex();
+				if (index > -1) {
+					paineis[index].init();
+					cardLayout.show(painelCaderno, dataPaineis[index]);
+					paineis[index].addAgendamentoListener(new AgendamentoListener() {
+
+						@Override
+						public void AgendamentoConcluido(Agendador ag) {
+							JOptionPane.showMessageDialog(null, "Agendamento efetuado com sucesso", "Agendamento concluído", JOptionPane.INFORMATION_MESSAGE);
+							cardLayout.show(painelCaderno, dataPaineis[0]);
+						}
+					});
+				}
 			}
 		});
 		lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -66,14 +77,11 @@ public class JanelaPrincipal extends JFrame {
 	private void criarCards() {
 		int i;
 		
-		paineis = new JPanel[dataPaineis.length];
+		paineis = new AppPanel[dataPaineis.length];		
 		paineis[0] = new PainelHome();
 		paineis[1] = new PainelAgendamento();
-		paineis[2] = new JPanel();
-		paineis[2].add(new JLabel("Agenda do dia"));
-		paineis[3] = new PainelGestao(this);
-		paineis[4] = new JPanel();
-		paineis[4].add(new JLabel("Configurações"));
+		paineis[2] = new PainelServicos(this);
+		paineis[3] = new PainelFuncionarios(this);
 		painelCaderno = new JPanel(cardLayout);
 		for (i = 0; i < dataPaineis.length; i++)
 			painelCaderno.add(paineis[i], dataPaineis[i]);

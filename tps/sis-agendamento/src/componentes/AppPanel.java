@@ -5,6 +5,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -14,6 +17,7 @@ public class AppPanel extends JPanel {
 
 	private static final long serialVersionUID = -8809042980038005933L;
 	private String titulo;
+	protected List<AgendamentoListener> ouvintes = new ArrayList<AgendamentoListener>();
 	
 	public AppPanel(String titulo) {
 		this.titulo = titulo;
@@ -42,5 +46,12 @@ public class AppPanel extends JPanel {
 	public String getTitulo() {
 		return titulo;
 	}
+	
+	public void init() {
+		return;
+	}
 
+	public void addAgendamentoListener(AgendamentoListener agendamentoListener) {		
+		ouvintes.add(agendamentoListener);
+	}
 }
