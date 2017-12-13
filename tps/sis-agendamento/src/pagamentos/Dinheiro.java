@@ -15,7 +15,7 @@ public class Dinheiro implements Pagamento {
 	
 	@Override
 	public boolean autorizar() {
-		return false;
+		return true;
 	}
 
 }

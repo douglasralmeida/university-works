@@ -1,5 +1,7 @@
 package pagamentos;
 
+import java.util.Random;
+
 public class Cheque implements Pagamento {
 
 	String nome;
@@ -15,6 +17,9 @@ public class Cheque implements Pagamento {
 	
 	@Override
 	public boolean autorizar() {
-		return false;
+		Random r = new Random();		
+		int x = r.nextInt(2);
+		
+		return (x == 0);
 	}
 }

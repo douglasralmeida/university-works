@@ -7,6 +7,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import agendamento.Agendas;
 import entidades.Servicos;
 import janelas.JanelaPrincipal;
+import pagamentos.Pagamentos;
 import pessoa.Pessoas;
 
 /**
@@ -17,6 +18,7 @@ public class Aplicacao {
 	static Agendas agendas = new Agendas();
 	static Pessoas pessoas = new Pessoas();
 	static Servicos servicos = new Servicos();
+	static Pagamentos formasPagamento = new Pagamentos();
 	
 	public static void exibirMsgErro(String msg) {
 		JOptionPane.showMessageDialog(null, msg, "Erro", JOptionPane.ERROR_MESSAGE);	
@@ -24,6 +26,10 @@ public class Aplicacao {
 	
 	public static Agendas getAgendas() {
 		return agendas;
+	}
+	
+	public static Pagamentos getFormasPagamento() {
+		return formasPagamento;
 	}
 	
 	public static Pessoas getPessoas() {

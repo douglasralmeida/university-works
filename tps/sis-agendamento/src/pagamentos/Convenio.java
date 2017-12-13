@@ -1,7 +1,10 @@
 package pagamentos;
 
+import java.util.Random;
+
 public class Convenio implements Pagamento {
 
+	int contador = 0;
 	String nome;
 	
 	public Convenio() {
@@ -15,7 +18,15 @@ public class Convenio implements Pagamento {
 	
 	@Override
 	public boolean autorizar() {
-		return false;
+		contador++;
+		if (contador == 10) {
+			contador = 0;
+			Random r = new Random();		
+			int x = r.nextInt(2);
+			
+			return (x == 0);
+		}		
+		return true;
 	}
 	
 }

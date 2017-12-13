@@ -32,7 +32,6 @@ import componentes.AppPanel;
 import entidades.Endereco;
 import entidades.Servico;
 import pagamentos.Pagamento;
-import pagamentos.Pagamentos;
 import pessoa.Cliente;
 import sistema.Agendador;
 import sistema.AgendamentoException;
@@ -395,11 +394,10 @@ public class PainelAgendamento extends AppPanel {
 	
 	private void criarPagamentos() {
 		int i;
-		Pagamentos formasPagamentos = new Pagamentos();
-		int max = formasPagamentos.getSize();
+		int max = Aplicacao.getFormasPagamento().getSize();
 		
 		for (i = 0; i < max; i++)
-			comboPagamento.addItem(formasPagamentos.getPagamento(i));
+			comboPagamento.addItem(Aplicacao.getFormasPagamento().getPagamento(i));
 		comboPagamento.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent ev) {

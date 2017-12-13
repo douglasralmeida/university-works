@@ -2,6 +2,7 @@ package pagamentos;
 
 public class Cortesia implements Pagamento {
 
+	int contador = 0;
 	String nome;
 	
 	public Cortesia() {
@@ -15,7 +16,12 @@ public class Cortesia implements Pagamento {
 	
 	@Override
 	public boolean autorizar() {
-		return false;
+		contador++;
+		if (contador == 5) {
+			contador = 0;
+			return false;
+		}		
+		return true;
 	}
 	
 }
