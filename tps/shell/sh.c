@@ -8,9 +8,7 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 
-/* MARK NAME Seu Nome Aqui */
-/* MARK NAME Nome de Outro Integrante Aqui */
-/* MARK NAME E Etc */
+/* MARK NAME Douglas Rodrigues de Almeida */
 
 /****************************************************************
  * Shell xv6 simplificado
@@ -20,23 +18,24 @@
  ***************************************************************/
 
 #define MAXARGS 10
+#define MAXBUFF 100
 
 /* Todos comandos tem um tipo.  Depois de olhar para o tipo do
  * comando, o código converte um *cmd para o tipo específico de
  * comando. */
 struct cmd {
-  int type; /* ' ' (exec)
-               '|' (pipe)
-               '<' or '>' (redirection) */
+  int type; /* ' ' (exec) ou
+               '|' (pipe) ou
+               '<' ou '>' (redirection) */
 };
 
 struct execcmd {
   int type;              // ' '
-  char *argv[MAXARGS];   // argumentos do comando a ser exec'utado
+  char *argv[MAXARGS];   // argumentos do comando a ser executado
 };
 
 struct redircmd {
-  int type;          // < ou > 
+  int type;          // < ou >
   struct cmd *cmd;   // o comando a rodar (ex.: um execcmd)
   char *file;        // o arquivo de entrada ou saída
   int mode;          // o modo no qual o arquivo deve ser aberto
@@ -50,28 +49,27 @@ struct pipecmd {
 };
 
 int fork1(void);  // Fork mas fechar se ocorrer erro.
+
 struct cmd *parsecmd(char*); // Processar o linha de comando.
 
 /* Executar comando cmd.  Nunca retorna. */
-void
-runcmd(struct cmd *cmd)
-{
+void runcmd(struct cmd *cmd) {
   int p[2], r;
   struct execcmd *ecmd;
   struct pipecmd *pcmd;
   struct redircmd *rcmd;
 
-  if(cmd == 0)
+  if (cmd == 0)
     exit(0);
   
-  switch(cmd->type){
+  switch (cmd->type) {
   default:
     fprintf(stderr, "tipo de comando desconhecido\n");
     exit(-1);
 
   case ' ':
     ecmd = (struct execcmd*)cmd;
-    if(ecmd->argv[0] == 0)
+    if (ecmd->argv[0] == 0)
       exit(0);
     /* MARK START task2
      * TAREFA2: Implemente codigo abaixo para executar
@@ -103,31 +101,32 @@ runcmd(struct cmd *cmd)
   exit(0);
 }
 
-int
-getcmd(char *buf, int nbuf)
-{
+int getcmd(char *buf, int nbuf) {
+  //Checa se o stdin é um terminal
   if (isatty(fileno(stdin)))
     fprintf(stdout, "$ ");
   memset(buf, 0, nbuf);
   fgets(buf, nbuf, stdin);
-  if(buf[0] == 0) // EOF
+  if (buf[0] == 0) // EOF
     return -1;
   return 0;
 }
 
-int
-main(void)
-{
-  static char buf[100];
+/****************************************************************
+ * Funcao Main
+ ***************************************************************/
+
+int main(void) {
+  static char buf[MAXBUFF];
   int r;
 
-  // Ler e rodar comandos.
-  while(getcmd(buf, sizeof(buf)) >= 0){
+  // Ler input e rodar comandos
+  while (getcmd(buf, sizeof(buf)) >= 0) {
     /* MARK START task1 */
     /* TAREFA1: O que faz o if abaixo e por que ele é necessário?
      * Insira sua resposta no código e modifique o fprintf abaixo
      * para reportar o erro corretamente. */
-    if(buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' '){
+    if (buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' ') {
       buf[strlen(buf)-1] = 0;
       if(chdir(buf+3) < 0)
         fprintf(stderr, "reporte erro\n");
@@ -135,21 +134,23 @@ main(void)
     }
     /* MARK END task1 */
 
-    if(fork1() == 0)
+    if (fork1() == 0)
       runcmd(parsecmd(buf));
     wait(&r);
   }
   exit(0);
 }
 
-int
-fork1(void)
-{
-  int pid;
+/* Faz a chamada de sistema fork() para criar um novo processo filho. */
+int fork1(void) {
+  int pid; //identificador do processo
   
   pid = fork();
-  if(pid == -1)
-    perror("fork");
+  /* pid será -1 quando ocorrer um erro.
+  	 pid será 0 quando estiver dentro do processo filho.
+     pid sera >0 quando estive dentro do processo pai. */
+  if (pid == -1)
+    perror("Erro do sistema operacional ao criar o processo.");
   return pid;
 }
 
@@ -157,9 +158,7 @@ fork1(void)
  * Funcoes auxiliares para criar estruturas de comando
  ***************************************************************/
 
-struct cmd*
-execcmd(void)
-{
+struct cmd* execcmd(void) {
   struct execcmd *cmd;
 
   cmd = malloc(sizeof(*cmd));
@@ -168,9 +167,7 @@ execcmd(void)
   return (struct cmd*)cmd;
 }
 
-struct cmd*
-redircmd(struct cmd *subcmd, char *file, int type)
-{
+struct cmd* redircmd(struct cmd *subcmd, char *file, int type) {
   struct redircmd *cmd;
 
   cmd = malloc(sizeof(*cmd));
@@ -183,9 +180,7 @@ redircmd(struct cmd *subcmd, char *file, int type)
   return (struct cmd*)cmd;
 }
 
-struct cmd*
-pipecmd(struct cmd *left, struct cmd *right)
-{
+struct cmd* pipecmd(struct cmd *left, struct cmd *right) {
   struct pipecmd *cmd;
 
   cmd = malloc(sizeof(*cmd));
@@ -203,9 +198,7 @@ pipecmd(struct cmd *left, struct cmd *right)
 char whitespace[] = " \t\r\n\v";
 char symbols[] = "<|>";
 
-int
-gettoken(char **ps, char *es, char **q, char **eq)
-{
+int gettoken(char **ps, char *es, char **q, char **eq) {
   char *s;
   int ret;
   
@@ -240,9 +233,7 @@ gettoken(char **ps, char *es, char **q, char **eq)
   return ret;
 }
 
-int
-peek(char **ps, char *es, char *toks)
-{
+int peek(char **ps, char *es, char *toks) {
   char *s;
   
   s = *ps;
@@ -258,9 +249,7 @@ struct cmd *parseexec(char**, char*);
 
 /* Copiar os caracteres no buffer de entrada, comeando de s ate es.
  * Colocar terminador zero no final para obter um string valido. */
-char 
-*mkcopy(char *s, char *es)
-{
+char *mkcopy(char *s, char *es) {
   int n = es - s;
   char *c = malloc(n+1);
   assert(c);
@@ -269,9 +258,7 @@ char
   return c;
 }
 
-struct cmd*
-parsecmd(char *s)
-{
+struct cmd* parsecmd(char *s) {
   char *es;
   struct cmd *cmd;
 
@@ -285,17 +272,13 @@ parsecmd(char *s)
   return cmd;
 }
 
-struct cmd*
-parseline(char **ps, char *es)
-{
+struct cmd* parseline(char **ps, char *es) {
   struct cmd *cmd;
   cmd = parsepipe(ps, es);
   return cmd;
 }
 
-struct cmd*
-parsepipe(char **ps, char *es)
-{
+struct cmd* parsepipe(char **ps, char *es) {
   struct cmd *cmd;
 
   cmd = parseexec(ps, es);
@@ -306,9 +289,7 @@ parsepipe(char **ps, char *es)
   return cmd;
 }
 
-struct cmd*
-parseredirs(struct cmd *cmd, char **ps, char *es)
-{
+struct cmd* parseredirs(struct cmd *cmd, char **ps, char *es) {
   int tok;
   char *q, *eq;
 
@@ -330,9 +311,7 @@ parseredirs(struct cmd *cmd, char **ps, char *es)
   return cmd;
 }
 
-struct cmd*
-parseexec(char **ps, char *es)
-{
+struct cmd* parseexec(char **ps, char *es) {
   char *q, *eq;
   int tok, argc;
   struct execcmd *cmd;
@@ -361,6 +340,3 @@ parseexec(char **ps, char *es)
   cmd->argv[argc] = 0;
   return ret;
 }
-
-// vim: expandtab:ts=2:sw=2:sts=2
-
