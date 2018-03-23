@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -17,9 +18,9 @@
  * curso de sistemas operacionais do MIT (6.828).
  ***************************************************************/
 
-//Quantidade maxima de argumentos do comando para execução
+/* Quantidade maxima de argumentos do comando para execução */
 #define MAXARGS 10
-//Buffer da linha de comando
+/* Buffer da linha de comando */
 #define MAXBUFF 100
 
 /* Todos comandos tem um tipo.  Depois de olhar para o tipo do
@@ -63,10 +64,9 @@ struct cmd *parsecmd(char*);
 
 /* Função para executar comando cmd. Nunca retorna. */
 void runcmd(struct cmd *cmd) {
-  int p[2], r;
-  struct execcmd *ecmd;
-  struct pipecmd *pcmd;
-  struct redircmd *rcmd;
+  struct execcmd* ecmd;
+  struct pipecmd* pcmd;
+  struct redircmd* rcmd;
 
   if (cmd == 0)
     exit(0);
@@ -137,9 +137,12 @@ int main(void) {
     /* TAREFA1: O que faz o if abaixo e por que ele é necessário?
      * Insira sua resposta no código e modifique o fprintf abaixo
      * para reportar o erro corretamente. */
+     
+    /* Comando cd
+     * Altera o diretório de trabalho */
     if (buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' ') {
       buf[strlen(buf)-1] = 0;
-      if(chdir(buf+3) < 0)
+      if (chdir(buf+3) < 0)
         fprintf(stderr, "reporte erro\n");
       continue;
     }
