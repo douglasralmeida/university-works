@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <errno.h>
 #include <stdio.h>
 #include <fcntl.h>
 #include <string.h>
@@ -20,7 +21,7 @@
 
 /* Quantidade maxima de argumentos do comando para execução */
 #define MAXARGS 10
-/* Buffer da linha de comando */
+/* Buffer da linha de comando atual */
 #define MAXBUFF 100
 
 /* Todos comandos tem um tipo.  Depois de olhar para o tipo do
@@ -29,7 +30,7 @@
 struct cmd {
   int type; /* ' ' (exec) ou
                '|' (pipe) ou
-               '<' ou '>' (redirection) */
+               '<' ou '>' (redirecionamento) */
 };
 
 /* Comando para execução de um aplicativo */
@@ -41,7 +42,7 @@ struct execcmd {
 /* Comando para execução de um aplicativo onde a entrada ou a saída
  * são arquivos */
 struct redircmd {
-  int type;          // < ou >
+  int type;          // '<' ou '>'
   struct cmd *cmd;   // o comando a rodar (ex.: um execcmd)
   char *file;        // o arquivo de entrada ou saída
   int mode;          // o modo no qual o arquivo deve ser aberto
@@ -49,17 +50,17 @@ struct redircmd {
 };
 
 /* Comando para execução de um aplicativo onde a entrada ou a saída
- * são a entrada ou a saída de outro comando para execução */
+ * é a entrada ou a saída de outro comando para execução */
 struct pipecmd {
-  int type;          // |
+  int type;          // '|'
   struct cmd *left;  // lado esquerdo do pipe
   struct cmd *right; // lado direito do pipe
 };
 
-// Função para fork do processo (fechar se ocorrer erro)
+// Função para criar um processo (fechar se ocorrer erro)
 int fork1(void);
 
-// Função para processar a linha de comando
+// Função para processar a linha de comando atual
 struct cmd *parsecmd(char*);
 
 /* Função para executar comando cmd. Nunca retorna. */
@@ -130,25 +131,21 @@ int getcmd(char *buf, int nbuf) {
 int main(void) {
   static char buf[MAXBUFF];
   int r;
+  int cd_result;
 
   // Ler input e rodar comandos
-  while (getcmd(buf, sizeof(buf)) >= 0) {
-    /* MARK START task1 */
-    /* TAREFA1: O que faz o if abaixo e por que ele é necessário?
-     * Insira sua resposta no código e modifique o fprintf abaixo
-     * para reportar o erro corretamente. */
-     
+  while (getcmd(buf, sizeof(buf)) >= 0) {    
     /* Comando cd
      * Altera o diretório de trabalho */
     if (buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' ') {
       buf[strlen(buf)-1] = 0;
-      if (chdir(buf+3) < 0)
-        fprintf(stderr, "reporte erro\n");
+      cd_result = chdir(buf+3);
+      if (cd_result < 0)
+        fprintf(stderr, "Erro no comando %s: %s\n", buf, strerror(errno));
       continue;
     }
-    /* MARK END task1 */
 
-    /* Cria um processo e executa o aplicativo */
+    /* Cria um processo e executa o comando */
     if (fork1() == 0)
       runcmd(parsecmd(buf));
     wait(&r);
