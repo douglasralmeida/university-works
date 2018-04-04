@@ -85,6 +85,11 @@ void runcmd(struct cmd *cmd) {
       /* MARK START task2
        * TAREFA2: Implemente codigo abaixo para executar
        * comandos simples. */
+      if (execvp(ecmd->argv[0], ecmd->argv+1) < 0) {
+        perror("Programa falhou\n");
+        exit(1);
+      }
+      
       fprintf(stderr, "exec nao implementado\n");
       /* MARK END task2 */
     break;
