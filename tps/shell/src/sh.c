@@ -68,8 +68,6 @@ void runcmd(struct cmd *cmd) {
   struct execcmd* ecmd;
   struct pipecmd* pcmd;
   struct redircmd* rcmd;
-  
-  char strerro[256];
 
   if (cmd == 0)
     exit(0);
@@ -85,7 +83,7 @@ void runcmd(struct cmd *cmd) {
         exit(0);
           
       if (execvp(*ecmd->argv, ecmd->argv) < 0) {
-        perror("Programa falhou");
+        perror("Erro de comando");
         strerror(errno);
         exit(1);
       }
@@ -146,6 +144,11 @@ int main(void) {
         fprintf(stderr, "Erro no comando %s: %s\n", buf, strerror(errno));
       continue;
     }
+    
+    /* Comando exit
+     * Sai do shell */
+    if (buf[0] == 'e' && buf[1] == 'x' && buf[2] == 'i' && buf[3] == 't' && (buf[4] == '\0' || buf[4] == ' ' || buf[4] == '\n'))
+      exit(0);
 
     /* Cria um processo e executa o comando */
     if (fork1() == 0)
