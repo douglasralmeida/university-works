@@ -68,6 +68,8 @@ void runcmd(struct cmd *cmd) {
   struct execcmd* ecmd;
   struct pipecmd* pcmd;
   struct redircmd* rcmd;
+  
+  char strerro[256];
 
   if (cmd == 0)
     exit(0);
@@ -81,17 +83,12 @@ void runcmd(struct cmd *cmd) {
       ecmd = (struct execcmd*)cmd;
       if (ecmd->argv[0] == 0)
         exit(0);
-   
-      /* MARK START task2
-       * TAREFA2: Implemente codigo abaixo para executar
-       * comandos simples. */
-      if (execvp(ecmd->argv[0], ecmd->argv+1) < 0) {
-        perror("Programa falhou\n");
+          
+      if (execvp(*ecmd->argv, ecmd->argv) < 0) {
+        perror("Programa falhou");
+        strerror(errno);
         exit(1);
       }
-      
-      fprintf(stderr, "exec nao implementado\n");
-      /* MARK END task2 */
     break;
 
     case '>':
