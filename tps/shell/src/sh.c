@@ -84,7 +84,6 @@ void runcmd(struct cmd *cmd) {
           
       if (execvp(*ecmd->argv, ecmd->argv) < 0) {
         perror("Erro de comando");
-        strerror(errno);
         exit(1);
       }
     break;
@@ -92,21 +91,20 @@ void runcmd(struct cmd *cmd) {
     case '>':
     case '<':
       rcmd = (struct redircmd*)cmd;
-      /* MARK START task3
-       * TAREFA3: Implemente codigo abaixo para executar
-       * comando com redirecionamento. */
-      fprintf(stderr, "redir nao implementado\n");
-      /* MARK END task3 */
+      int novofd = open(rcmd->file, rcmd->mode, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
+      if (dup2(novofd, rcmd->fd) < 0) {
+        perror("Erro no redirecionamento");
+        exit(1);
+      }
+      close(novofd);
       runcmd(rcmd->cmd);
     break;
 
     case '|':
       pcmd = (struct pipecmd*)cmd;
-      /* MARK START task4
-       * TAREFA4: Implemente codigo abaixo para executar
-       * comando com pipes. */
-      fprintf(stderr, "pipe nao implementado\n");
-      /* MARK END task4 */
+      
+      
+      runcmd(pcmd->left);
     break;
   }   
   exit(0);
@@ -131,7 +129,6 @@ int getcmd(char *buf, int nbuf) {
 int main(void) {
   static char buf[MAXBUFF];
   int r;
-  int cd_result;
 
   // Ler input e rodar comandos
   while (getcmd(buf, sizeof(buf)) >= 0) {    
@@ -139,9 +136,9 @@ int main(void) {
      * Altera o diretório de trabalho */
     if (buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' ') {
       buf[strlen(buf)-1] = 0;
-      cd_result = chdir(buf+3);
+      int cd_result = chdir(buf+3);
       if (cd_result < 0)
-        fprintf(stderr, "Erro no comando %s: %s\n", buf, strerror(errno));
+        perror("Erro de comando");
       continue;
     }
     
