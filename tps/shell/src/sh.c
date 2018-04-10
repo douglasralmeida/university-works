@@ -11,6 +11,7 @@
 #include <sys/wait.h>
 
 /* MARK NAME Douglas Rodrigues de Almeida */
+/* MARK NAME Saulo Weikert Bicalho */
 
 /****************************************************************
  * Shell xv6 simplificado
@@ -76,7 +77,6 @@ void runcmd(struct cmd *cmd) {
     default:
       fprintf(stderr, "tipo de comando desconhecido\n");
       exit(-1);
-
     case ' ':
       ecmd = (struct execcmd*)cmd;
       if (ecmd->argv[0] == 0)
@@ -101,10 +101,32 @@ void runcmd(struct cmd *cmd) {
     break;
 
     case '|':
+      int p[2];
+      int pid, r;
       pcmd = (struct pipecmd*)cmd;
       
-      
-      runcmd(pcmd->left);
+      // Descritores de arquivo do PIPE: in/read (0) e
+      // out/write (1)
+      pipe(p); // criacao do pipe a ser clonado em fork1
+      if ((pid = fork1()) == -1) {// Armazena o pid=0 no processo filho. -1 para erro
+        perror("Erro no pipe!");
+        exit(EXIT_FAILURE);
+      }
+      if (pid == 0) { //processo filho
+        //clona o read do pipe do stdin para o processo do execvp
+	      dup2(p[1], 1);
+        //clonagem do READ_END para o STDIN feita.
+        close(p[1]);
+        close(p[0]);
+        runcmd(pcmd->left);
+      } else { //processo pai
+        //Esperar o processo filho finalizar
+        waitpid(pid, &r, 0);
+	      dup2(p[0], 0);
+	      close(p[1]);
+	      close(p[0]);
+	      runcmd(pcmd->right);
+    }
     break;
   }   
   exit(0);
