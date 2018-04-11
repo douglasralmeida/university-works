@@ -101,9 +101,10 @@ void runcmd(struct cmd *cmd) {
     break;
 
     case '|':
-      int p[2];
-      int pid, r;
       pcmd = (struct pipecmd*)cmd;
+      int p[2];
+      int pid;
+      int r;
       
       // Descritores de arquivo do PIPE: in/read (0) e
       // out/write (1)

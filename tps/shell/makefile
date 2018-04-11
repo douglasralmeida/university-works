@@ -1,18 +1,29 @@
 #Makefile do TP1 de SO - Shell e Top
 #
 #Douglas Rodrigue de Almeida
+#Saulo Weikert Bicalho
 #
 
-PROJECTNAME=shell
-TOPNAME=mytop
 CC=gcc
 CFLAGS=-c -Wall -Wextra $(DEFS)
 DBGFLAGS=-ggdb -fno-inline -fno-omit-frame-pointer
+LDFLAGS=-pthread
 BINDIR=bin
 OBJDIR=obj
-OBJFILES=sh.o
-OBJECTS=$(addprefix $(OBJDIR)/, $(OBJFILES))
 SOURCEDIR=src
+
+SH_PROJECTNAME=shell
+SH_OBJFILES=sh.o
+SH_OBJECTS=$(addprefix $(OBJDIR)/, $(SH_OBJFILES))
+
+MT_PROJECTNAME=meutop
+MT_OBJFILES=meutop.o
+MT_OBJECTS=$(addprefix $(OBJDIR)/, $(MT_OBJFILES))
+
+MT_SIGNALTESTER=signaltester
+MT_STFILES=signaltester.o
+MT_STOBJ=$(addprefix $(OBJDIR)/, $(MT_STFILES))
+
 ARGS=
 
 $(OBJDIR)/%.o: $(SOURCEDIR)/%.c
@@ -20,36 +31,67 @@ $(OBJDIR)/%.o: $(SOURCEDIR)/%.c
 	@echo Compilando $<...
 	$(CC) $(DBGFLAGS) $(CFLAGS) $< -o $@
 
-$(PROJECTNAME): $(OBJECTS) 
+$(SH_PROJECTNAME): $(SH_OBJECTS) 
 	@echo 
-	@echo Gerando executavel...
+	@echo Gerando executavel do shell...
+	$(CC) -o $(BINDIR)/$@ $^ $(LIBS)
+	
+$(MT_PROJECTNAME): $(MT_OBJECTS) 
+	@echo 
+	@echo Gerando executavel do meutop...
 	$(CC) $(LDFLAGS) -o $(BINDIR)/$@ $^ $(LIBS)
+
+$(MT_SIGNALTESTER): $(MT_STOBJ) 
+	@echo 
+	@echo Gerando executavel do singaltester...
+	$(CC) -o $(BINDIR)/$@ $^ $(LIBS)
 
 .PHONY: all
 all:
 	@echo TP1 de SO
-	$(PROJECTNAME)
+	$(SH_PROJECTNAME)
+	$(MT_PROJECTNAME)
+	$(MT_SIGNALTESTER)
 	
-.PHONY:clean
-clean:
+.PHONY:clear
+clear:
 	@echo 
-	@echo Excluindo executavel...
-	rm -f $(BINDIR)/$(PROJECTNAME)
+	@echo Excluindo executaveis...
+	rm -f $(BINDIR)/$(MT_PROJECTNAME)
+	rm -f $(BINDIR)/$(SH_PROJECTNAME)
 	@echo Excluindo objetos...
-	rm -f $(OBJECTS)
+	rm -f $(SH_OBJECTS)
+	rm -f $(MT_OBJECTS)
+	rm -f $(MT_STFILES)
 
-.PHONY: debug
-debug:
-	gdb --args ./$(BINDIR)/$(PROJECTNAME)
-
-.PHONY: memcheck
-memcheck:
-	valgrind -v --leak-check=full --track-origins=yes --show-leak-kinds=all $(BINDIR)/$(PROJECTNAME)
-
-.PHONY: run
-run:
-	./$(BINDIR)/$(PROJECTNAME)
+.PHONY: debugsh
+debugsh:
+	gdb --args ./$(BINDIR)/$(SH_PROJECTNAME)
 	
-.PHONY: test
-test:
+.PHONY: debugmt
+debugmt:
+	gdb --args ./$(BINDIR)/$(MT_PROJECTNAME)
+
+.PHONY: memchecksh
+memchecksh:
+	valgrind -v --leak-check=full --track-origins=yes --show-leak-kinds=all $(BINDIR)/$(SH_PROJECTNAME)
+	
+.PHONY: memcheckmt
+memcheckmt:
+	valgrind -v --leak-check=full --track-origins=yes --show-leak-kinds=all $(BINDIR)/$(MT_PROJECTNAME)
+
+.PHONY: runsh
+runsh:
+	./$(BINDIR)/$(SH_PROJECTNAME)
+
+.PHONY: runmt
+runmt:
+	./$(BINDIR)/$(MT_PROJECTNAME)
+
+.PHONY: testsh
+testsh:
 	./grade.sh
+	
+.PHONY: testmt
+testmt:
+	./$(BINDIR)/signaltester
