@@ -28,32 +28,32 @@ OBJS = \
 	vectors.o\
 	vm.o\
 
-# Cross-compiling (e.g., on Mac OS X)
+# Para compilação cruzada (em outro SO, ex: MacOS X)
 # TOOLPREFIX = i386-jos-elf
 
-# Using native tools (e.g., on X86 Linux)
-#TOOLPREFIX = 
+# Para compilação com ferramentas nativas (ex: Linux x86)
+# TOOLPREFIX = 
 
-# Try to infer the correct TOOLPREFIX if not set
+# Se TOOLPREFIX não foi configurado, tentar encontrar o GCC correto
 ifndef TOOLPREFIX
 TOOLPREFIX := $(shell if i386-jos-elf-objdump -i 2>&1 | grep '^elf32-i386$$' >/dev/null 2>&1; \
 	then echo 'i386-jos-elf-'; \
 	elif objdump -i 2>&1 | grep 'elf32-i386' >/dev/null 2>&1; \
 	then echo ''; \
 	else echo "***" 1>&2; \
-	echo "*** Error: Couldn't find an i386-*-elf version of GCC/binutils." 1>&2; \
-	echo "*** Is the directory with i386-jos-elf-gcc in your PATH?" 1>&2; \
-	echo "*** If your i386-*-elf toolchain is installed with a command" 1>&2; \
-	echo "*** prefix other than 'i386-jos-elf-', set your TOOLPREFIX" 1>&2; \
-	echo "*** environment variable to that prefix and run 'make' again." 1>&2; \
-	echo "*** To turn off this error, run 'gmake TOOLPREFIX= ...'." 1>&2; \
+	echo "*** Erro: Não foi possível encontrar uma versão i386-*-elf do GCC/binutils." 1>&2; \
+	echo "*** O diretório do i386-jos-elf-gcc está no PATH do sistema?" 1>&2; \
+	echo "*** Se seu compilador i386-*-elf estiver instalado com um prefixo" 1>&2; \
+	echo "*** de comando diferente de 'i386-jos-elf-', configure a variável" 1>&2; \
+	echo "*** TOOLPREFIX para o tal prefixo e execute o comando 'make' novamente." 1>&2; \
+	echo "*** Para desativar este erro, execute 'gmake TOOLPREFIX= ...'." 1>&2; \
 	echo "***" 1>&2; exit 1; fi)
 endif
 
-# If the makefile can't find QEMU, specify its path here
+# Se o makefile nao econtrar o QEMU, informe seu caminho aqui
 # QEMU = qemu-system-i386
 
-# Try to infer the correct QEMU
+# Tentar ecnontrar o QEMU correto
 ifndef QEMU
 QEMU = $(shell if which qemu > /dev/null; \
 	then echo qemu; exit; \
@@ -65,9 +65,9 @@ QEMU = $(shell if which qemu > /dev/null; \
 	qemu=/Applications/Q.app/Contents/MacOS/i386-softmmu.app/Contents/MacOS/i386-softmmu; \
 	if test -x $$qemu; then echo $$qemu; exit; fi; fi; \
 	echo "***" 1>&2; \
-	echo "*** Error: Couldn't find a working QEMU executable." 1>&2; \
-	echo "*** Is the directory containing the qemu binary in your PATH" 1>&2; \
-	echo "*** or have you tried setting the QEMU variable in Makefile?" 1>&2; \
+	echo "*** Erro: Não foi possível econtrar o executável do QEMU." 1>&2; \
+	echo "*** O diretório que contem o executável do QEMU está no PATH do sistema?" 1>&2; \
+	echo "*** ou você tentou configurar a variável QEMU no Makefile?" 1>&2; \
 	echo "***" 1>&2; exit 1)
 endif
 
@@ -77,12 +77,19 @@ LD = $(TOOLPREFIX)ld
 OBJCOPY = $(TOOLPREFIX)objcopy
 OBJDUMP = $(TOOLPREFIX)objdump
 CFLAGS = -fno-pic -static -fno-builtin -fno-strict-aliasing -O2 -Wall -MD -ggdb -m32 -Werror -fno-omit-frame-pointer
-#CFLAGS = -fno-pic -static -fno-builtin -fno-strict-aliasing -fvar-tracking -fvar-tracking-assignments -O0 -g -Wall -MD -gdwarf-2 -m32 -Werror -fno-omit-frame-pointer
 CFLAGS += $(shell $(CC) -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 && echo -fno-stack-protector)
 ASFLAGS = -m32 -gdwarf-2 -Wa,-divide
-# FreeBSD ld wants ``elf_i386_fbsd''
+# O comando ld do FreeBSD exige ''elf_i386_fbsd''
 LDFLAGS += -m $(shell $(LD) -V | grep elf_i386 2>/dev/null | head -n 1)
 
+##Imagem do SO
+
+# XV6.IMG
+# >Cria o arquivo xv6.img com 10.000 kb de tamanho preechido com \0
+# >Anexa uma copia do arquivo bootblock (tam. max. 512 bytes)
+#  no arquivo xv6.img sem truncar
+# >Anexa uma copia do arquivo kernel na imagem xv6, a partir
+#  do segundo bloco (cada bloco tem 512 bytes) sem truncar
 xv6.img: bootblock kernel fs.img
 	dd if=/dev/zero of=xv6.img count=10000
 	dd if=bootblock of=xv6.img conv=notrunc
@@ -93,6 +100,18 @@ xv6memfs.img: bootblock kernelmemfs
 	dd if=bootblock of=xv6memfs.img conv=notrunc
 	dd if=kernelmemfs of=xv6memfs.img seek=1 conv=notrunc
 
+##Bloco do setor de Boot do HD
+
+# BOOTBLOCK
+# >Compila os arquivos bootasm.S bootmain.c
+# >Vincula os arquivos compilados num unico arquivo executavel bootblock.o
+# >Desmonta o executavel bootblock.o no arquivo bootblock.asm
+# >Cria o arquivo bootblock copiado de bootlock.o sem os simbolos, info. de realocação
+#  e depuração, copiando somente a seção .text do executavel no formato binário puro
+# >Checa se o arquivo bootblock possui mais de 510 bytes, anexando ao final, caracteres
+#  \0 até completar 510 bytes. Por fim, anexa os caracteres \55(HEX) e \AA(HEX).
+#  O arquivo final (que será o bloco do setor de boot) possuirá exatos 512 bytes de tamanho
+# * Ver: https://en.wikipedia.org/wiki/Master_boot_record
 bootblock: bootasm.S bootmain.c
 	$(CC) $(CFLAGS) -fno-pic -O -nostdinc -I. -c bootmain.c
 	$(CC) $(CFLAGS) -fno-pic -nostdinc -I. -c bootasm.S
@@ -100,6 +119,8 @@ bootblock: bootasm.S bootmain.c
 	$(OBJDUMP) -S bootblock.o > bootblock.asm
 	$(OBJCOPY) -S -O binary -j .text bootblock.o bootblock
 	./sign.pl bootblock
+
+##Kernel
 
 entryother: entryother.S
 	$(CC) $(CFLAGS) -fno-pic -nostdinc -I. -c entryother.S
@@ -130,9 +151,11 @@ kernelmemfs: $(MEMFSOBJS) entry.o entryother initcode kernel.ld fs.img
 	$(OBJDUMP) -S kernelmemfs > kernelmemfs.asm
 	$(OBJDUMP) -t kernelmemfs | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > kernelmemfs.sym
 
+##Tags para VI/Emacs
 tags: $(OBJS) entryother.S _init
 	etags *.S *.c
 
+##Tabela de interrupções/traps
 vectors.S: vectors.pl
 	perl vectors.pl > vectors.S
 
@@ -198,7 +221,6 @@ xv6.pdf: $(PRINT)
 print: xv6.pdf
 
 # run in emulators
-
 bochs : fs.img xv6.img
 	if [ ! -e .bochsrc ]; then ln -s dot-bochsrc .bochsrc; fi
 	bochs -q
