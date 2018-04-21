@@ -1,3 +1,5 @@
+# entryother.S - Inicializador de processadores
+
 #include "asm.h"
 #include "memlayout.h"
 #include "mmu.h"

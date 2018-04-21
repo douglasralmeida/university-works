@@ -1,18 +1,26 @@
+## BOOTASM - Bootstrap
+## Age diretamente no processador, configurando registradores,
+## paginação, ativando o modo protegido até chamar a função
+## bootmain do arquivo.c
+
 #include "asm.h"
 #include "memlayout.h"
 #include "mmu.h"
 
-# Start the first CPU: switch to 32-bit protected mode, jump into C.
-# The BIOS loads this code from the first sector of the hard disk into
-# memory at physical address 0x7c00 and starts executing in real mode
-# with %cs=0 %ip=7c00.
+# Inicia a primeira CPU, muda para o modo protegido de 32 bits, e chama o código C.
+# A BIOS carrega este código do primeiro setor do HD para a memória no endereço
+# físico 0x7c00 e inicia a execução no modo real com %cs=0 %ip=7c00.
 
-.code16                       # Assemble for 16-bit mode
+# Processador sempre inicia no modo real
+
+.code16                       # Será gerado código de 16 bits
 .globl start
 start:
-  cli                         # BIOS enabled interrupts; disable
+  cli                         # desabilita interrupções do processador
 
-  # Zero data segment registers DS, ES, and SS.
+  # Não usa paginação via hardware. Os endereços de memória lógicos
+  # serão traduzidos para os endereços físicos sem alteração.
+  # Zera os registradores de segmento DS, ES e SS.
   xorw    %ax,%ax             # Set %ax to zero
   movw    %ax,%ds             # -> Data Segment
   movw    %ax,%es             # -> Extra Segment
@@ -36,7 +44,7 @@ seta20.2:
   movb    $0xdf,%al               # 0xdf -> port 0x60
   outb    %al,$0x60
 
-  # Switch from real to protected mode.  Use a bootstrap GDT that makes
+  # Troca para o modo protegido.  Use a bootstrap GDT that makes
   # virtual addresses map directly to physical addresses so that the
   # effective memory map doesn't change during the transition.
   lgdt    gdtdesc
@@ -45,12 +53,12 @@ seta20.2:
   movl    %eax, %cr0
 
 //PAGEBREAK!
-  # Complete the transition to 32-bit protected mode by using a long jmp
+  # Completa a transição para o modo protegido 32-bit usando um long jmp
   # to reload %cs and %eip.  The segment descriptors are set up with no
   # translation, so that the mapping is still the identity mapping.
   ljmp    $(SEG_KCODE<<3), $start32
 
-.code32  # Tell assembler to generate 32-bit code now.
+.code32  # A partir de agora, será gerado código de 32 bits.
 start32:
   # Set up the protected-mode data segment registers
   movw    $(SEG_KDATA<<3), %ax    # Our data segment selector
@@ -61,12 +69,13 @@ start32:
   movw    %ax, %fs                # -> FS
   movw    %ax, %gs                # -> GS
 
-  # Set up the stack pointer and call into C.
+  # Configura o apontador da pilha e chama a função bootmain do arquivo .c.
   movl    $start, %esp
   call    bootmain
 
-  # If bootmain returns (it shouldn't), trigger a Bochs
-  # breakpoint if running under Bochs, then loop.
+  # Se bootmain returnar (não deveria), ativa um breakpoint
+  # no Bochs, caso esteja executando sobre o emulador Bochs,
+  # em seguinda entra em loop.
   movw    $0x8a00, %ax            # 0x8a00 -> port 0x8a00
   movw    %ax, %dx
   outw    %ax, %dx
@@ -85,4 +94,3 @@ gdt:
 gdtdesc:
   .word   (gdtdesc - gdt - 1)             # sizeof(gdt) - 1
   .long   gdt                             # address gdt
-

@@ -53,7 +53,7 @@ endif
 # Se o makefile nao econtrar o QEMU, informe seu caminho aqui
 # QEMU = qemu-system-i386
 
-# Tentar ecnontrar o QEMU correto
+# Se QEMU não foi configurado, tentar ecnontrar o QEMU correto
 ifndef QEMU
 QEMU = $(shell if which qemu > /dev/null; \
 	then echo qemu; exit; \
@@ -81,6 +81,7 @@ CFLAGS += $(shell $(CC) -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 &
 ASFLAGS = -m32 -gdwarf-2 -Wa,-divide
 # O comando ld do FreeBSD exige ''elf_i386_fbsd''
 LDFLAGS += -m $(shell $(LD) -V | grep elf_i386 2>/dev/null | head -n 1)
+BINDIR=bin
 
 ##Imagem do SO
 
@@ -172,8 +173,10 @@ _forktest: forktest.o $(ULIB)
 	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o _forktest forktest.o ulib.o usys.o
 	$(OBJDUMP) -S _forktest > forktest.asm
 
+# Aplicativo Make FileSystem
+# >Compila e gera o executável que constrói imagens com o sistema de arquivos
 mkfs: mkfs.c fs.h
-	gcc -Werror -Wall -o mkfs mkfs.c
+	gcc -Werror -Wall -o $(BINDIR)/mkfs mkfs.c
 
 # Prevent deletion of intermediate files, e.g. cat.o, after first build, so
 # that disk image changes after first build are persistent until clean.  More
@@ -198,15 +201,18 @@ UPROGS=\
 	_wc\
 	_zombie\
 
+##SISTEMA DE ARQUIVOS
+# >Gera uma imagem com o sistema de arquivos e
+#  copia os arquivos e aplicativos do SO
 fs.img: mkfs README $(UPROGS)
-	./mkfs fs.img README $(UPROGS)
+	./$(BINDIR)/mkfs fs.img README $(UPROGS)
 
 -include *.d
 
 clean: 
 	rm -f *.tex *.dvi *.idx *.aux *.log *.ind *.ilg \
 	*.o *.d *.asm *.sym vectors.S bootblock entryother \
-	initcode initcode.out kernel xv6.img fs.img kernelmemfs mkfs \
+	initcode initcode.out kernel xv6.img fs.img kernelmemfs $(BINDIR)/mkfs \
 	.gdbinit \
 	$(UPROGS)
 

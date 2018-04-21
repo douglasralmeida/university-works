@@ -1,9 +1,10 @@
 // Boot loader.
 //
-// Part of the boot block, along with bootasm.S, which calls bootmain().
-// bootasm.S has put the processor into protected 32-bit mode.
-// bootmain() loads an ELF kernel image from the disk starting at
-// sector 1 and then jumps to the kernel entry routine.
+// Pertence ao setor de inicialição do HD, juntamente com bootasm.S, 
+// que faz a chamada bootmain().
+// bootasm.S coloca o processador no modo protegido de 32 bits.
+// bootmain() carrega uma imagem ELF do kernel no disco que começa no
+// setor 1 e chama a rotina de entrada do kernel.
 
 #include "types.h"
 #include "elf.h"
@@ -14,9 +15,7 @@
 
 void readseg(uchar*, uint, uint);
 
-void
-bootmain(void)
-{
+void bootmain(void) {
   struct elfhdr *elf;
   struct proghdr *ph, *eph;
   void (*entry)(void);
@@ -24,14 +23,14 @@ bootmain(void)
 
   elf = (struct elfhdr*)0x10000;  // scratch space
 
-  // Read 1st page off disk
+  // Lê a primeira página do disco
   readseg((uchar*)elf, 4096, 0);
 
-  // Is this an ELF executable?
+  // É um executável no formato ELF?
   if(elf->magic != ELF_MAGIC)
-    return;  // let bootasm.S handle error
+    return;  // deixa o bootasm.S manipular o erro
 
-  // Load each program segment (ignores ph flags).
+  // Carrega cada segmento do programa (ignora os flags ph).
   ph = (struct proghdr*)((uchar*)elf + elf->phoff);
   eph = ph + elf->phnum;
   for(; ph < eph; ph++){
@@ -41,8 +40,8 @@ bootmain(void)
       stosb(pa + ph->filesz, 0, ph->memsz - ph->filesz);
   }
 
-  // Call the entry point from the ELF header.
-  // Does not return!
+  // Chama a rotina de entrada descrita no cabeçalho ELF.
+  // Não retorna!
   entry = (void(*)(void))(elf->entry);
   entry();
 }

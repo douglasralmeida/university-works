@@ -1,3 +1,6 @@
+//Kernel do xv6
+//É chamado atraves de entry.S
+
 #include "types.h"
 #include "defs.h"
 #include "param.h"
@@ -9,49 +12,44 @@
 static void startothers(void);
 static void mpmain(void)  __attribute__((noreturn));
 extern pde_t *kpgdir;
-extern char end[]; // first address after kernel loaded from ELF file
+extern char end[]; // primerio endereço após o kernel ser caregado do arquivo ELF
 
-// Bootstrap processor starts running C code here.
-// Allocate a real stack and switch to it, first
-// doing some setup required for memory allocator to work.
-int
-main(void)
-{
-  kinit1(end, P2V(4*1024*1024)); // phys page allocator
-  kvmalloc();      // kernel page table
-  mpinit();        // detect other processors
-  lapicinit();     // interrupt controller
-  seginit();       // segment descriptors
-  picinit();       // disable pic
-  ioapicinit();    // another interrupt controller
+// Os procedimentos de inicialização começam a executar o 
+// código .C a partir daqui.
+// Aloca uma pilha real e troca para ela, primeiro fazendo
+// algumas configurações necessárias par o alocador de memória funcionar.
+int main(void) {
+  kinit1(end, P2V(4*1024*1024)); // alocador de páginas de memória física
+  kvmalloc();      // tabela de páginas do kernel
+  mpinit();        // detecta outros processadores
+  lapicinit();     // controlador de interrupções
+  seginit();       // descritores de segmentos
+  picinit();       // desabilita pic
+  ioapicinit();    // outro controlador de interrupções
   consoleinit();   // console hardware
-  uartinit();      // serial port
-  pinit();         // process table
-  tvinit();        // trap vectors
+  uartinit();      // porta serial
+  pinit();         // tabela de processos
+  tvinit();        // vetores trap
   binit();         // buffer cache
-  fileinit();      // file table
-  ideinit();       // disk 
-  startothers();   // start other processors
-  kinit2(P2V(4*1024*1024), P2V(PHYSTOP)); // must come after startothers()
-  userinit();      // first user process
-  mpmain();        // finish this processor's setup
+  fileinit();      // tabela de arquivo
+  ideinit();       // disco 
+  startothers();   // inicia outros processadores
+  kinit2(P2V(4*1024*1024), P2V(PHYSTOP)); // deve vir após startothers()
+  userinit();      // primeiro processo no modo usuário
+  mpmain();        // encerra esta configuração de processadores
 }
 
 // Other CPUs jump here from entryother.S.
-static void
-mpenter(void)
-{
+static void mpenter(void) {
   switchkvm();
   seginit();
   lapicinit();
   mpmain();
 }
 
-// Common CPU setup code.
-static void
-mpmain(void)
-{
-  cprintf("cpu%d: starting %d\n", cpuid(), cpuid());
+// Código de configuração de CPU.
+static void mpmain(void) {
+  cprintf("cpu%d: iniciando %d\n", cpuid(), cpuid());
   idtinit();       // load idt register
   xchg(&(mycpu()->started), 1); // tell startothers() we're up
   scheduler();     // start running processes
@@ -60,9 +58,7 @@ mpmain(void)
 pde_t entrypgdir[];  // For entry.S
 
 // Start the non-boot (AP) processors.
-static void
-startothers(void)
-{
+static void startothers(void) {
   extern uchar _binary_entryother_start[], _binary_entryother_size[];
   uchar *code;
   struct cpu *c;
@@ -106,11 +102,3 @@ pde_t entrypgdir[NPDENTRIES] = {
   // Map VA's [KERNBASE, KERNBASE+4MB) to PA's [0, 4MB)
   [KERNBASE>>PDXSHIFT] = (0) | PTE_P | PTE_W | PTE_PS,
 };
-
-//PAGEBREAK!
-// Blank page.
-//PAGEBREAK!
-// Blank page.
-//PAGEBREAK!
-// Blank page.
-

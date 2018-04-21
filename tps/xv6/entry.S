@@ -1,6 +1,11 @@
-# The xv6 kernel starts executing in this file. This file is linked with
-# the kernel C code, so it can refer to kernel symbols such as main().
-# The boot block (bootasm.S and bootmain.c) jumps to entry below.
+##Rotina de Entrada do Kernel
+
+
+# O Kernel do xv6 começa sua execução neste arquivo. Este arquivo é vinculado com
+# o código .c do kernel, então é pode usar referências para os símblos do kernel
+# como main().
+# O bloco de inicialização (bootasm.S and bootmain.c) chama a rotina entry descrita
+# abaixo.
         
 # Multiboot header, for multiboot boot loaders like GNU Grub.
 # http://www.gnu.org/software/grub/manual/multiboot/multiboot.html
@@ -40,7 +45,7 @@ multiboot_header:
 .globl _start
 _start = V2P_WO(entry)
 
-# Entering xv6 on boot processor, with paging off.
+# Entrando no xv6 durante a inicialização, com paginação desativada.
 .globl entry
 entry:
   # Turn on page size extension for 4Mbyte pages
@@ -58,7 +63,7 @@ entry:
   # Set up the stack pointer.
   movl $(stack + KSTACKSIZE), %esp
 
-  # Jump to main(), and switch to executing at
+  # Chama a rotina main() de main.c, and switch to executing at
   # high addresses. The indirect call is needed because
   # the assembler produces a PC-relative instruction
   # for a direct jump.
