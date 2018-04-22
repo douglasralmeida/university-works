@@ -92,6 +92,8 @@ BINDIR=bin
 # >Anexa uma copia do arquivo kernel na imagem xv6, a partir
 #  do segundo bloco (cada bloco tem 512 bytes) sem truncar
 xv6.img: bootblock kernel fs.img
+	@echo 
+	@echo "Criando imagem do SO..."
 	dd if=/dev/zero of=xv6.img count=10000
 	dd if=bootblock of=xv6.img conv=notrunc
 	dd if=kernel of=xv6.img seek=1 conv=notrunc
@@ -114,6 +116,8 @@ xv6memfs.img: bootblock kernelmemfs
 #  O arquivo final (que será o bloco do setor de boot) possuirá exatos 512 bytes de tamanho
 # * Ver: https://en.wikipedia.org/wiki/Master_boot_record
 bootblock: bootasm.S bootmain.c
+	@echo 
+	@echo "Gerando bloco de inicialização..."
 	$(CC) $(CFLAGS) -fno-pic -O -nostdinc -I. -c bootmain.c
 	$(CC) $(CFLAGS) -fno-pic -nostdinc -I. -c bootasm.S
 	$(LD) $(LDFLAGS) -N -e start -Ttext 0x7C00 -o bootblock.o bootasm.o bootmain.o
@@ -136,6 +140,8 @@ initcode: initcode.S
 	$(OBJDUMP) -S initcode.o > initcode.asm
 
 kernel: $(OBJS) entry.o entryother initcode kernel.ld
+	@echo 
+	@echo "Gerando kernel..."
 	$(LD) $(LDFLAGS) -T kernel.ld -o kernel entry.o $(OBJS) -b binary initcode entryother
 	$(OBJDUMP) -S kernel > kernel.asm
 	$(OBJDUMP) -t kernel | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > kernel.sym
@@ -162,21 +168,22 @@ vectors.S: vectors.pl
 
 ULIB = ulib.o usys.o printf.o umalloc.o
 
-_%: %.o $(ULIB)
+##Apps incluídos no SO
+$(BINDIR)/_%: %.o $(ULIB)
 	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $@ $^
 	$(OBJDUMP) -S $@ > $*.asm
 	$(OBJDUMP) -t $@ | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $*.sym
 
-_forktest: forktest.o $(ULIB)
+$(BINDIR)/_forktest: forktest.o $(ULIB)
 	# forktest has less library code linked in - needs to be small
 	# in order to be able to max out the proc table.
-	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o _forktest forktest.o ulib.o usys.o
-	$(OBJDUMP) -S _forktest > forktest.asm
+	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $@ forktest.o ulib.o usys.o
+	$(OBJDUMP) -S $@ > forktest.asm
 
 # Aplicativo Make FileSystem
 # >Compila e gera o executável que constrói imagens com o sistema de arquivos
-mkfs: mkfs.c fs.h
-	gcc -Werror -Wall -o $(BINDIR)/mkfs mkfs.c
+$(BINDIR)/mkfs: mkfs.c fs.h
+	$(CC) -Werror -Wall -o $@ mkfs.c
 
 # Prevent deletion of intermediate files, e.g. cat.o, after first build, so
 # that disk image changes after first build are persistent until clean.  More
@@ -200,21 +207,28 @@ UPROGS=\
 	_usertests\
 	_wc\
 	_zombie\
+	
+APPFILES = $(addprefix $(BINDIR)/, $(UPROGS))
 
 ##SISTEMA DE ARQUIVOS
 # >Gera uma imagem com o sistema de arquivos e
 #  copia os arquivos e aplicativos do SO
-fs.img: mkfs README $(UPROGS)
-	./$(BINDIR)/mkfs fs.img README $(UPROGS)
+fs.img: $(BINDIR)/mkfs README $(APPFILES)
+	@echo 
+	@echo "Gerando FS..."
+	cp README $(BINDIR)/
+	(cd $(BINDIR) && ./mkfs ../fs.img README $(UPROGS))
 
 -include *.d
 
-clean: 
+clean:
+	@echo 
+	@echo "Executando limpeza..."
 	rm -f *.tex *.dvi *.idx *.aux *.log *.ind *.ilg \
 	*.o *.d *.asm *.sym vectors.S bootblock entryother \
 	initcode initcode.out kernel xv6.img fs.img kernelmemfs $(BINDIR)/mkfs \
-	.gdbinit \
-	$(UPROGS)
+	.gdbinit $(BINDIR)/README \
+	$(APPFILES)
 
 # make a printout
 FILES = $(shell grep -v '^\#' runoff.list)
