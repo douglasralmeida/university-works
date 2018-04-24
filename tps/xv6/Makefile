@@ -84,6 +84,7 @@ LDFLAGS += -m $(shell $(LD) -V | grep elf_i386 2>/dev/null | head -n 1)
 BINDIR=bin
 SRCDIR=src
 SYMDIR=sym
+SPTDIR=scripts
 
 %.o: $(SRCDIR)/%.c
 	$(CC) -c -o $@ $< $(CFLAGS)
@@ -131,7 +132,7 @@ bootblock: $(SRCDIR)/bootasm.S $(SRCDIR)/bootmain.c
 	$(LD) $(LDFLAGS) -N -e start -Ttext 0x7C00 -o bootblock.o bootasm.o bootmain.o
 	$(OBJDUMP) -S bootblock.o > $(SYMDIR)/bootblock.asm
 	$(OBJCOPY) -S -O binary -j .text bootblock.o $@
-	./sign.pl $@
+	./$(SPTDIR)/sign.pl $@
 
 ##Kernel
 
@@ -147,10 +148,10 @@ initcode: $(SRCDIR)/initcode.S
 	$(OBJCOPY) -S -O binary initcode.out $@
 	$(OBJDUMP) -S initcode.o > $(SYMDIR)/initcode.asm
 
-kernel: $(OBJS) entry.o entryother initcode kernel.ld
+kernel: $(OBJS) entry.o entryother initcode $(SPTDIR)/kernel.ld
 	@echo 
 	@echo "Gerando kernel..."
-	$(LD) $(LDFLAGS) -T kernel.ld -o $@ entry.o $(OBJS) -b binary initcode entryother
+	$(LD) $(LDFLAGS) -T $(SPTDIR)/kernel.ld -o $@ entry.o $(OBJS) -b binary initcode entryother
 	$(OBJDUMP) -S kernel > $(SYMDIR)/kernel.asm
 	$(OBJDUMP) -t kernel | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $(SYMDIR)/kernel.sym
 
@@ -171,7 +172,7 @@ tags: $(OBJS) entryother.S _init
 	etags *.S *.c
 
 ##Tabela de interrupções/traps
-$(SRCDIR)/vectors.S: vectors.pl
+$(SRCDIR)/vectors.S: $(SPTDIR)/vectors.pl
 	perl $< > $@
 
 ULIB = ulib.o usys.o printf.o umalloc.o
@@ -243,7 +244,7 @@ FILES = $(shell grep -v '^\#' runoff.list)
 PRINT = runoff.list runoff.spec README toc.hdr toc.ftr $(FILES)
 
 xv6.pdf: $(PRINT)
-	./runoff
+	./$(SPTDIR)/runoff
 	ls -l xv6.pdf
 
 print: xv6.pdf
@@ -285,11 +286,11 @@ qemu-nox-gdb: fs.img xv6.img .gdbinit
 	$(QEMU) -nographic $(QEMUOPTS) -S $(QEMUGDB)
 
 EXTRA=\
-	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
-	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c\
+	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c \
+	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c \
 	printf.c umalloc.c\
-	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
-	.gdbinit.tmpl gdbutil\
+	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list \
+	.gdbinit.tmpl gdbutil \
 
 dist:
 	rm -rf dist
