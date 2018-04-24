@@ -82,7 +82,14 @@ ASFLAGS = -m32 -gdwarf-2 -Wa,-divide
 # O comando ld do FreeBSD exige ''elf_i386_fbsd''
 LDFLAGS += -m $(shell $(LD) -V | grep elf_i386 2>/dev/null | head -n 1)
 BINDIR=bin
+SRCDIR=src
 SYMDIR=sym
+
+%.o: $(SRCDIR)/%.c
+	$(CC) -c -o $@ $< $(CFLAGS)
+	
+%.o: $(SRCDIR)/%.S
+	$(CC) -c -o $@ $< $(CFLAGS)
 
 ##Imagem do SO
 
@@ -116,34 +123,34 @@ xv6memfs.img: bootblock kernelmemfs
 #  \0 até completar 510 bytes. Por fim, anexa os caracteres \55(HEX) e \AA(HEX).
 #  O arquivo final (que será o bloco do setor de boot) possuirá exatos 512 bytes de tamanho
 # * Ver: https://en.wikipedia.org/wiki/Master_boot_record
-bootblock: bootasm.S bootmain.c
+bootblock: $(SRCDIR)/bootasm.S $(SRCDIR)/bootmain.c
 	@echo 
 	@echo "Gerando bloco de inicialização..."
-	$(CC) $(CFLAGS) -fno-pic -O -nostdinc -I. -c bootmain.c
-	$(CC) $(CFLAGS) -fno-pic -nostdinc -I. -c bootasm.S
+	$(CC) $(CFLAGS) -fno-pic -O -nostdinc -I. -c $(SRCDIR)/bootmain.c
+	$(CC) $(CFLAGS) -fno-pic -nostdinc -I. -c $(SRCDIR)/bootasm.S
 	$(LD) $(LDFLAGS) -N -e start -Ttext 0x7C00 -o bootblock.o bootasm.o bootmain.o
 	$(OBJDUMP) -S bootblock.o > $(SYMDIR)/bootblock.asm
-	$(OBJCOPY) -S -O binary -j .text bootblock.o bootblock
-	./sign.pl bootblock
+	$(OBJCOPY) -S -O binary -j .text bootblock.o $@
+	./sign.pl $@
 
 ##Kernel
 
-entryother: entryother.S
-	$(CC) $(CFLAGS) -fno-pic -nostdinc -I. -c entryother.S
+entryother: $(SRCDIR)/entryother.S
+	$(CC) $(CFLAGS) -fno-pic -nostdinc -I. -c $<
 	$(LD) $(LDFLAGS) -N -e start -Ttext 0x7000 -o bootblockother.o entryother.o
-	$(OBJCOPY) -S -O binary -j .text bootblockother.o entryother
+	$(OBJCOPY) -S -O binary -j .text bootblockother.o $@
 	$(OBJDUMP) -S bootblockother.o > $(SYMDIR)/entryother.asm
 
-initcode: initcode.S
-	$(CC) $(CFLAGS) -nostdinc -I. -c initcode.S
+initcode: $(SRCDIR)/initcode.S
+	$(CC) $(CFLAGS) -nostdinc -I. -c $<
 	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o initcode.out initcode.o
-	$(OBJCOPY) -S -O binary initcode.out initcode
+	$(OBJCOPY) -S -O binary initcode.out $@
 	$(OBJDUMP) -S initcode.o > $(SYMDIR)/initcode.asm
 
 kernel: $(OBJS) entry.o entryother initcode kernel.ld
 	@echo 
 	@echo "Gerando kernel..."
-	$(LD) $(LDFLAGS) -T kernel.ld -o kernel entry.o $(OBJS) -b binary initcode entryother
+	$(LD) $(LDFLAGS) -T kernel.ld -o $@ entry.o $(OBJS) -b binary initcode entryother
 	$(OBJDUMP) -S kernel > $(SYMDIR)/kernel.asm
 	$(OBJDUMP) -t kernel | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $(SYMDIR)/kernel.sym
 
@@ -155,17 +162,17 @@ kernel: $(OBJS) entry.o entryother initcode kernel.ld
 # needing a scratch disk.
 MEMFSOBJS = $(filter-out ide.o,$(OBJS)) memide.o
 kernelmemfs: $(MEMFSOBJS) entry.o entryother initcode kernel.ld fs.img
-	$(LD) $(LDFLAGS) -T kernel.ld -o kernelmemfs entry.o  $(MEMFSOBJS) -b binary initcode entryother fs.img
-	$(OBJDUMP) -S kernelmemfs > $(SYMDIR)/kernelmemfs.asm
-	$(OBJDUMP) -t kernelmemfs | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $(SYMDIR)/kernelmemfs.sym
+	$(LD) $(LDFLAGS) -T kernel.ld -o $@ entry.o  $(MEMFSOBJS) -b binary initcode entryother fs.img
+	$(OBJDUMP) -S $@ > $(SYMDIR)/kernelmemfs.asm
+	$(OBJDUMP) -t $@ | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $(SYMDIR)/kernelmemfs.sym
 
 ##Tags para VI/Emacs
 tags: $(OBJS) entryother.S _init
 	etags *.S *.c
 
 ##Tabela de interrupções/traps
-vectors.S: vectors.pl
-	perl vectors.pl > vectors.S
+$(SRCDIR)/vectors.S: vectors.pl
+	perl $< > $@
 
 ULIB = ulib.o usys.o printf.o umalloc.o
 
@@ -183,8 +190,8 @@ $(BINDIR)/_forktest: forktest.o $(ULIB)
 
 # Aplicativo Make FileSystem
 # >Compila e gera o executável que constrói imagens com o sistema de arquivos
-$(BINDIR)/mkfs: mkfs.c fs.h
-	$(CC) -Werror -Wall -o $@ mkfs.c
+$(BINDIR)/mkfs: $(SRCDIR)/mkfs.c
+	$(CC) -Werror -Wall -o $@ $<
 
 # Prevent deletion of intermediate files, e.g. cat.o, after first build, so
 # that disk image changes after first build are persistent until clean.  More
@@ -218,7 +225,7 @@ fs.img: $(BINDIR)/mkfs README $(APPFILES)
 	@echo 
 	@echo "Gerando FS..."
 	cp README $(BINDIR)/
-	(cd $(BINDIR) && ./mkfs ../fs.img README $(UPROGS))
+	(cd $(BINDIR) && ./mkfs ../$@ README $(UPROGS))
 
 -include *.d
 
@@ -226,7 +233,7 @@ clean:
 	@echo 
 	@echo "Executando limpeza..."
 	rm -f *.tex *.dvi *.idx *.aux *.log *.ind *.ilg \
-	*.o *.d *.asm *.sym vectors.S bootblock entryother \
+	*.o *.d *.asm *.sym $(SRCDIR)/vectors.S bootblock entryother \
 	initcode initcode.out kernel xv6.img fs.img kernelmemfs $(BINDIR)/mkfs \
 	.gdbinit $(BINDIR)/README $(SYMDIR)/* \
 	$(APPFILES)
