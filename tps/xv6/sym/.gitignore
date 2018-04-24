@@ -1,4 +1,4 @@
-# Pasta para executáveis após compilação
+# Pasta para símbolos e ASM gerados após compilação
 # Ignorar o conteudo desta pasta exceto este arquivo
 *
 !.gitignore

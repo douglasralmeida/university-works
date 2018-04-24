@@ -171,7 +171,7 @@ int main(void) {
     /* Comando EXIT
      * Sai do shell */
     if (buf[0] == 'e' && buf[1] == 'x' && buf[2] == 'i' && buf[3] == 't' && (buf[4] == '\0' || buf[4] == ' ' || buf[4] == '\n'))
-      exit(0);
+      exit();
       
     /* Cria um processo e executa o comando */
     if(fork1() == 0)

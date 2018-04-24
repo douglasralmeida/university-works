@@ -82,6 +82,7 @@ ASFLAGS = -m32 -gdwarf-2 -Wa,-divide
 # O comando ld do FreeBSD exige ''elf_i386_fbsd''
 LDFLAGS += -m $(shell $(LD) -V | grep elf_i386 2>/dev/null | head -n 1)
 BINDIR=bin
+SYMDIR=sym
 
 ##Imagem do SO
 
@@ -121,7 +122,7 @@ bootblock: bootasm.S bootmain.c
 	$(CC) $(CFLAGS) -fno-pic -O -nostdinc -I. -c bootmain.c
 	$(CC) $(CFLAGS) -fno-pic -nostdinc -I. -c bootasm.S
 	$(LD) $(LDFLAGS) -N -e start -Ttext 0x7C00 -o bootblock.o bootasm.o bootmain.o
-	$(OBJDUMP) -S bootblock.o > bootblock.asm
+	$(OBJDUMP) -S bootblock.o > $(SYMDIR)/bootblock.asm
 	$(OBJCOPY) -S -O binary -j .text bootblock.o bootblock
 	./sign.pl bootblock
 
@@ -131,20 +132,20 @@ entryother: entryother.S
 	$(CC) $(CFLAGS) -fno-pic -nostdinc -I. -c entryother.S
 	$(LD) $(LDFLAGS) -N -e start -Ttext 0x7000 -o bootblockother.o entryother.o
 	$(OBJCOPY) -S -O binary -j .text bootblockother.o entryother
-	$(OBJDUMP) -S bootblockother.o > entryother.asm
+	$(OBJDUMP) -S bootblockother.o > $(SYMDIR)/entryother.asm
 
 initcode: initcode.S
 	$(CC) $(CFLAGS) -nostdinc -I. -c initcode.S
 	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o initcode.out initcode.o
 	$(OBJCOPY) -S -O binary initcode.out initcode
-	$(OBJDUMP) -S initcode.o > initcode.asm
+	$(OBJDUMP) -S initcode.o > $(SYMDIR)/initcode.asm
 
 kernel: $(OBJS) entry.o entryother initcode kernel.ld
 	@echo 
 	@echo "Gerando kernel..."
 	$(LD) $(LDFLAGS) -T kernel.ld -o kernel entry.o $(OBJS) -b binary initcode entryother
-	$(OBJDUMP) -S kernel > kernel.asm
-	$(OBJDUMP) -t kernel | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > kernel.sym
+	$(OBJDUMP) -S kernel > $(SYMDIR)/kernel.asm
+	$(OBJDUMP) -t kernel | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $(SYMDIR)/kernel.sym
 
 # kernelmemfs is a copy of kernel that maintains the
 # disk image in memory instead of writing to a disk.
@@ -155,8 +156,8 @@ kernel: $(OBJS) entry.o entryother initcode kernel.ld
 MEMFSOBJS = $(filter-out ide.o,$(OBJS)) memide.o
 kernelmemfs: $(MEMFSOBJS) entry.o entryother initcode kernel.ld fs.img
 	$(LD) $(LDFLAGS) -T kernel.ld -o kernelmemfs entry.o  $(MEMFSOBJS) -b binary initcode entryother fs.img
-	$(OBJDUMP) -S kernelmemfs > kernelmemfs.asm
-	$(OBJDUMP) -t kernelmemfs | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > kernelmemfs.sym
+	$(OBJDUMP) -S kernelmemfs > $(SYMDIR)/kernelmemfs.asm
+	$(OBJDUMP) -t kernelmemfs | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $(SYMDIR)/kernelmemfs.sym
 
 ##Tags para VI/Emacs
 tags: $(OBJS) entryother.S _init
@@ -171,14 +172,14 @@ ULIB = ulib.o usys.o printf.o umalloc.o
 ##Apps incluídos no SO
 $(BINDIR)/_%: %.o $(ULIB)
 	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $@ $^
-	$(OBJDUMP) -S $@ > $*.asm
-	$(OBJDUMP) -t $@ | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $*.sym
+	$(OBJDUMP) -S $@ > $(SYMDIR)/$*.asm
+	$(OBJDUMP) -t $@ | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $(SYMDIR)/$*.sym
 
 $(BINDIR)/_forktest: forktest.o $(ULIB)
 	# forktest has less library code linked in - needs to be small
 	# in order to be able to max out the proc table.
 	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $@ forktest.o ulib.o usys.o
-	$(OBJDUMP) -S $@ > forktest.asm
+	$(OBJDUMP) -S $@ > $(SYMDIR)/forktest.asm
 
 # Aplicativo Make FileSystem
 # >Compila e gera o executável que constrói imagens com o sistema de arquivos
@@ -227,7 +228,7 @@ clean:
 	rm -f *.tex *.dvi *.idx *.aux *.log *.ind *.ilg \
 	*.o *.d *.asm *.sym vectors.S bootblock entryother \
 	initcode initcode.out kernel xv6.img fs.img kernelmemfs $(BINDIR)/mkfs \
-	.gdbinit $(BINDIR)/README \
+	.gdbinit $(BINDIR)/README $(SYMDIR)/* \
 	$(APPFILES)
 
 # make a printout
@@ -276,12 +277,6 @@ qemu-nox-gdb: fs.img xv6.img .gdbinit
 	@echo "*** Now run 'gdb'." 1>&2
 	$(QEMU) -nographic $(QEMUOPTS) -S $(QEMUGDB)
 
-# CUT HERE
-# prepare dist for students
-# after running make dist, probably want to
-# rename it to rev0 or rev1 or so on and then
-# check in that version.
-
 EXTRA=\
 	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
 	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c\
@@ -310,12 +305,10 @@ dist-test:
 	cd dist-test; $(MAKE) bochs || true
 	cd dist-test; $(MAKE) qemu
 
-# update this rule (change rev#) when it is time to
-# make a new revision.
 tar:
 	rm -rf /tmp/xv6
 	mkdir -p /tmp/xv6
 	cp dist/* dist/.gdbinit.tmpl /tmp/xv6
-	(cd /tmp; tar cf - xv6) | gzip >xv6-rev10.tar.gz  # the next one will be 10 (9/17)
+	(cd /tmp; tar cf - xv6) | gzip >xv6-doug.tar.gz
 
 .PHONY: dist-test dist
