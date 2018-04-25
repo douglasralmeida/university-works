@@ -1,32 +1,6 @@
-OBJFILES = \
-	bio.o\
-	console.o\
-	exec.o\
-	file.o\
-	fs.o\
-	ide.o\
-	ioapic.o\
-	kalloc.o\
-	kbd.o\
-	lapic.o\
-	log.o\
-	main.o\
-	mp.o\
-	picirq.o\
-	pipe.o\
-	proc.o\
-	sleeplock.o\
-	spinlock.o\
-	string.o\
-	swtch.o\
-	syscall.o\
-	sysfile.o\
-	sysproc.o\
-	trapasm.o\
-	trap.o\
-	uart.o\
-	vectors.o\
-	vm.o\
+## MAKEFILE DO XV6 MODIFICADO
+#  Aluno: 
+#  Aluno: 
 
 # Para compilação cruzada (em outro SO, ex: MacOS X)
 # TOOLPREFIX = i386-jos-elf
@@ -82,10 +56,41 @@ ASFLAGS = -m32 -gdwarf-2 -Wa,-divide
 # O comando ld do FreeBSD exige ''elf_i386_fbsd''
 LDFLAGS += -m $(shell $(LD) -V | grep elf_i386 2>/dev/null | head -n 1)
 BINDIR=bin
+CNFDIR=config
 OBJDIR=obj
 SPTDIR=scripts
 SRCDIR=src
 SYMDIR=sym
+
+OBJFILES = \
+	bio.o\
+	console.o\
+	exec.o\
+	file.o\
+	fs.o\
+	ide.o\
+	ioapic.o\
+	kalloc.o\
+	kbd.o\
+	lapic.o\
+	log.o\
+	main.o\
+	mp.o\
+	picirq.o\
+	pipe.o\
+	proc.o\
+	sleeplock.o\
+	spinlock.o\
+	string.o\
+	swtch.o\
+	syscall.o\
+	sysfile.o\
+	sysproc.o\
+	trapasm.o\
+	trap.o\
+	uart.o\
+	vectors.o\
+	vm.o\
 
 OBJS = $(addprefix $(OBJDIR)/, $(OBJFILES))
 
@@ -252,9 +257,10 @@ xv6.pdf: $(PRINT)
 
 print: xv6.pdf
 
-# run in emulators
+##COMANDOS PARA EMULADORES
+
 bochs : fs.img xv6.img
-	if [ ! -e .bochsrc ]; then ln -s dot-bochsrc .bochsrc; fi
+	if [ ! -e .bochsrc ]; then ln -s $(CNFDIR)/dot-bochsrc .bochsrc; fi
 	bochs -q
 
 # try to generate a unique GDB port
@@ -277,15 +283,15 @@ qemu-memfs: xv6memfs.img
 qemu-nox: fs.img xv6.img
 	$(QEMU) -nographic $(QEMUOPTS)
 
-.gdbinit: .gdbinit.tmpl
+.gdbinit: $(CNFDIR)/.gdbinit.tmpl
 	sed "s/localhost:1234/localhost:$(GDBPORT)/" < $^ > $@
 
-qemu-gdb: fs.img xv6.img .gdbinit
-	@echo "*** Now run 'gdb'." 1>&2
+qemu-gdb: fs.img xv6.img $(CNFDIR)/.gdbinit
+	@echo "*** Agora, execute 'gdb'." 1>&2
 	$(QEMU) -serial mon:stdio $(QEMUOPTS) -S $(QEMUGDB)
 
-qemu-nox-gdb: fs.img xv6.img .gdbinit
-	@echo "*** Now run 'gdb'." 1>&2
+qemu-nox-gdb: fs.img xv6.img $(CNFDIR)/.gdbinit
+	@echo "*** Agora, execute 'gdb'." 1>&2
 	$(QEMU) -nographic $(QEMUOPTS) -S $(QEMUGDB)
 
 EXTRA=\

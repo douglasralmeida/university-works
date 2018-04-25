@@ -1,0 +1,27 @@
+Alterações em relação ao xv6 original
+=====================================
+
+ESTRUTURA DO CÓDIGO-FONTE
+-------------------------
+Os arquivos do código-fonte foram redistribuidos em pastas
+para melhor organização.
+
+KERNEL
+------
+Devido a reorganização do código fonte, as seguintes chamadas
+do kernel foram alteradas:
+
+_binary_initcode_start para _binary_obj_initcode_start
+_binary_initcode_size para _binary_obj_initcode_size
+_binary_initcode_end para _binary_obj_initcode_end
+_binary_entryother_start para _binary_obj_entryother_start
+_binary_entryother_size para _binary_obj_entryother_size
+_binary_entryother_end para  _binary_obj_entryother_end
+
+SH
+--
+O shell aceita o comando exit para encerrar.
+
+OUTROS
+------
+O SO foi traduzido parcialmente para português do Brasil.
