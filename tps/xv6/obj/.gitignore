@@ -1,0 +1,4 @@
+# Pasta para objetos compilados
+# Ignorar o conteudo desta pasta exceto este arquivo
+*
+!.gitignore

@@ -59,7 +59,7 @@ pde_t entrypgdir[];  // For entry.S
 
 // Start the non-boot (AP) processors.
 static void startothers(void) {
-  extern uchar _binary_entryother_start[], _binary_entryother_size[];
+  extern uchar _binary_obj_entryother_start[], _binary_obj_entryother_size[];
   uchar *code;
   struct cpu *c;
   char *stack;
@@ -68,7 +68,7 @@ static void startothers(void) {
   // The linker has placed the image of entryother.S in
   // _binary_entryother_start.
   code = P2V(0x7000);
-  memmove(code, _binary_entryother_start, (uint)_binary_entryother_size);
+  memmove(code, _binary_obj_entryother_start, (uint)_binary_obj_entryother_size);
 
   for(c = cpus; c < cpus+ncpu; c++){
     if(c == mycpu())  // We've started already.

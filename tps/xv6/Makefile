@@ -1,4 +1,4 @@
-OBJS = \
+OBJFILES = \
 	bio.o\
 	console.o\
 	exec.o\
@@ -82,14 +82,17 @@ ASFLAGS = -m32 -gdwarf-2 -Wa,-divide
 # O comando ld do FreeBSD exige ''elf_i386_fbsd''
 LDFLAGS += -m $(shell $(LD) -V | grep elf_i386 2>/dev/null | head -n 1)
 BINDIR=bin
+OBJDIR=obj
+SPTDIR=scripts
 SRCDIR=src
 SYMDIR=sym
-SPTDIR=scripts
 
-%.o: $(SRCDIR)/%.c
+OBJS = $(addprefix $(OBJDIR)/, $(OBJFILES))
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) -c -o $@ $< $(CFLAGS)
-	
-%.o: $(SRCDIR)/%.S
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.S
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 ##Imagem do SO
@@ -100,17 +103,17 @@ SPTDIR=scripts
 #  no arquivo xv6.img sem truncar
 # >Anexa uma copia do arquivo kernel na imagem xv6, a partir
 #  do segundo bloco (cada bloco tem 512 bytes) sem truncar
-xv6.img: bootblock kernel fs.img
+xv6.img: $(OBJDIR)/bootblock $(OBJDIR)/kernel fs.img
 	@echo 
 	@echo "Criando imagem do SO..."
 	dd if=/dev/zero of=xv6.img count=10000
-	dd if=bootblock of=xv6.img conv=notrunc
-	dd if=kernel of=xv6.img seek=1 conv=notrunc
+	dd if=$(OBJDIR)/bootblock of=xv6.img conv=notrunc
+	dd if=$(OBJDIR)/kernel of=xv6.img seek=1 conv=notrunc
 
-xv6memfs.img: bootblock kernelmemfs
+xv6memfs.img: $(OBJDIR)/bootblock $(OBJDIR)/kernelmemfs
 	dd if=/dev/zero of=xv6memfs.img count=10000
-	dd if=bootblock of=xv6memfs.img conv=notrunc
-	dd if=kernelmemfs of=xv6memfs.img seek=1 conv=notrunc
+	dd if=$(OBJDIR)/bootblock of=xv6memfs.img conv=notrunc
+	dd if=$(OBJDIR)/kernelmemfs of=xv6memfs.img seek=1 conv=notrunc
 
 ##Bloco do setor de Boot do HD
 
@@ -124,36 +127,36 @@ xv6memfs.img: bootblock kernelmemfs
 #  \0 até completar 510 bytes. Por fim, anexa os caracteres \55(HEX) e \AA(HEX).
 #  O arquivo final (que será o bloco do setor de boot) possuirá exatos 512 bytes de tamanho
 # * Ver: https://en.wikipedia.org/wiki/Master_boot_record
-bootblock: $(SRCDIR)/bootasm.S $(SRCDIR)/bootmain.c
+$(OBJDIR)/bootblock: $(SRCDIR)/bootasm.S $(SRCDIR)/bootmain.c
 	@echo 
 	@echo "Gerando bloco de inicialização..."
-	$(CC) $(CFLAGS) -fno-pic -O -nostdinc -I. -c $(SRCDIR)/bootmain.c
-	$(CC) $(CFLAGS) -fno-pic -nostdinc -I. -c $(SRCDIR)/bootasm.S
-	$(LD) $(LDFLAGS) -N -e start -Ttext 0x7C00 -o bootblock.o bootasm.o bootmain.o
-	$(OBJDUMP) -S bootblock.o > $(SYMDIR)/bootblock.asm
-	$(OBJCOPY) -S -O binary -j .text bootblock.o $@
+	$(CC) $(CFLAGS) -fno-pic -O -nostdinc -I. -c -o $(OBJDIR)/bootmain.o $(SRCDIR)/bootmain.c
+	$(CC) $(CFLAGS) -fno-pic -nostdinc -I. -c -o $(OBJDIR)/bootasm.o $(SRCDIR)/bootasm.S
+	$(LD) $(LDFLAGS) -N -e start -Ttext 0x7C00 -o $(OBJDIR)/bootblock.o $(OBJDIR)/bootasm.o $(OBJDIR)/bootmain.o
+	$(OBJDUMP) -S $(OBJDIR)/bootblock.o > $(SYMDIR)/bootblock.asm
+	$(OBJCOPY) -S -O binary -j .text $(OBJDIR)/bootblock.o $@
 	./$(SPTDIR)/sign.pl $@
 
 ##Kernel
 
-entryother: $(SRCDIR)/entryother.S
-	$(CC) $(CFLAGS) -fno-pic -nostdinc -I. -c $<
-	$(LD) $(LDFLAGS) -N -e start -Ttext 0x7000 -o bootblockother.o entryother.o
-	$(OBJCOPY) -S -O binary -j .text bootblockother.o $@
-	$(OBJDUMP) -S bootblockother.o > $(SYMDIR)/entryother.asm
+$(OBJDIR)/entryother: $(SRCDIR)/entryother.S
+	$(CC) $(CFLAGS) -fno-pic -nostdinc -I. -c -o $(OBJDIR)/entryother.o $<
+	$(LD) $(LDFLAGS) -N -e start -Ttext 0x7000 -o $(OBJDIR)/entryother.out $(OBJDIR)/entryother.o
+	$(OBJCOPY) -S -O binary -j .text $(OBJDIR)/entryother.out $@
+	$(OBJDUMP) -S $(OBJDIR)/entryother.out > $(SYMDIR)/entryother.asm
 
-initcode: $(SRCDIR)/initcode.S
-	$(CC) $(CFLAGS) -nostdinc -I. -c $<
-	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o initcode.out initcode.o
-	$(OBJCOPY) -S -O binary initcode.out $@
-	$(OBJDUMP) -S initcode.o > $(SYMDIR)/initcode.asm
+$(OBJDIR)/initcode: $(SRCDIR)/initcode.S
+	$(CC) $(CFLAGS) -nostdinc -I. -c -o $(OBJDIR)/initcode.o $<
+	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o $(OBJDIR)/initcode.out $(OBJDIR)/initcode.o
+	$(OBJCOPY) -S -O binary $(OBJDIR)/initcode.out $@
+	$(OBJDUMP) -S $(OBJDIR)/initcode.o > $(SYMDIR)/initcode.asm
 
-kernel: $(OBJS) entry.o entryother initcode $(SPTDIR)/kernel.ld
+$(OBJDIR)/kernel: $(OBJS) $(OBJDIR)/entry.o $(OBJDIR)/entryother $(OBJDIR)/initcode $(SPTDIR)/kernel.ld
 	@echo 
 	@echo "Gerando kernel..."
-	$(LD) $(LDFLAGS) -T $(SPTDIR)/kernel.ld -o $@ entry.o $(OBJS) -b binary initcode entryother
-	$(OBJDUMP) -S kernel > $(SYMDIR)/kernel.asm
-	$(OBJDUMP) -t kernel | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $(SYMDIR)/kernel.sym
+	$(LD) $(LDFLAGS) -T $(SPTDIR)/kernel.ld -o $@ $(OBJDIR)/entry.o $(OBJS) -b binary $(OBJDIR)/initcode $(OBJDIR)/entryother
+	$(OBJDUMP) -S $@ > $(SYMDIR)/kernel.asm
+	$(OBJDUMP) -t $@ | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $(SYMDIR)/kernel.sym
 
 # kernelmemfs is a copy of kernel that maintains the
 # disk image in memory instead of writing to a disk.
@@ -161,32 +164,32 @@ kernel: $(OBJS) entry.o entryother initcode $(SPTDIR)/kernel.ld
 # exploring disk buffering implementations, but it is
 # great for testing the kernel on real hardware without
 # needing a scratch disk.
-MEMFSOBJS = $(filter-out ide.o,$(OBJS)) memide.o
-kernelmemfs: $(MEMFSOBJS) entry.o entryother initcode kernel.ld fs.img
-	$(LD) $(LDFLAGS) -T kernel.ld -o $@ entry.o  $(MEMFSOBJS) -b binary initcode entryother fs.img
+MEMFSOBJS = $(filter-out $(OBJDIR)/ide.o,$(OBJS)) $(OBJDIR)/memide.o
+$(OBJDIR)/kernelmemfs: $(MEMFSOBJS) $(OBJDIR)/entry.o $(OBJDIR)/entryother $(OBJDIR)/initcode $(SPTDIR)/kernel.ld fs.img
+	$(LD) $(LDFLAGS) -T $(SPTDIR)/kernel.ld -o $@ $(OBJDIR)/entry.o  $(MEMFSOBJS) -b binary $(OBJDIR)/initcode $(OBJDIR)/entryother fs.img
 	$(OBJDUMP) -S $@ > $(SYMDIR)/kernelmemfs.asm
 	$(OBJDUMP) -t $@ | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $(SYMDIR)/kernelmemfs.sym
 
 ##Tags para VI/Emacs
-tags: $(OBJS) entryother.S _init
+tags: $(OBJS) $(SRCDIR)/entryother.S $(BINDIR)/_init
 	etags *.S *.c
 
 ##Tabela de interrupções/traps
 $(SRCDIR)/vectors.S: $(SPTDIR)/vectors.pl
 	perl $< > $@
 
-ULIB = ulib.o usys.o printf.o umalloc.o
+ULIB = $(OBJDIR)/ulib.o $(OBJDIR)/usys.o $(OBJDIR)/printf.o $(OBJDIR)/umalloc.o
 
 ##Apps incluídos no SO
-$(BINDIR)/_%: %.o $(ULIB)
+$(BINDIR)/_%: $(OBJDIR)/%.o $(ULIB)
 	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $@ $^
 	$(OBJDUMP) -S $@ > $(SYMDIR)/$*.asm
 	$(OBJDUMP) -t $@ | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $(SYMDIR)/$*.sym
 
-$(BINDIR)/_forktest: forktest.o $(ULIB)
+$(BINDIR)/_forktest: $(OBJDIR)/forktest.o $(ULIB)
 	# forktest has less library code linked in - needs to be small
 	# in order to be able to max out the proc table.
-	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $@ forktest.o ulib.o usys.o
+	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $@ $(OBJDIR)/forktest.o $(OBJDIR)/ulib.o $(OBJDIR)/usys.o
 	$(OBJDUMP) -S $@ > $(SYMDIR)/forktest.asm
 
 # Aplicativo Make FileSystem
@@ -198,7 +201,7 @@ $(BINDIR)/mkfs: $(SRCDIR)/mkfs.c
 # that disk image changes after first build are persistent until clean.  More
 # details:
 # http://www.gnu.org/software/make/manual/html_node/Chained-Rules.html
-.PRECIOUS: %.o
+.PRECIOUS: $(OBJDIR)/%.o
 
 UPROGS=\
 	_cat\
@@ -236,7 +239,7 @@ clean:
 	rm -f *.tex *.dvi *.idx *.aux *.log *.ind *.ilg \
 	*.o *.d *.asm *.sym $(SRCDIR)/vectors.S bootblock entryother \
 	initcode initcode.out kernel xv6.img fs.img kernelmemfs $(BINDIR)/mkfs \
-	.gdbinit $(BINDIR)/README $(SYMDIR)/* \
+	.gdbinit $(BINDIR)/README $(SYMDIR)/* $(OBJDIR)/* \
 	$(APPFILES)
 
 # make a printout
