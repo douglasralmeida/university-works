@@ -46,13 +46,11 @@ QEMU = $(shell if which qemu > /dev/null; \
 endif
 
 CC = $(TOOLPREFIX)gcc
-AS = $(TOOLPREFIX)gas
 LD = $(TOOLPREFIX)ld
 OBJCOPY = $(TOOLPREFIX)objcopy
 OBJDUMP = $(TOOLPREFIX)objdump
 CFLAGS = -fno-pic -static -fno-builtin -fno-strict-aliasing -O2 -Wall -MD -ggdb -m32 -Werror -fno-omit-frame-pointer
 CFLAGS += $(shell $(CC) -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 && echo -fno-stack-protector)
-ASFLAGS = -m32 -gdwarf-2 -Wa,-divide
 # O comando ld do FreeBSD exige ''elf_i386_fbsd''
 LDFLAGS += -m $(shell $(LD) -V | grep elf_i386 2>/dev/null | head -n 1)
 BINDIR=bin
@@ -62,7 +60,7 @@ SPTDIR=scripts
 SRCDIR=src
 SYMDIR=sym
 
-OBJFILES = \
+OBJS = \
 	bio.o\
 	console.o\
 	exec.o\
@@ -92,7 +90,7 @@ OBJFILES = \
 	vectors.o\
 	vm.o\
 
-OBJS = $(addprefix $(OBJDIR)/, $(OBJFILES))
+OBJFILES = $(addprefix $(OBJDIR)/, $(OBJS))
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) -c -o $@ $< $(CFLAGS)
@@ -156,10 +154,10 @@ $(OBJDIR)/initcode: $(SRCDIR)/initcode.S
 	$(OBJCOPY) -S -O binary $(OBJDIR)/initcode.out $@
 	$(OBJDUMP) -S $(OBJDIR)/initcode.o > $(SYMDIR)/initcode.asm
 
-$(OBJDIR)/kernel: $(OBJS) $(OBJDIR)/entry.o $(OBJDIR)/entryother $(OBJDIR)/initcode $(SPTDIR)/kernel.ld
+$(OBJDIR)/kernel: $(OBJFILES) $(OBJDIR)/entry.o $(OBJDIR)/entryother $(OBJDIR)/initcode $(SPTDIR)/kernel.ld
 	@echo 
 	@echo "Gerando kernel..."
-	$(LD) $(LDFLAGS) -T $(SPTDIR)/kernel.ld -o $@ $(OBJDIR)/entry.o $(OBJS) -b binary $(OBJDIR)/initcode $(OBJDIR)/entryother
+	$(LD) $(LDFLAGS) -T $(SPTDIR)/kernel.ld -o $@ $(OBJDIR)/entry.o $(OBJFILES) -b binary $(OBJDIR)/initcode $(OBJDIR)/entryother
 	$(OBJDUMP) -S $@ > $(SYMDIR)/kernel.asm
 	$(OBJDUMP) -t $@ | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $(SYMDIR)/kernel.sym
 
@@ -169,14 +167,14 @@ $(OBJDIR)/kernel: $(OBJS) $(OBJDIR)/entry.o $(OBJDIR)/entryother $(OBJDIR)/initc
 # exploring disk buffering implementations, but it is
 # great for testing the kernel on real hardware without
 # needing a scratch disk.
-MEMFSOBJS = $(filter-out $(OBJDIR)/ide.o,$(OBJS)) $(OBJDIR)/memide.o
+MEMFSOBJS = $(filter-out $(OBJDIR)/ide.o,$(OBJFILES)) $(OBJDIR)/memide.o
 $(OBJDIR)/kernelmemfs: $(MEMFSOBJS) $(OBJDIR)/entry.o $(OBJDIR)/entryother $(OBJDIR)/initcode $(SPTDIR)/kernel.ld fs.img
 	$(LD) $(LDFLAGS) -T $(SPTDIR)/kernel.ld -o $@ $(OBJDIR)/entry.o  $(MEMFSOBJS) -b binary $(OBJDIR)/initcode $(OBJDIR)/entryother fs.img
 	$(OBJDUMP) -S $@ > $(SYMDIR)/kernelmemfs.asm
 	$(OBJDUMP) -t $@ | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $(SYMDIR)/kernelmemfs.sym
 
 ##Tags para VI/Emacs
-tags: $(OBJS) $(SRCDIR)/entryother.S $(BINDIR)/_init
+tags: $(OBJFILES) $(SRCDIR)/entryother.S $(BINDIR)/_init
 	etags *.S *.c
 
 ##Tabela de interrupções/traps
@@ -208,7 +206,7 @@ $(BINDIR)/mkfs: $(SRCDIR)/mkfs.c
 # http://www.gnu.org/software/make/manual/html_node/Chained-Rules.html
 .PRECIOUS: $(OBJDIR)/%.o
 
-UPROGS=\
+APPS=\
 	_cat\
 	_echo\
 	_forktest\
@@ -225,7 +223,7 @@ UPROGS=\
 	_wc\
 	_zombie\
 	
-APPFILES = $(addprefix $(BINDIR)/, $(UPROGS))
+APPFILES = $(addprefix $(BINDIR)/, $(APPS))
 
 ##SISTEMA DE ARQUIVOS
 # >Gera uma imagem com o sistema de arquivos e
@@ -234,7 +232,7 @@ fs.img: $(BINDIR)/mkfs README $(APPFILES)
 	@echo 
 	@echo "Gerando FS..."
 	cp README $(BINDIR)/
-	(cd $(BINDIR) && ./mkfs ../$@ README $(UPROGS))
+	(cd $(BINDIR) && ./mkfs ../$@ README $(APPS))
 
 -include *.d
 
