@@ -1,56 +1,42 @@
-// Routines to let C code use special x86 instructions.
+// Rotinas para permitir código em C usar instruções x86 especiais.
 
-static inline uchar
-inb(ushort port)
-{
+static inline uchar inb(ushort port) {
   uchar data;
 
   asm volatile("in %1,%0" : "=a" (data) : "d" (port));
   return data;
 }
 
-static inline void
-insl(int port, void *addr, int cnt)
-{
+static inline void insl(int port, void *addr, int cnt) {
   asm volatile("cld; rep insl" :
                "=D" (addr), "=c" (cnt) :
                "d" (port), "0" (addr), "1" (cnt) :
                "memory", "cc");
 }
 
-static inline void
-outb(ushort port, uchar data)
-{
+static inline void outb(ushort port, uchar data) {
   asm volatile("out %0,%1" : : "a" (data), "d" (port));
 }
 
-static inline void
-outw(ushort port, ushort data)
-{
+static inline void outw(ushort port, ushort data) {
   asm volatile("out %0,%1" : : "a" (data), "d" (port));
 }
 
-static inline void
-outsl(int port, const void *addr, int cnt)
-{
+static inline void outsl(int port, const void *addr, int cnt) {
   asm volatile("cld; rep outsl" :
                "=S" (addr), "=c" (cnt) :
                "d" (port), "0" (addr), "1" (cnt) :
                "cc");
 }
 
-static inline void
-stosb(void *addr, int data, int cnt)
-{
+static inline void stosb(void *addr, int data, int cnt) {
   asm volatile("cld; rep stosb" :
                "=D" (addr), "=c" (cnt) :
                "0" (addr), "1" (cnt), "a" (data) :
                "memory", "cc");
 }
 
-static inline void
-stosl(void *addr, int data, int cnt)
-{
+static inline void stosl(void *addr, int data, int cnt) {
   asm volatile("cld; rep stosl" :
                "=D" (addr), "=c" (cnt) :
                "0" (addr), "1" (cnt), "a" (data) :
@@ -59,9 +45,7 @@ stosl(void *addr, int data, int cnt)
 
 struct segdesc;
 
-static inline void
-lgdt(struct segdesc *p, int size)
-{
+static inline void lgdt(struct segdesc *p, int size) {
   volatile ushort pd[3];
 
   pd[0] = size-1;
@@ -73,9 +57,7 @@ lgdt(struct segdesc *p, int size)
 
 struct gatedesc;
 
-static inline void
-lidt(struct gatedesc *p, int size)
-{
+static inline void lidt(struct gatedesc *p, int size) {
   volatile ushort pd[3];
 
   pd[0] = size-1;
@@ -85,9 +67,7 @@ lidt(struct gatedesc *p, int size)
   asm volatile("lidt (%0)" : : "r" (pd));
 }
 
-static inline void
-ltr(ushort sel)
-{
+static inline void ltr(ushort sel) {
   asm volatile("ltr %0" : : "r" (sel));
 }
 
@@ -138,27 +118,24 @@ rcr2(void)
   return val;
 }
 
-static inline void
-lcr3(uint val)
-{
+static inline void lcr3(uint val) {
   asm volatile("movl %0,%%cr3" : : "r" (val));
 }
 
-//PAGEBREAK: 36
-// Layout of the trap frame built on the stack by the
-// hardware and by trapasm.S, and passed to trap().
+// Layout da moldura de um trap construído sob a pilha pelo
+// hardware e por trapasm.S, e passado para a func. trap().
 struct trapframe {
-  // registers as pushed by pusha
+  // registradores empilhados por pusha
   uint edi;
   uint esi;
   uint ebp;
-  uint oesp;      // useless & ignored
+  uint oesp;      // inútil & ignorado
   uint ebx;
   uint edx;
   uint ecx;
   uint eax;
 
-  // rest of trap frame
+  // restante da moldura de um trap
   ushort gs;
   ushort padding1;
   ushort fs;
@@ -169,14 +146,14 @@ struct trapframe {
   ushort padding4;
   uint trapno;
 
-  // below here defined by x86 hardware
+  // a partir daqui, é definido pelo hardware x86
   uint err;
   uint eip;
   ushort cs;
   ushort padding5;
   uint eflags;
 
-  // below here only when crossing rings, such as from user to kernel
+  // a partir daqui, somente quando na mudança de modo, como do modo-usuário para modo-kernel
   uint esp;
   ushort ss;
   ushort padding6;

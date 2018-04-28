@@ -1,4 +1,4 @@
-// Per-CPU state
+// estado de uma CPU
 struct cpu {
   uchar apicid;                // Local APIC ID
   struct context *scheduler;   // swtch() here to enter scheduler
@@ -13,8 +13,7 @@ struct cpu {
 extern struct cpu cpus[NCPU];
 extern int ncpu;
 
-//PAGEBREAK: 17
-// Saved registers for kernel context switches.
+// Registradores salvos para trocas de contexto do kernel.
 // Don't need to save all the segment registers (%cs, etc),
 // because they are constant across kernel contexts.
 // Don't need to save %eax, %ecx, %edx, because the
@@ -34,21 +33,21 @@ struct context {
 
 enum procstate { UNUSED, EMBRYO, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
 
-// Per-process state
+// estado de um processo
 struct proc {
-  uint sz;                     // Size of process memory (bytes)
-  pde_t* pgdir;                // Page table
+  uint sz;                     // Tamanho da memória do processo (bytes)
+  pde_t* pgdir;                // Tabela de Páginas
   char *kstack;                // Bottom of kernel stack for this process
-  enum procstate state;        // Process state
-  int pid;                     // Process ID
-  struct proc *parent;         // Parent process
-  struct trapframe *tf;        // Trap frame for current syscall
-  struct context *context;     // swtch() here to run process
+  enum procstate state;        // Estado do processo
+  int pid;                     // ID Processo
+  struct proc *parent;         // Processo pai
+  struct trapframe *tf;        // Moldura trap para a chamada de sistema atual
+  struct context *context;     // swtch() aqui para executar o processo
   void *chan;                  // If non-zero, sleeping on chan
-  int killed;                  // If non-zero, have been killed
-  struct file *ofile[NOFILE];  // Open files
-  struct inode *cwd;           // Current directory
-  char name[16];               // Process name (debugging)
+  int killed;                  // Se não for zero, mòr-reu!!
+  struct file *ofile[NOFILE];  // Abertura de arquivos
+  struct inode *cwd;           // Diretório atual
+  char name[16];               // Nome do processo (para depuração)
 };
 
 // Process memory is laid out contiguously, low addresses first:

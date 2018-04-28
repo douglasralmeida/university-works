@@ -1,7 +1,7 @@
 struct stat;
 struct rtcdate;
 
-// system calls
+// chamadas de sistema
 int fork(void);
 int exit(void) __attribute__((noreturn));
 int wait(void);
