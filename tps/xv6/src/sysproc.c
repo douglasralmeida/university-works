@@ -85,3 +85,6 @@ int sys_date(void) {
 
   return 0;
 }
+
+//SYSCALLs para paginação
+

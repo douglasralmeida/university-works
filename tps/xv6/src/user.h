@@ -25,6 +25,11 @@ int sleep(int);
 int uptime(void);
 int date(struct rtcdate*);
 
+// Implementadas para o TP
+int forkcow(void);
+int num_pages(void);
+char* virt2real(char *va);
+
 // ulib.c
 int stat(char*, struct stat*);
 char* strcpy(char*, char*);
