@@ -208,6 +208,7 @@ $(BINDIR)/mkfs: $(SRCDIR)/mkfs.c
 
 APPS=\
 	_cat\
+	_corretor\
 	_date\
 	_echo\
 	_forktest\

@@ -26,9 +26,9 @@ int uptime(void);
 int date(struct rtcdate*);
 
 // Implementadas para o TP
-int forkcow(void);
-int num_pages(void);
-char* virt2real(char *va);
+int forkcow(void);          //fork copy-on-write
+int num_pages(void);        //número de paginas do processo
+char* virt2real(char *va);  //Converte o endereço virtual para endereço real
 
 // ulib.c
 int stat(char*, struct stat*);

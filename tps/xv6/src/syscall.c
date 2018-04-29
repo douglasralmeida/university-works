@@ -7,11 +7,11 @@
 #include "x86.h"
 #include "syscall.h"
 
-// User code makes a system call with INT T_SYSCALL.
-// System call number in %eax.
-// Arguments on the stack, from the user call to the C
-// library system call function. The saved user %esp points
-// to a saved program counter, and then the first argument.
+// O código do usuário faz uma chamada de sistema com INT T_SYSCALL.
+// Número da chamada de sistema em %eax.
+// Argumentos estão na pilha, da chamada do usuário para a função
+// da chamada de sistemad da biblioteca C. O %esp do usuário salvo
+// aponta para um contador do programa, e então o seu primeiro argumento.
 
 // Fetch the int at addr from the current process.
 int fetchint(uint addr, int *ip) {
@@ -94,6 +94,9 @@ extern int sys_wait(void);
 extern int sys_write(void);
 extern int sys_uptime(void);
 extern int sys_date(void);
+extern int sys_virt2real(void);
+extern int sys_num_pages(void);
+extern int sys_forkcow(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -117,7 +120,10 @@ static int (*syscalls[])(void) = {
 [SYS_link]    sys_link,
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
-[SYS_date]    sys_date
+[SYS_date]    sys_date,
+[SYS_virt2real]    sys_virt2real,
+[SYS_num_pages]    sys_num_pages,
+[SYS_forkcow]      sys_forkcow
 };
 
 void syscall(void) {

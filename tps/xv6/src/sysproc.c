@@ -25,6 +25,7 @@ int sys_kill(void) {
 
   if (argint(0, &pid) < 0)
     return -1;
+    
   return kill(pid);
 }
 
@@ -41,6 +42,7 @@ int sys_sbrk(void) {
   addr = myproc()->sz;
   if (growproc(n) < 0)
     return -1;
+    
   return addr;
 }
 
@@ -60,6 +62,7 @@ int sys_sleep(void) {
     sleep(&ticks, &tickslock);
   }
   release(&tickslock);
+  
   return 0;
 }
 
@@ -71,6 +74,7 @@ int sys_uptime(void) {
   acquire(&tickslock);
   xticks = ticks;
   release(&tickslock);
+  
   return xticks;
 }
 
@@ -80,11 +84,41 @@ int sys_uptime(void) {
 int sys_date(void) {
   char *ptr;
 
-  argptr(0, &ptr, sizeof(struct rtcdate*));
+  if (argptr(0, &ptr, sizeof(struct rtcdate*)) < 0)
+    return -1;
   cmostime((struct rtcdate*)ptr);
 
   return 0;
 }
 
-//SYSCALLs para paginação
+//SYSCALLs do TP
 
+//converte endereços de memória virtual em endereços de memória real
+int sys_virt2real(void) {
+  char* endereco;
+
+  if (argstr(0, &endereco) < 0)
+    return -1;
+    
+  endereco[0] = '\0'; //TODO
+    
+  return 0;
+}
+
+//retorna o numero de páginas utilizadas pelo processo atual
+int sys_num_pages(void) {
+  int num;
+ 
+  if (argint(0, &num) < 0)
+    return -1;
+  num = 0; //TODO
+
+  return 0;
+}
+
+//faz um fork com copy-on-write
+int sys_forkcow(void) {
+  //TODO
+
+  return 0;
+}
