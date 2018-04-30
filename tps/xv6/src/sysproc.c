@@ -97,13 +97,12 @@ int sys_date(void) {
 //converte endereços de memória virtual em endereços de memória real
 int sys_virt2real(void) {
   char* endereco;
-  uint temp;
+  pte_t enderecoreal;
 
   if (argstr(0, &endereco) < 0)
     return -1;
     
-  temp = atoui(endereco);
-  temp = V2P_WO(temp);
+  temp = walkpgdir(myproc()->pgdir, endereco, 0);
   uitoa(temp, endereco);
       
   return 0;
@@ -116,6 +115,7 @@ int sys_num_pages(void) {
   if (argint(0, &num) < 0)
     return -1;
   num = 0; //TODO
+  //myproc()->
 
   return 0;
 }
