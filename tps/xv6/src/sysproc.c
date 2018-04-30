@@ -6,6 +6,7 @@
 #include "memlayout.h"
 #include "mmu.h"
 #include "proc.h"
+#include "stdlib.h"
 
 int sys_fork(void) {
   return fork();
@@ -96,12 +97,15 @@ int sys_date(void) {
 //converte endereços de memória virtual em endereços de memória real
 int sys_virt2real(void) {
   char* endereco;
+  uint temp;
 
   if (argstr(0, &endereco) < 0)
     return -1;
     
-  endereco[0] = '\0'; //TODO
-    
+  temp = atoui(endereco);
+  temp = V2P_WO(temp);
+  uitoa(temp, endereco);
+      
   return 0;
 }
 
