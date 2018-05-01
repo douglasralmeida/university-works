@@ -110,12 +110,30 @@ int sys_virt2real(void) {
 
 //retorna o numero de páginas utilizadas pelo processo atual
 int sys_num_pages(void) {
-  int num;
+  int i = 0;
+  int num = 0; //Contador
+  pde_t* pgdir = myproc()->pgdir; //Diretório de páginas do proc. atual
+  pte_t* pgtab; //Moldura de página
+  uint endereco; //Endereço de memória
  
   if (argint(0, &num) < 0)
     return -1;
-  num = 0; //TODO
-  //myproc()->
+
+  //Varre o diretório de páginas
+  for (i = 0; i < NPDENTRIES; i++) {
+    //Para cada tabela encontrada...
+    if (pgdir[i] & PTE_P) {
+      for (endereco = PGROUNDUP(0); endereco < KERNELBASE; endereco += PGSIZE) {
+        pgtab = walkpgdir(pgdir[i], (char*)endereco, 0);
+        if (!pgtab)
+          endereco = PGADDR(PDX(endereco) + 1, 0, 0) - PGSIZE;
+        else if((*pgtab & PTE_P) != 0) {
+          num++;
+          *pte = 0;
+        }
+      }    
+    }
+  }
 
   return 0;
 }
