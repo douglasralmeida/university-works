@@ -203,6 +203,42 @@ int fork(void) {
   return pid;
 }
 
+int forkcow(void) {
+  int i, pid;
+  struct proc *np;
+  struct proc *curproc = myproc();
+
+  // Aloca o processo.
+  if ((np = allocproc()) == 0){
+    return -1;
+  }
+
+  // Varre o diretorio de paginas marcando cada pagina encontrada
+  // com o bit Copy-On-Write
+  np->pgdir = curproc->pgdir;
+  markcow(curproc->pgdir);
+
+  np->sz = curproc->sz;
+  np->parent = curproc;
+  *np->tf = *curproc->tf;
+
+  // Limpa o registrador %eax assim o fork returna 0 no filho.
+  np->tf->eax = 0;
+
+  for (i = 0; i < NOFILE; i++)
+    if (curproc->ofile[i])
+      np->ofile[i] = filedup(curproc->ofile[i]);
+
+  np->cwd = idup(curproc->cwd);
+  safestrcpy(np->name, curproc->name, sizeof(curproc->name));
+  pid = np->pid;
+  acquire(&ptable.lock);
+  np->state = RUNNABLE;
+  release(&ptable.lock);
+
+  return pid;
+}
+
 // Exit the current process.  Does not return.
 // An exited process remains in the zombie state
 // until its parent calls wait() to find out it exited.
@@ -420,8 +456,7 @@ void sleep(void *chan, struct spinlock *lk) {
 
 // Wake up all processes sleeping on chan.
 // The ptable lock must be held.
-static void wakeup1(void *chan)
-{
+static void wakeup1(void *chan) {
   struct proc *p;
 
   for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)

@@ -97,13 +97,13 @@ int sys_date(void) {
 //converte endereços de memória virtual em endereços de memória real
 int sys_virt2real(void) {
   char* endereco;
-  pte_t enderecoreal;
+  pde_t* temp;
 
   if (argstr(0, &endereco) < 0)
     return -1;
     
-  temp = walkpgdir(myproc()->pgdir, endereco, 0);
-  uitoa(temp, endereco);
+  temp = getpage(myproc()->pgdir, endereco);
+  uitoa(*temp, endereco);
       
   return 0;
 }
@@ -120,16 +120,16 @@ int sys_num_pages(void) {
     return -1;
 
   //Varre o diretório de páginas
-  for (i = 0; i < NPDENTRIES; i++) {
+  for (i = 0; i < 1; i++) {
     //Para cada tabela encontrada...
     if (pgdir[i] & PTE_P) {
-      for (endereco = PGROUNDUP(0); endereco < KERNELBASE; endereco += PGSIZE) {
-        pgtab = walkpgdir(pgdir[i], (char*)endereco, 0);
+      for (endereco = PGROUNDUP(0); endereco < KERNBASE; endereco += PGSIZE) {
+        pgtab = getpage(pgdir+i, (char*)endereco);
         if (!pgtab)
           endereco = PGADDR(PDX(endereco) + 1, 0, 0) - PGSIZE;
         else if((*pgtab & PTE_P) != 0) {
           num++;
-          *pte = 0;
+          *pgtab = 0;
         }
       }    
     }
@@ -140,7 +140,5 @@ int sys_num_pages(void) {
 
 //faz um fork com copy-on-write
 int sys_forkcow(void) {
-  //TODO
-
-  return 0;
+   return forkcow();
 }

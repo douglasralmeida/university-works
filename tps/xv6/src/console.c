@@ -88,6 +88,9 @@ cprintf(char *fmt, ...)
       for(; *s; s++)
         consputc(*s);
       break;
+    case 'u':
+      printint(*argp++, 10, 0);
+      break;
     case '%':
       consputc('%');
       break;
