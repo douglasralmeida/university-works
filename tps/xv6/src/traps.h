@@ -1,4 +1,4 @@
-// x86 trap and interrupt constants.
+// Constantes de interrupções e traps do x86.
 
 // Processor-defined:
 #define T_DIVIDE         0      // divide error
@@ -35,4 +35,3 @@
 #define IRQ_IDE         14
 #define IRQ_ERROR       19
 #define IRQ_SPURIOUS    31
-

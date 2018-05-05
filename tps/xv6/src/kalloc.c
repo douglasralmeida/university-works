@@ -20,7 +20,7 @@ struct run {
 struct {
   struct spinlock lock;
   int use_lock;
-  struct run *freelist;
+  struct run *freelist;  //Representa todas as páginas de memória livre
 } kmem;
 
 // Initialization happens in two phases.
@@ -51,14 +51,12 @@ freerange(void *vstart, void *vend)
   for(; p + PGSIZE <= (char*)vend; p += PGSIZE)
     kfree(p);
 }
-//PAGEBREAK: 21
+
 // Free the page of physical memory pointed at by v,
 // which normally should have been returned by a
 // call to kalloc().  (The exception is when
 // initializing the allocator; see kinit above.)
-void
-kfree(char *v)
-{
+void kfree(char *v) {
   struct run *r;
 
   if((uint)v % PGSIZE || v < end || V2P(v) >= PHYSTOP)
@@ -79,17 +77,15 @@ kfree(char *v)
 // Allocate one 4096-byte page of physical memory.
 // Returns a pointer that the kernel can use.
 // Returns 0 if the memory cannot be allocated.
-char*
-kalloc(void)
-{
+char* kalloc(void) {
   struct run *r;
 
-  if(kmem.use_lock)
+  if (kmem.use_lock)
     acquire(&kmem.lock);
   r = kmem.freelist;
-  if(r)
+  if (r)
     kmem.freelist = r->next;
-  if(kmem.use_lock)
+  if (kmem.use_lock)
     release(&kmem.lock);
   return (char*)r;
 }
