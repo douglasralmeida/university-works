@@ -365,20 +365,41 @@ void mapbits(pde_t *pgdir, int bits) {
   }
 }
 
-// Marca as todas as páginas alocadas com o bit Copy-On-Write
-void markcow(pde_t *pgdir) {
-	int i;
-	pde_t *pde;
+// Cria uma cópia da tabela de páginas do processo pai
+// aplicando a técnica de copy on write
+pde_t* copyuvm_cow(pde_t *pgdir, uint sz) {
+  pde_t *d;
+  pte_t *pte;
+  uint pa, i, flags;
 
-	for (i = 0; i < 1; i++) {
-		if (pgdir[i] & PTE_P) {
-			pde = pgdir + i;
-      mapbits(pde, PTE_COW);
-      
-      //Mapea a propria entrada do diretorio de paginas
-      *pde = *pde | PTE_COW;
+  // aloca uma tabela de paginas
+  if ((d = setupkvm()) == 0)
+    return 0;
+   
+  // faz uma copia da tabela do pai para o filho
+  for (i = 0; i < sz; i += PGSIZE){
+    if ((pte = walkpgdir(pgdir, (void *) i, 0)) == 0)
+      panic("copyuvm_cow: pte deveria existir");
+    if (!(*pte & PTE_P))
+      panic("copyuvm_cow: pagina nao presente");
+    
+    // se é uma página gravável, a marca como
+    // somente leitura e adiciona um flag copy on write
+    if (CHECK_PTEW(*pte)) {
+      *pte &= ~PTE_W;
+      *pte |= PTE_COW;
     }
+    
+    pa = PTE_ADDR(*pte);
+    flags = PTE_FLAGS(*pte);
+    if (mappages(d, (void*)i, PGSIZE, V2P(pa), flags) < 0)
+      goto bad;
   }
+  return d;
+
+bad:
+  freevm(d);
+  return 0;
 }
 
 uint* getpage(pde_t* pgdir, char* virtualendereco) {

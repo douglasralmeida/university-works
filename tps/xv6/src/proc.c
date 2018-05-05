@@ -163,8 +163,8 @@ int growproc(int n) {
   return 0;
 }
 
-// Cria um novo processo copiando p como pai.
-// Configuraa pilha para retornar como sendo uma chamada de sistema.
+// Cria um novo processo copiando np do pai.
+// Configura pilha para retornar como sendo uma chamada de sistema.
 // O chamador deve configurar o estado do processo retornado como RUNNABLE.
 int fork(void) {
   int i, pid;
@@ -203,6 +203,10 @@ int fork(void) {
   return pid;
 }
 
+// Cria um novo processo copiando np do pai.
+// Usa a técnica de copy on write.
+// Configura pilha para retornar como sendo uma chamada de sistema.
+// O chamador deve configurar o estado do processo retornado como RUNNABLE.
 int forkcow(void) {
   int i, pid;
   struct proc *np;
@@ -213,10 +217,13 @@ int forkcow(void) {
     return -1;
   }
 
-  // Varre o diretorio de paginas marcando cada pagina encontrada
-  // com o bit Copy-On-Write
-  np->pgdir = curproc->pgdir;
-  markcow(curproc->pgdir);
+  // Copia o estado do processo de proc atual aplicando CoW.
+  if ((np->pgdir = copyuvm_cow(curproc->pgdir, curproc->sz)) == 0) {
+    kfree(np->kstack);
+    np->kstack = 0;
+    np->state = UNUSED;
+    return -1;
+  }
 
   np->sz = curproc->sz;
   np->parent = curproc;
