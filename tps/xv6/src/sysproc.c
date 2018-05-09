@@ -97,43 +97,23 @@ int sys_date(void) {
 //converte endereços de memória virtual em endereços de memória real
 int sys_virt2real(void) {
   char* endereco;
-  pde_t* temp;
-
+  
   if (argstr(0, &endereco) < 0)
     return -1;
     
-  temp = getpage(myproc()->pgdir, endereco);
-  uitoa(*temp, endereco);
-      
+  va2pa(endereco);
+       
   return 0;
 }
 
 //retorna o numero de páginas utilizadas pelo processo atual
 int sys_num_pages(void) {
-  int i = 0;
-  int num = 0; //Contador
-  pde_t* pgdir = myproc()->pgdir; //Diretório de páginas do proc. atual
-  pte_t* pgtab; //Moldura de página
-  uint endereco; //Endereço de memória
+  int num;
  
   if (argint(0, &num) < 0)
     return -1;
-
-  //Varre o diretório de páginas
-  for (i = 0; i < 1; i++) {
-    //Para cada tabela encontrada...
-    if (pgdir[i] & PTE_P) {
-      for (endereco = PGROUNDUP(0); endereco < KERNBASE; endereco += PGSIZE) {
-        pgtab = getpage(pgdir+i, (char*)endereco);
-        if (!pgtab)
-          endereco = PGADDR(PDX(endereco) + 1, 0, 0) - PGSIZE;
-        else if((*pgtab & PTE_P) != 0) {
-          num++;
-          *pgtab = 0;
-        }
-      }    
-    }
-  }
+    
+  num = countpages();
 
   return 0;
 }

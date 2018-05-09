@@ -353,9 +353,9 @@ int copyout(pde_t *pgdir, uint va, void *p, uint len) {
 // Cria uma cópia da tabela de páginas do processo pai
 // aplicando a técnica de copy on write
 pde_t* copyuvm_cow(pde_t *pgdir, uint sz) {
+  uint pa, i, flags;
   pde_t *d;
   pte_t *pte;
-  uint pa, i, flags;
 
   // aloca uma tabela de paginas
   if ((d = setupkvm()) == 0)
@@ -378,20 +378,23 @@ pde_t* copyuvm_cow(pde_t *pgdir, uint sz) {
     } else {
       *pte |= PTE_SOR;
     }
-    
     pa = PTE_ADDR(*pte);
     flags = PTE_FLAGS(*pte);
     if (mappages(d, (void*)i, PGSIZE, V2P(pa), flags) < 0)
       goto bad;
+
+    //Incrementa o contador de referências de memória compartilhada
+    inc_shdcount(pa);
   }
   return d;
 
 bad:
   freevm(d);
+  lcr3(V2P(pgdir));
   return 0;
 }
 
-int copypage(pte_t* pte) {
+void copypage(pte_t* pte) {
   char *mem;
   uint pa = PTE_ADDR(*pte);
   struct proc* curproc = myproc();
@@ -399,14 +402,26 @@ int copypage(pte_t* pte) {
   if ((mem = kalloc()) == 0) {
     cprintf("Page fault out of memory, kill proc %s with pid %d\n", curproc->name, curproc->pid);
     curproc->killed = 1;
-    
-    return 0;
+
+    return;
   }
   memmove(mem, (char*)P2V(pa), PGSIZE);
-  *pte |= PTE_W;
   *pte = V2P(mem) | PTE_P | PTE_U | PTE_W;
+}
+
+int countpages() { 
+  int i = 0;
+  int num = 0;                    // Contador
+  pde_t* pgdir = myproc()->pgdir; // Diretório de páginas do proc. atual
+  pte_t* pte;                     // Página
+ 
+  for (i = 0; i < KERNBASE; i += PGSIZE) {
+    pte = walkpgdir(pgdir, (void *)i, 0);
+    if ((pte) || ((*pte & PTE_P)))
+      num++;
+  }
   
-  return 1;
+  return num;
 }
 
 uint* getpage(pde_t* pgdir, char* virtualendereco) {
@@ -415,18 +430,18 @@ uint* getpage(pde_t* pgdir, char* virtualendereco) {
 
 //Trata a trap pagefault gerada pela cpu
 void pgfault(uint code) {
-  uint va;
+  uint pa, va, shdcount;
   pte_t* pte;
   struct proc* curproc = myproc();
   struct cpu* curcpu = mycpu();
   
   // endereço virtual que gerou o pagefault está no registrador CR2
   va = rcr2();
-
+  
   // procura pela moldura no diretório de páginas
   pte = walkpgdir(curproc->pgdir, (char*)va, 0);
   
-  // checa a validade da va e pte
+   // checa a validade da va e pte
   if (va >= KERNBASE || (!pte) || !(*pte & PTE_P) || !(*pte & PTE_U)) {
     cprintf("Acesso a memória inválido (VADDR_INVALIDO): CPU %d VA 0x%x, processo %s com pid %d.\nProcesso será encerrado.\n", curcpu->apicid, va, curproc->name, myproc()->pid);
     //mata o processo que gerou page fault
@@ -438,15 +453,35 @@ void pgfault(uint code) {
   // checa se a página é somente-leitura e está marcada com CoW
   if (!(*pte & PTE_W) && (*pte & PTE_COW)) {
     //
-    if (copypage(pte)) {
-      // Após página ser copiada, tenta manipulá-la novamente
-      lcr3(V2P(curproc->pgdir));
-      
-      return;
-    }
+    pa = PTE_ADDR(*pte);
+    shdcount = get_shdcount(pa);
+    
+    if (shdcount > 1) {
+      copypage(pte);
+      dec_shdcount(pa);
+    } else if (shdcount == 1) {
+      // remove the read-only restriction on the trapping page
+      *pte |= PTE_W;
+    }    
+
+    //tentar manipulá-la novamente
+    lcr3(V2P(curproc->pgdir));
+
+    return;
   }
   
   //Pagefault não tratável
   cprintf("Falha na página de memória (PGFAULT_DESCONHECIDO): CPU %d VA 0x%x, processo %s com pid %d.\nProcesso será encerrado.\n", curcpu->apicid, va, curproc->name, myproc()->pid);
   curproc->killed = 1;
+}
+
+void va2pa(char* endereco) {
+  pte_t *pte;
+  pde_t* pgdir = myproc()->pgdir; //Diretório de páginas do proc. atual
+
+  pte = walkpgdir(pgdir, (void*)endereco, 0);
+  if ((!pte) || (!(*pte & PTE_P)))
+    *endereco = 0;
+  else
+    *endereco = (PTE_ADDR(*pte));
 }

@@ -68,6 +68,9 @@ char*           kalloc(void);
 void            kfree(char*);
 void            kinit1(void*, void*);
 void            kinit2(void*, void*);
+void            dec_shdcount(const uint);
+uint            get_shdcount(const uint);
+void            inc_shdcount(const uint);
 
 // kbd.c
 void            kbdintr(void);
@@ -101,7 +104,6 @@ void            pipeclose(struct pipe*, int);
 int             piperead(struct pipe*, char*, int);
 int             pipewrite(struct pipe*, char*, int);
 
-//PAGEBREAK: 16
 // proc.c
 int             cpuid(void);
 void            exit(void);
@@ -187,8 +189,10 @@ void            switchkvm(void);
 int             copyout(pde_t*, uint, void*, uint);
 void            clearpteu(pde_t *pgdir, char *uva);
 pde_t*          copyuvm_cow(pde_t*, uint);
+int             countpages();
 uint*           getpage(pde_t*, char*);
 void            pgfault(uint);
+void            va2pa(char*);
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
