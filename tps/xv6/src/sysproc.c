@@ -101,7 +101,7 @@ int sys_virt2real(void) {
   if (argstr(0, &endereco) < 0)
     return -1;
     
-  va2pa(endereco);
+  va2pa((uint*)endereco);
        
   return 0;
 }

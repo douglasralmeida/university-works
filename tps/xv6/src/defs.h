@@ -192,7 +192,7 @@ pde_t*          copyuvm_cow(pde_t*, uint);
 int             countpages();
 uint*           getpage(pde_t*, char*);
 void            pgfault(uint);
-void            va2pa(char*);
+void            va2pa(uint*);
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))

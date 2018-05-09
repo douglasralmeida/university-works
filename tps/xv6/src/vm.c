@@ -353,7 +353,7 @@ int copyout(pde_t *pgdir, uint va, void *p, uint len) {
 // Cria uma cópia da tabela de páginas do processo pai
 // aplicando a técnica de copy on write
 pde_t* copyuvm_cow(pde_t *pgdir, uint sz) {
-  uint pa, i, flags;
+  uint pa, i;
   pde_t *d;
   pte_t *pte;
 
@@ -375,23 +375,14 @@ pde_t* copyuvm_cow(pde_t *pgdir, uint sz) {
     if (*pte & PTE_W) {
       *pte &= ~PTE_W;
       *pte |= PTE_COW;
-    } else {
-      *pte |= PTE_SOR;
     }
     pa = PTE_ADDR(*pte);
-    flags = PTE_FLAGS(*pte);
-    if (mappages(d, (void*)i, PGSIZE, V2P(pa), flags) < 0)
-      goto bad;
 
     //Incrementa o contador de referências de memória compartilhada
     inc_shdcount(pa);
   }
+  
   return d;
-
-bad:
-  freevm(d);
-  lcr3(V2P(pgdir));
-  return 0;
 }
 
 void copypage(pte_t* pte) {
@@ -400,7 +391,7 @@ void copypage(pte_t* pte) {
   struct proc* curproc = myproc();
 
   if ((mem = kalloc()) == 0) {
-    cprintf("Page fault out of memory, kill proc %s with pid %d\n", curproc->name, curproc->pid);
+    cprintf("Memória insuficiente (PGFAULT_FALTADEMEMORIA): proc %s com pid %d\n", curproc->name, curproc->pid);
     curproc->killed = 1;
 
     return;
@@ -413,11 +404,12 @@ int countpages() {
   int i = 0;
   int num = 0;                    // Contador
   pde_t* pgdir = myproc()->pgdir; // Diretório de páginas do proc. atual
+  uint sz = myproc()->sz; // 
   pte_t* pte;                     // Página
  
-  for (i = 0; i < KERNBASE; i += PGSIZE) {
+  for (i = 0; i < sz; i += PGSIZE) {
     pte = walkpgdir(pgdir, (void *)i, 0);
-    if ((pte) || ((*pte & PTE_P)))
+    if ((pte) && ((*pte & PTE_P)))
       num++;
   }
   
@@ -455,7 +447,6 @@ void pgfault(uint code) {
     //
     pa = PTE_ADDR(*pte);
     shdcount = get_shdcount(pa);
-    
     if (shdcount > 1) {
       copypage(pte);
       dec_shdcount(pa);
@@ -475,7 +466,7 @@ void pgfault(uint code) {
   curproc->killed = 1;
 }
 
-void va2pa(char* endereco) {
+void va2pa(uint* endereco) {
   pte_t *pte;
   pde_t* pgdir = myproc()->pgdir; //Diretório de páginas do proc. atual
 
