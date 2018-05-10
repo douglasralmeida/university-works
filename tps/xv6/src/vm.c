@@ -393,6 +393,7 @@ bad:
   return 0;
 }
 
+// Faz uma cópia do conteúdo de uma página na memória
 int copypage(pte_t* pte) {
   char *mem;
   uint pa = PTE_ADDR(*pte);
@@ -476,6 +477,7 @@ void pgfault(uint code) {
   curproc->killed = 1;
 }
 
+// Converte um endereço lógico para seu equivalente real
 uint va2pa(uint* endereco) {
   pte_t *pte;
   pde_t* pgdir = myproc()->pgdir; //Diretório de páginas do proc. atual

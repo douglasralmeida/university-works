@@ -1,6 +1,6 @@
 ## MAKEFILE DO XV6 MODIFICADO
-#  Aluno: 
-#  Aluno: 
+#  Aluno: DOUGLAS RODRIGUES DE ALMEIDA
+#  Aluno: SAULO G. WEIKERT BICALHO
 
 # Para compilação cruzada (em outro SO, ex: MacOS X)
 # TOOLPREFIX = i386-jos-elf
