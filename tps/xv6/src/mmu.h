@@ -141,8 +141,7 @@ struct segdesc {
 #define PTE_D           0x040   // Dirty
 #define PTE_PS          0x080   // Page Size
 #define PTE_MBZ         0x180   // Bits must be zero
-#define PTE_COW         0x200   // Bit copy on write
-#define PTE_SOR         0x300   // Bit shared only read
+#define PTE_COW         0x800   // Bit copy on write
 
 // Address in page table or page directory entry
 #define PTE_ADDR(pte)   ((uint)(pte) & ~0xFFF)
