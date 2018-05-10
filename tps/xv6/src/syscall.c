@@ -134,8 +134,7 @@ void syscall(void) {
   if (num > 0 && num < NELEM(syscalls) && syscalls[num]) {
     curproc->tf->eax = syscalls[num]();
   } else {
-    cprintf("%d %s: chamada de sistema desconhecida: %d\n",
-            curproc->pid, curproc->name, num);
+    cprintf("%d %s: chamada de sistema desconhecida: %d\n", curproc->pid, curproc->name, num);
     curproc->tf->eax = -1;
   }
 }

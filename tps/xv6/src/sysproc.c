@@ -101,21 +101,12 @@ int sys_virt2real(void) {
   if (argstr(0, &endereco) < 0)
     return -1;
     
-  va2pa((uint*)endereco);
-       
-  return 0;
+  return (int)va2pa((uint*)endereco);
 }
 
 //retorna o numero de páginas utilizadas pelo processo atual
-int sys_num_pages(void) {
-  int num;
- 
-  if (argint(0, &num) < 0)
-    return -1;
-    
-  num = countpages();
-
-  return 0;
+int sys_num_pages(void) {   
+  return (int)countpages();
 }
 
 //faz um fork com copy-on-write

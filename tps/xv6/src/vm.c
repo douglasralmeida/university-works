@@ -406,24 +406,11 @@ int copypage(pte_t* pte) {
   return 1;
 }
 
-int countpages() { 
-  uint i = 0;
-  int num = 0;                    // Contador
-  pde_t* pgdir = myproc()->pgdir; // Diretório de páginas do proc. atual
-  uint sz = myproc()->sz;         //
-  pte_t* pte;                     // Página
+// Conta quantas páginas o processo atual está alocando
+uint countpages() { 
+  uint sz = myproc()->sz;         //Tamanho do processo na memória
  
-  for (i = 0; i < sz; i += PGSIZE) {
-    pte = walkpgdir(pgdir, (void *)i, 0);
-    if ((pte) && ((*pte & PTE_P)))
-      num++;
-  }
-  
-  return num;
-}
-
-uint* getpage(pde_t* pgdir, char* virtualendereco) {
-  return walkpgdir(pgdir, virtualendereco, 0);
+  return PGROUNDUP(sz) / PGSIZE;
 }
 
 //Trata a trap pagefault gerada pela cpu
@@ -489,13 +476,13 @@ void pgfault(uint code) {
   curproc->killed = 1;
 }
 
-void va2pa(uint* endereco) {
+uint va2pa(uint* endereco) {
   pte_t *pte;
   pde_t* pgdir = myproc()->pgdir; //Diretório de páginas do proc. atual
 
   pte = walkpgdir(pgdir, (void*)endereco, 0);
   if ((!pte) || (!(*pte & PTE_P)))
-    *endereco = 0;
+    return 0;
   else
-    *endereco = (PTE_ADDR(*pte));
+    return (PTE_ADDR(*pte));
 }
