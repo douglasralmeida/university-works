@@ -6,7 +6,7 @@
 
 PROJECTNAME=dcc_fs_shell
 CC=gcc
-CFLAGS=-c -Wall -Wextra -Werror -pedantic $(DEFS)
+CFLAGS=-c -Wall -Wextra -Werror -pedantic
 DBGFLAGS=-ggdb -fno-inline -fno-omit-frame-pointer
 BINDIR=bin
 OBJDIR=obj
@@ -19,10 +19,15 @@ $(OBJDIR)/%.o: $(SOURCEDIR)/%.c
 	@echo Compilando $<...
 	$(CC) $(DBGFLAGS) $(CFLAGS) $< -o $@
 
-$(PROJECTNAME): $(OBJECTS) 
+$(PROJECTNAME): $(OBJECTS)
 	@echo 
 	@echo Gerando executavel...
 	$(CC) -o $(BINDIR)/$@ $^
+
+fs.img:
+	@echo 
+	@echo Gerando imagem...
+	touch $@
 
 .PHONY: all
 all:
@@ -35,6 +40,8 @@ clean:
 	rm -f $(BINDIR)/$(PROJECTNAME)
 	@echo Excluindo objetos...
 	rm -f $(OBJECTS)
+	@echo Excluindo imagem...
+	rm -f fs.img
 
 .PHONY: debug
 debug:
@@ -45,5 +52,7 @@ run:
 	./$(BINDIR)/$(PROJECTNAME)
 
 .PHONY: test
-test:
-	./$(BINDIR)/$(PROJECTNAME)
+test: fs.img
+	@echo 
+	@echo Executando aplicativo...
+	./$(BINDIR)/$(PROJECTNAME) fs.img
