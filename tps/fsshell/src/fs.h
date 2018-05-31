@@ -8,16 +8,17 @@
 #ifndef FS_H
 #define FS_H
 
-/* Tamanho do buffer da linha de comando atual */
-#define SHBUFFER 100
-
 typedef unsigned short uint16;
 
 typedef unsigned int uint32;
 
+/****  EXT2  ****/
+
 struct ext2_super_block {
   uint32 inodes_count;          /* Contador de Inodes */
 };
+
+/****  FS  ****/
 
 struct {
   char* imgnome;
@@ -25,34 +26,54 @@ struct {
   char  pwd[129];
 } fs;
 
-/****  COMANDOS DO SHELL  ****/
+/****  SHELL  ****/
+
+/* Tamanho do buffer da linha de comando atual */
+#define SHBUFFER 257
+
+/* Tamanho do buffer de um comando */
+#define SHCMDBUFFER 17
 
 /* Quantidade de comandos */
-#define SHCMDSMAX 1
+#define SHCMDSQUANT 1
 
-/* Cabeçalho dos comandos */
+/* Cabeçalho dos comandos do shell */
 void sh_cmd_pwd(void);
 
 /* Estruturas para o vetor de comandos do shell */
-typedef void (*shcmd)(void);
+typedef void (*shcmd_t)(void);
 
-shcmd shcmds_func[SHCMDSMAX] = {
+shcmd_t shcmds_func[SHCMDSQUANT] = {
   &sh_cmd_pwd
 };
 
 /* Cada string deve estar na mesma posição da
    sua respectiva função em shcmds_func */
-char* shcmds_name[SHCMDSMAX] = {
+char* shcmds_name[SHCMDSQUANT] = {
   "pwd"
 };
 
-static struct {
-  shcmd* functions;
+struct {
+  shcmd_t* functions;
   char** names;
 } shcmds;
 
-int shcmds_lookup(char* cmd);
+struct {
+  char cmd[SHCMDBUFFER];
+  char* arg;
+} usercmd;
 
 void shcmds_call(int index);
+
+int shcmds_lookup(char* cmd);
+
+/* Funções do shell */
+int sh_getcmd(char *buf, int nbuf);
+
+void sh_init();
+
+void sh_parse(char* line);
+
+void sh_run();
 
 #endif
