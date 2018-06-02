@@ -12,6 +12,8 @@
 #include "unistd.h"
 #include "fcntl.h"
 #include "fs.h"
+#include "sys/mman.h"
+#include "sys/stat.h"
 
 /****    STRING UTILS    ****/
 
@@ -38,22 +40,70 @@ void fs_init() {
   fs.pwd[1] = '\0';
 }
 
+void fs_exit() {
+  munmap(fs.ptr, fs.size);
+  close(fs.imgdesc);
+}
+
 /****    IMG LEITOR    ****/
 
 int img_open(char* nomearq) {
+  struct stat imgstat;
+  
+  /* abre o arquivo da imagem */
   fs.imgdesc = open(nomearq, O_RDONLY);
   if (fs.imgdesc == -1) {
-      perror("Falha ao abrir imagem.");
-      return 0;
-   }
-  fs.imgnome = nomearq;
-    
+    perror("Falha ao abrir imagem.");
+    return 0;
+  }
+  fs.imgname = nomearq;
+  
+  /* lê metadados do arquivo da imagem */
+  if (fstat (fs.imgdesc, &imgstat) == -1) {
+    close(fs.imgdesc);
+    perror("Falha ao ler informações da imagem.");
+    return 0;
+  }
+  fs.size = imgstat.st_size;
+  
+  /* checa o tamanho do arquivo */
+  if (fs.size == 0) {
+    close(fs.imgdesc);
+    fprintf(stderr, "Arquivo de imagem inválido. Tamanho de arquivo não pode ser nulo.\n");
+    return 0;
+  }
+  
+  /* mapeia o arquivo da imagem na memória */
+  fs.ptr = mmap(NULL, fs.size, PROT_READ, MAP_PRIVATE, fs.imgdesc, 0);
+  if (fs.ptr == MAP_FAILED) {
+    close(fs.imgdesc);
+    perror("Falha ao mapear arquivo da imagem na memória.");
+    return 0;
+  }
+  
+  /* carrega o primeiro superbloco */
+  fs.super_block = (void*)((char*)fs.ptr + BOOT_OFFSET);
+  fs.block_size = BLOCK_SIZE(fs.super_block->log_block_size);
+  
+  /* checa o número mágico do ext2 */
+  if (fs.super_block->magic != EXT2_SUPER_MAGIC) {
+    munmap(fs.ptr, fs.size);
+    close(fs.imgdesc);
+    fprintf(stderr, "Arquivo de imagem inválido. Formato irreconhecível\n");
+    return 0;
+  }
+
   return 1;
 }
 
 /****    SHELL    ****/
 
 /* comandos do shell */
+void sh_cmd_info() {
+  fprintf(stdout, "Nome do arquivo de imagem:  %s\n", fs.imgname);
+  fprintf(stdout, "Tamanho padrão de um bloco: %u KB", fs.block_size / 1024);
+}
+
 void sh_cmd_pwd() {
   fputs(fs.pwd, stdout);
 }
@@ -70,7 +120,7 @@ int shcmds_lookup(char* cmd) {
     if (!strcmp(cmd, shcmds.names[i]))
       return i;
   }
-  
+
   return i;
 }
 
@@ -78,7 +128,7 @@ int shcmds_lookup(char* cmd) {
 int sh_getcmd(char *buf, int nbuf) {
   /* Checa se o stdin é um terminal */
   if (isatty(fileno(stdin)))
-    fprintf(stdout, "%s> ", fs.imgnome);
+    fprintf(stdout, "%s> ", fs.imgname);
   memset(buf, 0, nbuf);
   fgets(buf, nbuf, stdin);
   if (buf[0] == 0) /* EOF (hora de ir embora, tchau) */
@@ -146,5 +196,6 @@ int main(int argc, char *argv[]) {
     exit(EXIT_FAILURE);
   }
   sh_run();
+  fs_exit();
   exit(EXIT_SUCCESS);
 }

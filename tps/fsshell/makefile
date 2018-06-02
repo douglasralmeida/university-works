@@ -27,7 +27,8 @@ $(PROJECTNAME): $(OBJECTS)
 fs.img:
 	@echo 
 	@echo Gerando imagem...
-	touch $@
+	dd if=/dev/zero of=$@ bs=1024 count=100
+	mkfs.ext2 $@
 
 .PHONY: all
 all:
