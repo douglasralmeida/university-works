@@ -89,7 +89,7 @@ int img_open(char* nomearq) {
   if (fs.super_block->magic != EXT2_SUPER_MAGIC) {
     munmap(fs.ptr, fs.size);
     close(fs.imgdesc);
-    fprintf(stderr, "Arquivo de imagem inválido. Formato irreconhecível\n");
+    fprintf(stderr, "Arquivo de imagem inválido. Formato irreconhecível.\n");
     return 0;
   }
 
@@ -104,8 +104,32 @@ void sh_cmd_info() {
   fprintf(stdout, "Tamanho padrão de um bloco: %u KB", fs.block_size / 1024);
 }
 
+void sh_cmd_cd(void) {
+  fputs("Comando 'cd' ainda não implementado.", stdout);
+}
+
+void sh_cmd_exit(void) {
+  usercmd.exiting = 1;
+}
+
+void sh_cmd_find(void) {
+  fputs("Comando 'find' ainda não implementado.", stdout);
+}
+
+void sh_cmd_ls(void) {
+  fputs("Comando 'ls' ainda não implementado.", stdout);
+}
+
 void sh_cmd_pwd() {
   fputs(fs.pwd, stdout);
+}
+
+void sh_cmd_sb(void) {
+  fputs("Comando 'sb' ainda não implementado.", stdout);
+}
+
+void sh_cmd_stat(void) {
+  fputs("Comando 'stat' ainda não implementado.", stdout);
 }
 
 void shcmds_call(int index) {
@@ -139,10 +163,33 @@ int sh_getcmd(char *buf, int nbuf) {
 void sh_init() {
   shcmds.functions = shcmds_func;
   shcmds.names = shcmds_name;
+  usercmd.exiting = 0;
+}
+
+int str_split(char* line, char* dels, char** array, int max) {
+  int i = 0;
+  char* token;
+  
+  token = strtok(line, dels);
+  while (token != NULL && i < max) {
+    array[i] = token;
+    i++;
+    token = strtok(NULL, dels);
+  } 
+  array[i] = NULL;
+  
+  return i;
 }
 
 void sh_parse(char* line) {
-  int i = 0;
+  size_t len = strlen(line);
+  
+  if (line[len - 1] == '\n') {
+    line[len -1] = '\0';
+  }
+  usercmd.argc = str_split(line, " ", usercmd.argv, ARG_MAX);
+  
+/*  int i = 0; 
   
   while (line[i] != '\0') {
     if (i == SHCMDBUFFER)
@@ -157,7 +204,7 @@ void sh_parse(char* line) {
   while (isspace((unsigned char) line[i])) {
     i++;
   }
-  usercmd.arg = line + i;
+  usercmd.arg = line + i;*/
 }
 
 void sh_run() {
@@ -165,21 +212,18 @@ void sh_run() {
   int cmdindex;
 
   while (sh_getcmd(buf, sizeof(buf))) {
-    str_trim(buf);
-    if (buf[0] == '\0')
-      continue;
-
-    /* comando exit */
-    if (buf[0] == 'e' && buf[1] == 'x' && buf[2] == 'i' && buf[3] == 't' && buf[4] == '\0') {
-      fflush (stdout);
-      return;  
-    }
     sh_parse(buf);
-    cmdindex = shcmds_lookup(usercmd.cmd);
-    if (cmdindex >= 0)
-      shcmds_call(cmdindex);
-    else
-      fprintf(stderr, "'%s' não foi reconhecido como um comando válido.\n", usercmd.cmd);
+    if (usercmd.argc > 0) {
+      cmdindex = shcmds_lookup(usercmd.argv[0]);
+      if (cmdindex >= 0)
+        shcmds_call(cmdindex);
+      else
+        fprintf(stderr, "'%s' não foi reconhecido como um comando válido.\n", usercmd.argv[0]);
+      if (usercmd.exiting) {
+        fflush(stdout);
+        return;
+      }
+    }
   }
 }
 

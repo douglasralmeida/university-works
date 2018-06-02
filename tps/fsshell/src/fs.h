@@ -23,6 +23,12 @@ typedef unsigned int uint32;
 /* número mágico do ext2 */
 #define EXT2_SUPER_MAGIC 0xEF53
 
+/*
+   um superbloco tem 1024 bytes. ele contém metadados
+   do bloco no qual pertence. os metadados formam um
+   vetor de inteiros, alguns de 16 bits, outros de 32 bits.
+*/
+/* estrutura do superbloco */
 typedef struct e_sblk {
   uint32 inodes_count;          /* contador de nós i          */
   uint32 reserved1[5];          /* não utilizado neste TP     */
@@ -36,44 +42,69 @@ typedef struct e_sblk {
 /****  FS  ****/
 
 struct {
-  char*             imgname;
-  int               imgdesc;
-  char              pwd[129];
-  void*             ptr;
-  off_t             size;
-  ext2_super_block* super_block;
-  uint32            block_size;
+  char*             imgname;      /* nome do arquivo de imagem           */
+  int               imgdesc;      /* descritor (fd) do arquivo de imagem */
+  char              pwd[129];     /* diretório atual                     */
+  void*             ptr;          /* ponteiro para o arquivo img mapeado */
+  off_t             size;         /* tamanho do arquivo de imagem        */
+  ext2_super_block* super_block;  /* ponteiro para um superbloco         */
+  uint32            block_size;   /* tamanho padrão de um bloco          */
 } fs;
 
 /****  SHELL  ****/
 
 /* Tamanho do buffer da linha de comando atual */
-#define SHBUFFER 257
+#define SHBUFFER 512
 
-/* Tamanho do buffer de um comando */
-#define SHCMDBUFFER 17
+/* Quantidade máxima de argumentos de um comando */
+#define ARG_MAX 4096
 
 /* Quantidade de comandos */
-#define SHCMDSQUANT 2
+#define SHCMDSQUANT 8
 
 /* Cabeçalho dos comandos do shell */
-void sh_cmd_pwd(void);
 
 void sh_cmd_info(void);
+
+void sh_cmd_cd(void);
+
+void sh_cmd_exit(void);
+
+void sh_cmd_find(void);
+
+void sh_cmd_ls(void);
+
+void sh_cmd_pwd(void);
+
+void sh_cmd_sb(void);
+
+void sh_cmd_stat(void);
 
 /* Estruturas para o vetor de comandos do shell */
 typedef void (*shcmd_t)(void);
 
 shcmd_t shcmds_func[SHCMDSQUANT] = {
   &sh_cmd_info,
-  &sh_cmd_pwd
+  &sh_cmd_cd,
+  &sh_cmd_exit,
+  &sh_cmd_find,
+  &sh_cmd_ls,
+  &sh_cmd_pwd,
+  &sh_cmd_sb,
+  &sh_cmd_stat
 };
 
 /* Cada string deve estar na mesma posição da
    sua respectiva função em shcmds_func */
 char* shcmds_name[SHCMDSQUANT] = {
   "info",
-  "pwd"
+  "cd",
+  "exit",
+  "find",
+  "ls",
+  "pwd",
+  "sb",
+  "stat"
 };
 
 struct {
@@ -82,8 +113,9 @@ struct {
 } shcmds;
 
 struct {
-  char cmd[SHCMDBUFFER];
-  char* arg;
+  int argc;
+  char* argv[ARG_MAX];
+  int exiting;
 } usercmd;
 
 void shcmds_call(int index);
