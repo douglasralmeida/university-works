@@ -17,6 +17,22 @@
 
 /****    STRING UTILS    ****/
 
+int str_split(char* line, char* dels, char** array, int max) {
+  int i = 0;
+  char* token;
+  
+  token = strtok(line, dels);
+  while (token != NULL && i < max) {
+    array[i] = token;
+    i++;
+    token = strtok(NULL, dels);
+  } 
+  array[i] = NULL;
+  
+  return i;
+}
+
+
 void str_trim(char *str) {
   int i;
   int inicio = 0;
@@ -32,6 +48,45 @@ void str_trim(char *str) {
   str[i - inicio] = '\0';
 }
 
+/*  */
+void* ext2_lseek(const uint32 numbytes) {
+  return (void*)((char*)fs.ptr + BOOT_OFFSET + numbytes);
+}
+                 
+void* ext2_getblock(const uint32 numblock) {
+  return ext2_lseek(numblock * fs.block_size);
+}
+
+ext2_group_desc* ext2_getgroupdesc(const uint32 inode) {
+  uint32 offset;
+  
+  offset = sizeof(fs.super_block) + (inode - 1) / fs.super_block->inodes_per_group;
+  return (ext2_group_desc*)ext2_lseek(offset);
+}
+
+ext2_inode* ext2_getinode(const uint32 inode) {
+  ext2_group_desc* gd = 0;
+  void* block = 0;
+  unsigned int index = 0;
+  unsigned int inodes_size = 128;
+
+  gd = ext2_getgroupdesc(inode);
+  index = (inode - 1) % fs.super_block->inodes_per_group;
+  block = ext2_getblock(gd->inode_table);
+
+  return  (ext2_inode*)ext2_getblock((unsigned long)block + index * inodes_size);
+}
+
+ext2_dir_entry* ext2_getdirentries(const uint32 block, const uint32 inode) {
+  ext2_inode* i;
+  ext2_dir_entry* d;
+  
+  i = ext2_getinode(inode);
+  d = (ext2_dir_entry*)ext2_getblock(i->block[block]);
+  
+  return d;
+}
+
 /****    FS    ****/
 
 void fs_init() {
@@ -43,6 +98,11 @@ void fs_init() {
 void fs_exit() {
   munmap(fs.ptr, fs.size);
   close(fs.imgdesc);
+}
+
+void fs_setcurrdir(const uint32 inode) {
+  fs.curr_dir.data = ext2_getinode(inode);
+  fs.curr_dir.inode = inode;
 }
 
 /****    IMG LEITOR    ****/
@@ -110,6 +170,7 @@ void sh_cmd_cd(void) {
 
 void sh_cmd_exit(void) {
   usercmd.exiting = 1;
+  fputs("Saindo...", stdout);
 }
 
 void sh_cmd_find(void) {
@@ -166,21 +227,6 @@ void sh_init() {
   usercmd.exiting = 0;
 }
 
-int str_split(char* line, char* dels, char** array, int max) {
-  int i = 0;
-  char* token;
-  
-  token = strtok(line, dels);
-  while (token != NULL && i < max) {
-    array[i] = token;
-    i++;
-    token = strtok(NULL, dels);
-  } 
-  array[i] = NULL;
-  
-  return i;
-}
-
 void sh_parse(char* line) {
   size_t len = strlen(line);
   
@@ -188,29 +234,16 @@ void sh_parse(char* line) {
     line[len -1] = '\0';
   }
   usercmd.argc = str_split(line, " ", usercmd.argv, ARG_MAX);
-  
-/*  int i = 0; 
-  
-  while (line[i] != '\0') {
-    if (i == SHCMDBUFFER)
-      break;
-    if (isspace((unsigned char) line[i]))
-      break;
-    else
-      usercmd.cmd[i] = line[i];
-    i++;
-  }
-  usercmd.cmd[i] = '\0';
-  while (isspace((unsigned char) line[i])) {
-    i++;
-  }
-  usercmd.arg = line + i;*/
 }
 
 void sh_run() {
   static char buf[SHBUFFER];
   int cmdindex;
+  
+  /* começa com o diretório atual no diretório raiz */
+  fs_setcurrdir(EXT2_ROOT_INO);
 
+  /* espera por um comando da entrada */
   while (sh_getcmd(buf, sizeof(buf))) {
     sh_parse(buf);
     if (usercmd.argc > 0) {
