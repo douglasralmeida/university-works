@@ -14,25 +14,40 @@ typedef unsigned short uint16;
 
 typedef unsigned int uint32;
 
+/*#define SHOW_DEBUGINFO 0*/
+
 /****  EXT2  ****/
 
 /* espaço para o setor de inicialização no HD */
-#define BOOT_OFFSET      1024
+#define BOOT_OFFSET 1024
 
 #define BLOCK_SIZE(x) \
   (1024 << x)
 
 /* tamanho máximo de um nome de arquivo */
-#define EXT2_NAME_LEN    255
+#define EXT2_NAME_LEN 255
+
+/* offset entre dir_entry e dir_entry->name */
+#define EXT2_NAME_OFFSET 8
 
 /* número mágico do ext2 */
 #define EXT2_SUPER_MAGIC 0xEF53
 
+/* número de blocos de dados */
+
+#define	EXT2_NDIR_BLOCKS 12
+#define	EXT2_IND_BLOCK EXT2_NDIR_BLOCKS
+#define	EXT2_DIND_BLOCK  (EXT2_IND_BLOCK + 1)
+#define	EXT2_TIND_BLOCK  (EXT2_DIND_BLOCK + 1)
+#define	EXT2_N_BLOCKS    (EXT2_TIND_BLOCK + 1)
 
 /* Nós i especiais */
 
 /* nó i do diretório raiz */
-#define EXT2_ROOT_INO		 2
+#define EXT2_ROOT_INO	2
+
+/* Flags do nó i */
+#define EXT2_INDEX_FL 0x00001000   /* diretório com índice hash */
 
 /* estrutura do superbloco
  *
@@ -51,7 +66,10 @@ typedef struct e_sblk {
   uint32 reserved2[3];          /* não utilizado neste TP                  */
   uint16 magic;                 /* assinatura mágica do ext2               */
   uint16 state;                 /* estado atual do fs                      */
-  uint32 reserved3[241];        /* não utilizado neste TP                  */
+  uint32 reserved3[7];          /* não utilizado neste TP                  */
+  uint16 inode_size;            /* tamanho da estrutura ext2_inode         */
+  uint16 block_group_nr;        /* num. do grupo de blocos que hospeda este superbloco */
+  uint32 reserved4[233];        /* não utilizado neste TP                  */
 } ext2_super_block;
 
 /* descritores do grupo de blocos
@@ -62,7 +80,7 @@ typedef struct e_sblk {
  */
 typedef struct e_gdesc {
   uint32 reserved1[2];          /* não utilizado neste TP                       */
-  uint32 inode_table;           /* endereço do bloco com mapa de bits dos nós i */
+  uint32 inode_table;           /* endereço do bloco da tabela de nós i         */
   uint32 reserved2[5];          /* não utilizado neste TP                       */
 } ext2_group_desc;
 
@@ -73,9 +91,14 @@ typedef struct e_gdesc {
  * outros de 16 bits e outros de 32 bits.
  */
 typedef struct e_in {
-  uint32 reserved1[10];          /* não utilizado neste TP                  */
-  uint32 block[15];             /* ponteiros para os blocos                */
-  uint32 reserved2[7];           /* não utilizado neste TP                  */
+  uint32 reserved1;              /* não utilizado neste TP                        */
+  uint32 size;                   /* tamanho do arquivo                            */
+  uint32 reserved2[5];           /* não utilizado neste TP                        */
+  uint32 blocks;                 /* total de blocos de dados reservados pelo nó-i */
+  uint32 flags;                  /* metadados do nó i                       */
+  uint32 reserved3;              /* não utilizado neste TP                        */
+  uint32 block[EXT2_N_BLOCKS];   /* ponteiros para os blocos                */
+  uint32 reserved4[7];           /* não utilizado neste TP                  */
 } ext2_inode;
 
 /* entrada de diretório
@@ -90,7 +113,7 @@ typedef struct e_dentry {
 	uint16 rec_len;	      /* tamanho da entrada de diretório */
 	uint8  name_len;      /* tamanho do nome da entrada */
 	uint8  file_type;     /* tipo da entrada */
-	char*	 name;          /* nome da entrada (max. 255) */
+	char*	 name;     /* nome da entrada (max. 255) */
 } ext2_dir_entry;
 
 

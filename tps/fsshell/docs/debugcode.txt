@@ -1,0 +1,21 @@
+  printf("GETDIR\n");
+  printf("bloco:                 %u\n", block);
+  printf("Byte Nó i:             %p\n", (void*)((char*)inode - (char*)fs.super_block));
+  printf("Byte Dir Entry:        %p\n", (void*)((char*)d - (char*)fs.super_block));
+
+  printf("GETINODE\n");
+  printf("nó i:                  %u\n", inode);
+  printf("índice:                %u\n", index);
+  printf("GD:                    %p\n", (void*)((char*)gd - (char*)fs.super_block));
+  printf("Bloco da tabela nós i: %u\n", gd->inode_table);
+  printf("Tabela de nós i:       %p\n", (void*)((char*)table - (char*)fs.super_block));
+  printf("Byte Nó i:             %p\n", (void*)((char*)block - (char*)fs.super_block));
+
+  printf("CMD LS\n");
+  printf("posição nó i:      %p\n", (void*)((char*)inode - (char*)fs.super_block));
+  printf("quant. blocos:     %u\n", blocks);
+  printf("diretório hash:    %u\n", inode->flags && EXT2_INDEX_FL);
+  
+  printf("  nó i:      %u\n", dir_entry->inode);
+  printf("  byte nome: %p\n", dir_entry->name);
+

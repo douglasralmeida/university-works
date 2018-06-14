@@ -32,13 +32,14 @@ int str_split(char* line, char* dels, char** array, int max) {
   return i;
 }
 
-
 void str_trim(char *str) {
   int i;
   int inicio = 0;
-  int final = strlen(str) - 1;
+  int final;
+  
   while (isspace((unsigned char) str[inicio]))
     inicio++;
+  final = strlen(str) - 1;
   while ((final >= inicio) && isspace((unsigned char) str[final]))
     final--;
 
@@ -48,41 +49,56 @@ void str_trim(char *str) {
   str[i - inicio] = '\0';
 }
 
-/*  */
+/***   EXT2   ***/
+
+/* caminha x bytes pela imagem */
 void* ext2_lseek(const uint32 numbytes) {
-  return (void*)((char*)fs.ptr + BOOT_OFFSET + numbytes);
+  return (void*)((char*)fs.super_block + numbytes - BOOT_OFFSET);
 }
-                 
+
+/* obtem a posição do bloco */
 void* ext2_getblock(const uint32 numblock) {
   return ext2_lseek(numblock * fs.block_size);
 }
 
 ext2_group_desc* ext2_getgroupdesc(const uint32 inode) {
   uint32 offset;
+  uint32 blockgroup;
+  uint32 block;
   
-  offset = sizeof(fs.super_block) + (inode - 1) / fs.super_block->inodes_per_group;
+  blockgroup = (inode - 1) / fs.super_block->inodes_per_group;
+  block = blockgroup * fs.super_block->blocks_per_group * fs.block_size;
+  offset = block + sizeof(ext2_super_block) + BOOT_OFFSET;
+  
   return (ext2_group_desc*)ext2_lseek(offset);
 }
 
 ext2_inode* ext2_getinode(const uint32 inode) {
   ext2_group_desc* gd = 0;
-  void* block = 0;
   unsigned int index = 0;
-  unsigned int inodes_size = 128;
+  void* table = 0;
+  void* block = 0;
 
-  gd = ext2_getgroupdesc(inode);
+  /* índice do nó i na tabela de nós i */
   index = (inode - 1) % fs.super_block->inodes_per_group;
-  block = ext2_getblock(gd->inode_table);
-
-  return  (ext2_inode*)ext2_getblock((unsigned long)block + index * inodes_size);
+  
+  /* descritores de grupo referente                  *
+   * ao grupo de blocos onde o nó i pertence         */
+  gd = ext2_getgroupdesc(inode);
+  
+  /* tabela de nós i que armazena o nó i */
+  table = ext2_getblock(gd->inode_table);
+  
+  /* nó i */
+  block = (char*)table + index * fs.super_block->inode_size;
+  
+  return  (ext2_inode*)block;
 }
 
-ext2_dir_entry* ext2_getdirentries(const uint32 block, const uint32 inode) {
-  ext2_inode* i;
+ext2_dir_entry* ext2_getdirentries(ext2_inode* inode, const uint32 block) {
   ext2_dir_entry* d;
   
-  i = ext2_getinode(inode);
-  d = (ext2_dir_entry*)ext2_getblock(i->block[block]);
+  d = (ext2_dir_entry*)ext2_getblock(inode->block[block]);
   
   return d;
 }
@@ -161,7 +177,10 @@ int img_open(char* nomearq) {
 /* comandos do shell */
 void sh_cmd_info() {
   fprintf(stdout, "Nome do arquivo de imagem:  %s\n", fs.imgname);
-  fprintf(stdout, "Tamanho padrão de um bloco: %u KB", fs.block_size / 1024);
+  fprintf(stdout, "Tamanho padrão de um bloco: %u KB\n", fs.block_size / 1024);
+  
+  fprintf(stdout, "Tamanho de um nó i:         %u\n", fs.super_block->inode_size);
+  fprintf(stdout, "Quant. de nós i por grupo:  %u\n", fs.super_block->inodes_per_group);
 }
 
 void sh_cmd_cd(void) {
@@ -177,8 +196,32 @@ void sh_cmd_find(void) {
   fputs("Comando 'find' ainda não implementado.", stdout);
 }
 
+void sh_cmd_ls_show(ext2_dir_entry* dir) {
+  printf("%s\n", (char*)dir + EXT2_NAME_OFFSET);
+}
+
 void sh_cmd_ls(void) {
-  fputs("Comando 'ls' ainda não implementado.", stdout);
+  unsigned int i;
+  ext2_inode* inode;
+  ext2_dir_entry* dir_entry = NULL;
+  uint32 blocks;
+  uint32 maxlen;
+  uint32 curlen = 0;
+  
+  inode = fs.curr_dir.data;
+  blocks = inode->blocks / (fs.block_size / 512);
+  maxlen = inode->size;
+
+  for (i = 0; i < blocks && i < 12; i++) {
+    curlen = 0;
+    dir_entry = ext2_getdirentries(fs.curr_dir.data, i);
+    while (dir_entry && dir_entry->name_len && curlen < maxlen) {
+      sh_cmd_ls_show(dir_entry);
+ 	    curlen += dir_entry->rec_len;
+	    dir_entry = (void*)((char*)dir_entry + dir_entry->rec_len);
+    }
+  }
+  /* TODO: ainda falta ler os blocos indiretos do bloco 13, 14 e 15 */
 }
 
 void sh_cmd_pwd() {
@@ -228,8 +271,9 @@ void sh_init() {
 }
 
 void sh_parse(char* line) {
-  size_t len = strlen(line);
+  size_t len;
   
+  len = strlen(line);
   if (line[len - 1] == '\n') {
     line[len -1] = '\0';
   }

@@ -45,9 +45,11 @@ clean:
 	rm -f fs.img
 
 .PHONY: debug
-debug:
-	gdb --args ./$(BINDIR)/$(PROJECTNAME)
-
+debug: fs.img
+	@echo 
+	@echo Iniciando GDB...
+	gdb --args ./$(BINDIR)/$(PROJECTNAME) fs.img
+	
 .PHONY: run
 run:
 	./$(BINDIR)/$(PROJECTNAME)
