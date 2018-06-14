@@ -116,9 +116,34 @@ void fs_exit() {
   close(fs.imgdesc);
 }
 
+void fs_interatedir(direntry_func_t action, ext2_inode* inode) {
+  unsigned int i;
+  ext2_dir_entry* dir_entry = NULL;
+  uint32 blocks;
+  uint32 maxlen;
+  uint32 curlen = 0;
+  
+  blocks = inode->blocks / (fs.block_size / 512);
+  maxlen = inode->size;
+  for (i = 0; i < blocks && i < 12; i++) {
+    curlen = 0;
+    dir_entry = ext2_getdirentries(fs.curr_dir.data, i);
+    while (dir_entry && dir_entry->name_len && curlen < maxlen) {
+      action(dir_entry);
+ 	    curlen += dir_entry->rec_len;
+	    dir_entry = (void*)((char*)dir_entry + dir_entry->rec_len);
+    }
+  }
+  /* TODO: ainda falta ler os dados indiretos do bloco 13, 14 e 15 */
+}
+
 void fs_setcurrdir(const uint32 inode) {
   fs.curr_dir.data = ext2_getinode(inode);
   fs.curr_dir.inode = inode;
+}
+
+void fs_direntry_show(ext2_dir_entry* entry) {
+  printf("%s\n", (char*)entry + EXT2_NAME_OFFSET);
 }
 
 /****    IMG LEITOR    ****/
@@ -177,9 +202,8 @@ int img_open(char* nomearq) {
 /* comandos do shell */
 void sh_cmd_info() {
   fprintf(stdout, "Nome do arquivo de imagem:  %s\n", fs.imgname);
-  fprintf(stdout, "Tamanho padrão de um bloco: %u KB\n", fs.block_size / 1024);
-  
-  fprintf(stdout, "Tamanho de um nó i:         %u\n", fs.super_block->inode_size);
+  fprintf(stdout, "Tamanho de um bloco: %u KB\n", fs.block_size / 1024); 
+  fprintf(stdout, "Tamanho de um nó i:         %u bytes\n", fs.super_block->inode_size);
   fprintf(stdout, "Quant. de nós i por grupo:  %u\n", fs.super_block->inodes_per_group);
 }
 
@@ -196,32 +220,8 @@ void sh_cmd_find(void) {
   fputs("Comando 'find' ainda não implementado.", stdout);
 }
 
-void sh_cmd_ls_show(ext2_dir_entry* dir) {
-  printf("%s\n", (char*)dir + EXT2_NAME_OFFSET);
-}
-
 void sh_cmd_ls(void) {
-  unsigned int i;
-  ext2_inode* inode;
-  ext2_dir_entry* dir_entry = NULL;
-  uint32 blocks;
-  uint32 maxlen;
-  uint32 curlen = 0;
-  
-  inode = fs.curr_dir.data;
-  blocks = inode->blocks / (fs.block_size / 512);
-  maxlen = inode->size;
-
-  for (i = 0; i < blocks && i < 12; i++) {
-    curlen = 0;
-    dir_entry = ext2_getdirentries(fs.curr_dir.data, i);
-    while (dir_entry && dir_entry->name_len && curlen < maxlen) {
-      sh_cmd_ls_show(dir_entry);
- 	    curlen += dir_entry->rec_len;
-	    dir_entry = (void*)((char*)dir_entry + dir_entry->rec_len);
-    }
-  }
-  /* TODO: ainda falta ler os blocos indiretos do bloco 13, 14 e 15 */
+  fs_interatedir(&fs_direntry_show, fs.curr_dir.data);
 }
 
 void sh_cmd_pwd() {

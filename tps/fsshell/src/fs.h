@@ -135,6 +135,11 @@ struct {
   uint32            block_size;   /* tamanho padrão de um bloco          */
 } fs;
 
+/* estrutura para interação com as entradas de um diretório */
+typedef void (*direntry_func_t)(ext2_dir_entry* entry);
+
+void fs_direntry_show(ext2_dir_entry* entry);
+
 /****  SHELL  ****/
 
 /* Tamanho do buffer da linha de comando atual */
