@@ -33,8 +33,7 @@ typedef unsigned int uint32;
 /* número mágico do ext2 */
 #define EXT2_SUPER_MAGIC 0xEF53
 
-/* número de blocos de dados */
-
+/* quantidade de blocos de dados */
 #define	EXT2_NDIR_BLOCKS 12
 #define	EXT2_IND_BLOCK EXT2_NDIR_BLOCKS
 #define	EXT2_DIND_BLOCK  (EXT2_IND_BLOCK + 1)
@@ -91,7 +90,8 @@ typedef struct e_gdesc {
  * outros de 16 bits e outros de 32 bits.
  */
 typedef struct e_in {
-  uint32 reserved1;              /* não utilizado neste TP                        */
+  uint16 mode;                   /* modos do arquivo                              */
+  uint16 uid;                    /* uid do dono do arquivo                        */
   uint32 size;                   /* tamanho do arquivo                            */
   uint32 reserved2[5];           /* não utilizado neste TP                        */
   uint32 blocks;                 /* total de blocos de dados reservados pelo nó-i */
@@ -113,7 +113,7 @@ typedef struct e_dentry {
 	uint16 rec_len;	      /* tamanho da entrada de diretório */
 	uint8  name_len;      /* tamanho do nome da entrada */
 	uint8  file_type;     /* tipo da entrada */
-	char*	 name;     /* nome da entrada (max. 255) */
+	char*	 name;          /* nome da entrada (max. 255)(não usar diretamente) */
 } ext2_dir_entry;
 
 
@@ -124,21 +124,28 @@ typedef struct dt {
   uint32            inode;        /* nó i do diretório */
 } dir_t;
 
+/* Tamanho máximo do caminho do diretório atual */
+#define MAX_PATH 8192
+
 struct {
   char*             imgname;      /* nome do arquivo de imagem           */
   int               imgdesc;      /* descritor (fd) do arquivo de imagem */
   dir_t             curr_dir;     /* diretório atual                     */
-  char              pwd[256];     /* caminho do diretório atual          */
+  char              pwd[MAX_PATH];/* caminho do diretório atual          */
   void*             ptr;          /* ponteiro para o arquivo img mapeado */
   off_t             size;         /* tamanho do arquivo de imagem        */
-  ext2_super_block* super_block;  /* ponteiro para um superbloco         */
+  ext2_super_block* super_block;  /* ponteiro para o primeiro superbloco */
   uint32            block_size;   /* tamanho padrão de um bloco          */
 } fs;
 
-/* estrutura para interação com as entradas de um diretório */
-typedef void (*direntry_func_t)(ext2_dir_entry* entry);
+/* estrutura para interação com as entradas de diretório */
+typedef int (*direntry_func_t)(ext2_dir_entry*, void*);
 
-void fs_direntry_show(ext2_dir_entry* entry);
+/* exibe o nome da entrada de diretório na tela */
+int fs_direntry_show(ext2_dir_entry* entry, void* data);
+
+/* escolhe a entrada de diretório como diretório atual */
+int fs_direntry_goto(ext2_dir_entry* entry, void* data);
 
 /****  SHELL  ****/
 
@@ -147,6 +154,9 @@ void fs_direntry_show(ext2_dir_entry* entry);
 
 /* Quantidade máxima de argumentos de um comando */
 #define ARG_MAX 4096
+
+/* Quantide máxima de subdiretório passados pelo comando cd */
+#define CD_PATH_MAX 256
 
 /* Quantidade de comandos */
 #define SHCMDSQUANT 8
@@ -218,5 +228,12 @@ void sh_init();
 void sh_parse(char* line);
 
 void sh_run();
+
+typedef struct cdinfo {
+  uint32 inode_index;
+  ext2_inode* inode_data;
+  char* nextdir;
+  int isnotdir;
+} cdinfo_t;
 
 #endif

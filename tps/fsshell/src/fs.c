@@ -61,6 +61,10 @@ void* ext2_getblock(const uint32 numblock) {
   return ext2_lseek(numblock * fs.block_size);
 }
 
+char* ext2_getdirname(ext2_dir_entry* entry) {
+  return (char*)entry + EXT2_NAME_OFFSET;
+}
+
 ext2_group_desc* ext2_getgroupdesc(const uint32 inode) {
   uint32 offset;
   uint32 blockgroup;
@@ -116,7 +120,7 @@ void fs_exit() {
   close(fs.imgdesc);
 }
 
-void fs_interatedir(direntry_func_t action, ext2_inode* inode) {
+int fs_interatedir(direntry_func_t action, ext2_inode* inode, void* data) {
   unsigned int i;
   ext2_dir_entry* dir_entry = NULL;
   uint32 blocks;
@@ -129,12 +133,15 @@ void fs_interatedir(direntry_func_t action, ext2_inode* inode) {
     curlen = 0;
     dir_entry = ext2_getdirentries(fs.curr_dir.data, i);
     while (dir_entry && dir_entry->name_len && curlen < maxlen) {
-      action(dir_entry);
+      if (action(dir_entry, data))
+        return 1;
  	    curlen += dir_entry->rec_len;
 	    dir_entry = (void*)((char*)dir_entry + dir_entry->rec_len);
     }
   }
   /* TODO: ainda falta ler os dados indiretos do bloco 13, 14 e 15 */
+  
+  return 0;
 }
 
 void fs_setcurrdir(const uint32 inode) {
@@ -142,8 +149,37 @@ void fs_setcurrdir(const uint32 inode) {
   fs.curr_dir.inode = inode;
 }
 
-void fs_direntry_show(ext2_dir_entry* entry) {
-  printf("%s\n", (char*)entry + EXT2_NAME_OFFSET);
+int fs_direntry_goto(ext2_dir_entry* entry, void* data) {
+  char* dirname;
+  cdinfo_t* info;
+  ext2_inode* inode;
+  
+  info = (cdinfo_t*)data;
+  dirname = ext2_getdirname(entry);
+  inode = ext2_getinode(entry->inode);
+  if (!strncmp(info->nextdir, dirname, entry->name_len) && info->nextdir[(int)entry->name_len] == '\0') {
+    if (!(inode->mode & S_IFDIR)) {
+      info->isnotdir = 1;
+      fprintf(stderr, "%s não é um diretório.\n", info->nextdir);
+      return 0;
+    }
+    info->inode_index = entry->inode;
+    info->inode_data = inode;
+    return 1;
+  }
+  
+  return 0;
+}
+
+int fs_direntry_show(ext2_dir_entry* entry, void* data) {
+  char* dirname;
+  
+  dirname = ext2_getdirname(entry);
+  printf("%s\n", dirname);
+  
+  return 0;
+  if (data) {
+  }
 }
 
 /****    IMG LEITOR    ****/
@@ -184,8 +220,7 @@ int img_open(char* nomearq) {
   
   /* carrega o primeiro superbloco */
   fs.super_block = (void*)((char*)fs.ptr + BOOT_OFFSET);
-  fs.block_size = BLOCK_SIZE(fs.super_block->log_block_size);
-  
+    
   /* checa o número mágico do ext2 */
   if (fs.super_block->magic != EXT2_SUPER_MAGIC) {
     munmap(fs.ptr, fs.size);
@@ -193,6 +228,9 @@ int img_open(char* nomearq) {
     fprintf(stderr, "Arquivo de imagem inválido. Formato irreconhecível.\n");
     return 0;
   }
+  
+  /* carrega informações úteis */
+  fs.block_size = BLOCK_SIZE(fs.super_block->log_block_size);
 
   return 1;
 }
@@ -208,7 +246,62 @@ void sh_cmd_info() {
 }
 
 void sh_cmd_cd(void) {
-  fputs("Comando 'cd' ainda não implementado.", stdout);
+  char* c;
+  int startroot = 0;
+  int subdircount = 0;
+  int subdirpos = 0;
+  int pwdcharzeropos;
+  char* path[CD_PATH_MAX];
+  cdinfo_t info;
+  
+  if (usercmd.argc < 2) {
+    fprintf(stderr, "A sintaxe do comando está incorreta.\n");
+    return;
+  }
+  pwdcharzeropos = strlen(fs.pwd);
+  startroot = (usercmd.argv[1][0] == '/');
+  if (startroot && fs.curr_dir.inode != EXT2_ROOT_INO) {
+    info.inode_data = ext2_getinode(EXT2_ROOT_INO);
+    info.inode_index = EXT2_ROOT_INO;
+  } else {
+    info.inode_data = fs.curr_dir.data;
+    info.inode_index = fs.curr_dir.inode;
+  }
+  subdircount = str_split(usercmd.argv[1], "/", path, CD_PATH_MAX);
+  if (!subdircount && fs.curr_dir.inode != EXT2_ROOT_INO) {
+    fs.curr_dir.data = info.inode_data;
+    fs.curr_dir.inode = info.inode_index;
+    return;
+  }
+  info.nextdir = path[subdirpos];
+  info.isnotdir = 0;
+  while (fs_interatedir(&fs_direntry_goto, info.inode_data, (void*)(&info))) {
+    subdirpos++;
+    if (!strcmp(info.nextdir, "..")) {
+      if (pwdcharzeropos > 1) {
+        c = fs.pwd + pwdcharzeropos - 1;
+        do {
+          c--;
+        } while (*c != '/');
+        *(c+1) = '\0';
+      }
+    } else if (strcmp(info.nextdir, ".")) {
+      strcat(fs.pwd, info.nextdir);
+      strcat(fs.pwd, "/");    
+    }
+    if (subdirpos < subdircount)
+      info.nextdir = path[subdirpos];
+    else
+      break;
+  }
+  if (subdirpos == subdircount) {
+    fs.curr_dir.data = info.inode_data;
+    fs.curr_dir.inode = info.inode_index;
+  } else {
+      fs.pwd[pwdcharzeropos] = '\0';
+      if (!info.isnotdir)
+        fprintf(stderr, "Arquivo ou diretório não encontrado.\n");
+  }
 }
 
 void sh_cmd_exit(void) {
@@ -221,7 +314,7 @@ void sh_cmd_find(void) {
 }
 
 void sh_cmd_ls(void) {
-  fs_interatedir(&fs_direntry_show, fs.curr_dir.data);
+  fs_interatedir(&fs_direntry_show, fs.curr_dir.data, NULL);
 }
 
 void sh_cmd_pwd() {
