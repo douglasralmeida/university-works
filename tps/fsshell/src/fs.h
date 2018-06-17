@@ -93,12 +93,17 @@ typedef struct e_in {
   uint16 mode;                   /* modos do arquivo                              */
   uint16 uid;                    /* uid do dono do arquivo                        */
   uint32 size;                   /* tamanho do arquivo                            */
-  uint32 reserved2[5];           /* não utilizado neste TP                        */
+  uint32 atime;                  /* nº segundos desde o último acesso ao nó i     */
+  uint32 ctime;                  /* nº segundos desde a criação do nó i           */
+  uint32 mtime;                  /* nº segundos desde a última modificação ao nó i*/
+  uint32 dtime;                  /* nº segundos desde a exclusão do nó i          */
+  uint16 gid;                    /* gid do grupo que acessa o arquivo             */
+  uint16 links_count;            /* nº de referências (atalhos) para o nó i       */
   uint32 blocks;                 /* total de blocos de dados reservados pelo nó-i */
-  uint32 flags;                  /* metadados do nó i                       */
+  uint32 flags;                  /* metadados do nó i                             */
   uint32 reserved3;              /* não utilizado neste TP                        */
-  uint32 block[EXT2_N_BLOCKS];   /* ponteiros para os blocos                */
-  uint32 reserved4[7];           /* não utilizado neste TP                  */
+  uint32 block[EXT2_N_BLOCKS];   /* ponteiros para os blocos                      */
+  uint32 reserved4[7];           /* não utilizado neste TP                        */
 } ext2_inode;
 
 /* entrada de diretório
@@ -117,7 +122,53 @@ typedef struct e_dentry {
 } ext2_dir_entry;
 
 
+/* modos do nó i
+ * 
+ * nó i->modo.
+ */
+
+char* ext2_inode_type[8] = {
+  "fifo",
+  "disp. caractere",
+  "diretório",
+  "dispositivo de bloco",
+  "arquivo",
+  "link",
+  "soquete",
+  "desconhecido"
+};
+
+enum ext2_inode_mode {
+  IFMT    = 0xF000, /* Format mask */
+  IFSOCK  = 0xA000, /* Socket. */
+  IFLNK   = 0xC000, /* Symbol link. */
+  IFREG   = 0x8000, /* Regular file. */
+  IFBLK   = 0x6000, /* Block device. */
+  IFDIR   = 0x4000, /* Directory. */
+  IFCHR   = 0x2000, /* Character device. */
+  IFIFO   = 0x1000, /* FIFO. */
+  
+  
+  ISUID   = 0x0800, /* SUID. */
+  ISGID   = 0x0400, /* SGID. */
+  ISVTX   = 0x0200, /* Sticky bit. */
+  
+  IRWXU   = 0x01C0, /* User mask. */
+  IRUSR   = 0x0100, /* Read. */
+  IWUSR   = 0x0080, /* Write. */
+  IXUSR   = 0x0040, /* Execute. */
+  IRWXG   = 0x0038, /* Group mask. */
+  IRGRP   = 0x0020, /* Read. */
+  IWGRP   = 0x0010, /* Write. */
+  IXGRP   = 0x0008, /* Execute. */
+  IRWXO   = 0x0007, /* Other mask. */
+  IROTH   = 0x0004, /* Read. */
+  IWOTH   = 0x0002, /* Write. */
+  IXOTH   = 0x0001  /* Execute. */
+};
+
 /****  FS  ****/
+
 
 typedef struct dt {
   ext2_inode*       data;         /* metadados do diretório */
@@ -146,6 +197,9 @@ int fs_direntry_show(ext2_dir_entry* entry, void* data);
 
 /* escolhe a entrada de diretório como diretório atual */
 int fs_direntry_goto(ext2_dir_entry* entry, void* data);
+
+/*  */
+int fs_interatedir(direntry_func_t action, ext2_inode* inode, void* data);
 
 /****  SHELL  ****/
 
@@ -223,17 +277,29 @@ int shcmds_lookup(char* cmd);
 /* Funções do shell */
 int sh_getcmd(char *buf, int nbuf);
 
+uint32 sh_getinode(char* path);
+
 void sh_init();
 
 void sh_parse(char* line);
 
 void sh_run();
 
-typedef struct cdinfo {
+/* Funções usadas pelos comandos do shell */
+
+void do_stat(uint32, ext2_inode*, char*);
+
+typedef struct ii {
+  uint32 inode;
+  char* name;
+} inodeinfo_t;
+
+typedef struct ci {
   uint32 inode_index;
   ext2_inode* inode_data;
   char* nextdir;
   int isnotdir;
 } cdinfo_t;
+
 
 #endif

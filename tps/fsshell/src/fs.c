@@ -6,9 +6,11 @@
 */
 
 #include "ctype.h"
+#include "math.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
+#include "time.h"
 #include "unistd.h"
 #include "fcntl.h"
 #include "fs.h"
@@ -61,8 +63,17 @@ void* ext2_getblock(const uint32 numblock) {
   return ext2_lseek(numblock * fs.block_size);
 }
 
-char* ext2_getdirname(ext2_dir_entry* entry) {
+/* checa o nome da entrada de diretório */
+char* ext2_dirent_getname(ext2_dir_entry* entry) {
   return (char*)entry + EXT2_NAME_OFFSET;
+}
+
+/* checa o nome da entrada de diretório */
+int ext2_dirent_comparename(ext2_dir_entry* entry, char* name) { 
+  char* entryname;
+
+  entryname = ext2_dirent_getname(entry);
+  return (name[(int)entry->name_len] == '\0' && !strncmp(name, entryname, entry->name_len));
 }
 
 ext2_group_desc* ext2_getgroupdesc(const uint32 inode) {
@@ -120,6 +131,19 @@ void fs_exit() {
   close(fs.imgdesc);
 }
 
+/* retorna o nó i do arquivo, caso exista */
+int fs_getinode_byname(ext2_dir_entry* entry, void* data) {
+  inodeinfo_t* info;
+
+  info = (inodeinfo_t*)data;
+  if (ext2_dirent_comparename(entry, info->name)) {
+    info->inode = entry->inode;
+    return 1;
+  } else {
+    return 0;
+  }  
+}
+
 int fs_interatedir(direntry_func_t action, ext2_inode* inode, void* data) {
   unsigned int i;
   ext2_dir_entry* dir_entry = NULL;
@@ -155,7 +179,7 @@ int fs_direntry_goto(ext2_dir_entry* entry, void* data) {
   ext2_inode* inode;
   
   info = (cdinfo_t*)data;
-  dirname = ext2_getdirname(entry);
+  dirname = ext2_dirent_getname(entry);
   inode = ext2_getinode(entry->inode);
   if (!strncmp(info->nextdir, dirname, entry->name_len) && info->nextdir[(int)entry->name_len] == '\0') {
     if (!(inode->mode & S_IFDIR)) {
@@ -174,12 +198,11 @@ int fs_direntry_goto(ext2_dir_entry* entry, void* data) {
 int fs_direntry_show(ext2_dir_entry* entry, void* data) {
   char* dirname;
   
-  dirname = ext2_getdirname(entry);
+  dirname = ext2_dirent_getname(entry);
   printf("%s\n", dirname);
   
   return 0;
-  if (data) {
-  }
+  if (data) {}
 }
 
 /****    IMG LEITOR    ****/
@@ -236,6 +259,92 @@ int img_open(char* nomearq) {
 }
 
 /****    SHELL    ****/
+
+/****    funções dos comandos    ****/
+
+void do_stat_mode(uint32 mode, char* mask) {
+  int i;
+  
+  for (i = 0; i < 9; i++)
+    mask[i] = '-';
+    
+  if (mode & IRUSR)
+    mask[0] = 'r';
+  if (mode & IWUSR)
+    mask[1] = 'w';
+  if (mode & IXUSR)
+    mask[2] = 'x';
+    
+  if (mode & IRGRP)
+    mask[3] = 'r';
+  if (mode & IWGRP)
+    mask[4] = 'w';
+  if (mode & IXGRP)
+    mask[5] = 'x';
+    
+  if (mode & IROTH)
+    mask[6] = 'r';
+  if (mode & IWOTH)
+    mask[7] = 'w';
+  if (mode & IXOTH)
+    mask[8] = 'x';
+}
+
+int do_stat_type(uint32 mode) {
+  if (mode & IFIFO)
+    return 0;
+  if (mode & IFCHR)
+    return 1;
+  if (mode & IFDIR)
+    return 2;
+  if (mode & IFBLK)
+    return 3;
+  if (mode & IFREG)
+    return 4;
+  if (mode & IFLNK)
+    return 5;
+  if (mode & IFSOCK)
+    return 6;
+    
+  return 7;
+}
+
+void do_stat(uint32 iinode, ext2_inode* inode, char* filename) {
+  uint32 blocks;
+  char* accessmask;
+  char timestr[80];
+  int filetype;
+  struct tm* ts;
+  time_t tt;
+  
+  accessmask = (char*)malloc(sizeof(char) * 9);  
+  blocks = inode->blocks / (fs.block_size / 512);
+  do_stat_mode(inode->mode, accessmask);
+  filetype = do_stat_type(inode->mode);
+  
+  fprintf(stdout, "         Arquivo: '%s'\n", filename);
+  fprintf(stdout, "            Tipo: '%s'\n", ext2_inode_type[filetype]);
+  fprintf(stdout, "         Tamanho: %u         Blocos: %u             Bloco ES: %u\n", inode->size, blocks, fs.block_size);
+  fprintf(stdout, "          Imagem: %.*s       Nó i: %u               Links: %u\n", 12, fs.imgname, iinode, inode->links_count);
+  fprintf(stdout, "          Acesso: %.*s    Uid: %u                Gid: %u\n", 12, accessmask, inode->uid, inode->gid);
+  
+  tt = inode->atime;
+  ts = localtime(&tt);
+  strftime(timestr, sizeof(timestr), "%Y-%m-%d %H:%M:%S", ts);
+  fprintf(stdout, "     Ult. acesso: %s\n", timestr);
+  
+  tt = inode->mtime;
+  ts = localtime(&tt);
+  strftime(timestr, sizeof(timestr), "%Y-%m-%d %H:%M:%S", ts);
+  fprintf(stdout, "Ult. modificação: %s\n", timestr);
+
+  tt = inode->ctime;
+  ts = localtime(&tt);
+  strftime(timestr, sizeof(timestr), "%Y-%m-%d %H:%M:%S", ts);
+  fprintf(stdout, "    Ult. criação: %s\n", timestr);
+  
+  free(accessmask);
+}
 
 /* comandos do shell */
 void sh_cmd_info() {
@@ -326,7 +435,21 @@ void sh_cmd_sb(void) {
 }
 
 void sh_cmd_stat(void) {
-  fputs("Comando 'stat' ainda não implementado.", stdout);
+  ext2_inode* inode;
+  uint32 iinode;
+
+  if (usercmd.argc < 2) {
+    fprintf(stderr, "A sintaxe do comando está incorreta.\n");
+    return;
+  }
+
+  iinode = sh_getinode(usercmd.argv[1]);
+  if (iinode) {
+    inode = ext2_getinode(iinode);
+    do_stat(iinode, inode, usercmd.argv[usercmd.argc-1]);
+  } else {
+    fprintf(stderr, "Arquivo ou diretório não encontrado.\n");
+  }
 }
 
 void shcmds_call(int index) {
@@ -355,6 +478,51 @@ int sh_getcmd(char *buf, int nbuf) {
   if (buf[0] == 0) /* EOF (hora de ir embora, tchau) */
     return 0;
   return 1;
+}
+
+uint32 sh_getinode(char* path) {
+  int startroot = 0;
+  char* subdirs[CD_PATH_MAX];
+  int subdircount = 0;
+  int subdirpos = 0;
+  inodeinfo_t data;
+  ext2_inode* currentinode;
+
+  /* começa da raiz ou do diretório atual? */
+  startroot = (usercmd.argv[1][0] == '/');
+  if (startroot) {
+    currentinode = ext2_getinode(EXT2_ROOT_INO);
+    data.inode = EXT2_ROOT_INO;
+  } else {
+    currentinode = fs.curr_dir.data;
+    data.inode = fs.curr_dir.inode;
+  }
+
+  /* divide o caminho passado num vetor de subdiretórios */
+  subdircount = str_split(path, "/", subdirs, CD_PATH_MAX);
+  if (!subdircount)
+    return data.inode;
+
+  data.inode = 0;
+  data.name = subdirs[subdirpos];
+  
+  /* navega pelo subdiretório atual */
+  while (fs_interatedir(&fs_getinode_byname, currentinode, (void*)&data)) {
+    /* encontrou uma entrada, tenta entrar */
+    subdirpos++;
+    if (subdirpos < subdircount) {
+      currentinode = ext2_getinode(data.inode);
+      if (!(currentinode->mode & S_IFDIR))
+        return 0;
+      data.name = subdirs[subdirpos];      
+    }
+    else
+      break;
+  }
+  if (subdirpos == subdircount)
+    return data.inode;
+  else
+    return 0;
 }
 
 void sh_init() {
