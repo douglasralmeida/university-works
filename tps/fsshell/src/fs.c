@@ -431,7 +431,66 @@ void sh_cmd_pwd() {
 }
 
 void sh_cmd_sb(void) {
-  fputs("Comando 'sb' ainda não implementado.", stdout);
+  int i;
+  
+  fputs("Dados do super bloco ext2\n", stdout);
+  fputs("=========================\n", stdout);
+  
+  fprintf(stdout, "inodes_count = %u\n", fs.super_block->inodes_count);
+  fprintf(stdout, "blocks_count = %u\n", fs.super_block->blocks_count);
+  fprintf(stdout, "r_blocks_count = %u\n", fs.super_block->r_blocks_count);
+  fprintf(stdout, "free_blocks_count = %u\n", fs.super_block->free_blocks_count);
+  fprintf(stdout, "free_inodes_count = %u\n", fs.super_block->first_data_block);
+  fprintf(stdout, "log_block_size = %u\n", fs.super_block->log_block_size);
+  fprintf(stdout, "log_frag_size = %u\n", fs.super_block->log_frag_size);
+  fprintf(stdout, "blocks_per_group = %u\n", fs.super_block->blocks_per_group);
+  fprintf(stdout, "frags_per_group = %u\n", fs.super_block->frags_per_group);
+  fprintf(stdout, "inodes_per_group = %u\n", fs.super_block->inodes_per_group);
+  fprintf(stdout, "mtime = %u\n", fs.super_block->mtime);
+  fprintf(stdout, "wtime = %u\n", fs.super_block->wtime);
+  fprintf(stdout, "mnt_count = %u\n", fs.super_block->mnt_count);
+  fprintf(stdout, "max_mnt_count = %u\n", fs.super_block->max_mnt_count);
+  fprintf(stdout, "magic = %u\n", fs.super_block->magic);
+  fprintf(stdout, "state = %u\n", fs.super_block->state);
+  fprintf(stdout, "errors = %u\n", fs.super_block->errors);
+  fprintf(stdout, "minor_rev_level = %u\n", fs.super_block->minor_rev_level);
+  fprintf(stdout, "lastcheck = %u\n", fs.super_block->lastcheck);
+  fprintf(stdout, "checkinterval = %u\n", fs.super_block->checkinterval);
+  fprintf(stdout, "creator_os = %u\n", fs.super_block->creator_os);
+  fprintf(stdout, "rev_level = %u\n", fs.super_block->rev_level);
+  fprintf(stdout, "def_resuid = %u\n", fs.super_block->def_resuid);
+  fprintf(stdout, "def_resgid = %u\n", fs.super_block->def_resgid);
+  if (fs.super_block->rev_level == EXT2_DYNAMIC_REV) {
+    fprintf(stdout, "first_ino = %u\n", fs.super_block->first_ino);
+    fprintf(stdout, "inode_size = %u\n", fs.super_block->inode_size);
+    fprintf(stdout, "block_group_nr = %u\n", fs.super_block->block_group_nr);
+    fprintf(stdout, "rev_level = %u\n", fs.super_block->rev_level);
+    fprintf(stdout, "feature_compat = %u\n", fs.super_block->feature_compat);
+    fprintf(stdout, "feature_incompat = %u\n", fs.super_block->feature_incompat);
+    fprintf(stdout, "feature_ro_compat = %u\n", fs.super_block->feature_ro_compat);
+    fprintf(stdout, "uuid = ");
+    for (i = 0; i < 16; i++)
+      fprintf(stdout, "%u", fs.super_block->uuid[16]);
+    fprintf(stdout, "\nvolume_name = %s\n", (char*)&fs.super_block->volume_name);
+    fprintf(stdout, "last_mounted = %s\n", (char*)&fs.super_block->last_mounted);
+    fprintf(stdout, "algorithm_usage_bitmap = %u\n", fs.super_block->algorithm_usage_bitmap);
+    fprintf(stdout, "prealloc_blocks = %u\n", fs.super_block->prealloc_blocks);
+    fprintf(stdout, "prealloc_dir_blocks = %u\n", fs.super_block->prealloc_dir_blocks);
+    fprintf(stdout, "journal_uuid = ");
+    for (i = 0; i < 16; i++)
+      fprintf(stdout, "%u", fs.super_block->journal_uuid[i]);
+    fprintf(stdout, "\njournal_inum = %u\n", fs.super_block->journal_inum);
+    fprintf(stdout, "journal_dev = %u\n", fs.super_block->journal_inum);
+    fprintf(stdout, "last_orphan = %u\n", fs.super_block->journal_inum);
+    fprintf(stdout, "hash_seed = ");
+    for (i = 0; i < 4; i++)
+      fprintf(stdout, "%u", fs.super_block->hash_seed[i]);
+    fprintf(stdout, "\ndef_hash_version = %u\n", fs.super_block->def_hash_version);
+    fprintf(stdout, "default_mount_opts = %u\n", fs.super_block->default_mount_opts);
+    fprintf(stdout, "first_meta_bg = %u\n", fs.super_block->first_meta_bg);
+  }
+	
+  
 }
 
 void sh_cmd_stat(void) {

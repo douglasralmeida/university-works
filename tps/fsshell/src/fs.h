@@ -33,6 +33,11 @@ typedef unsigned int uint32;
 /* número mágico do ext2 */
 #define EXT2_SUPER_MAGIC 0xEF53
 
+/* versões do ext2 */
+#define EXT2_GOOD_OLD_REV	0	/* versão original */
+
+#define EXT2_DYNAMIC_REV	1 	/* versão 2 com tamanhos dinâmicos de nó i */
+
 /* quantidade de blocos de dados */
 #define	EXT2_NDIR_BLOCKS 12
 #define	EXT2_IND_BLOCK EXT2_NDIR_BLOCKS
@@ -56,19 +61,55 @@ typedef unsigned int uint32;
  */
 typedef struct e_sblk {
   uint32 inodes_count;          /* contador de nós i                       */
-  uint32 reserved1[5];          /* não utilizado neste TP                  */
+  uint32 blocks_count;
+  uint32 r_blocks_count;
+  uint32 free_blocks_count;
+  uint32 free_inodes_count;
+  uint32 first_data_block;
   uint32 log_block_size;        /* tamanho de cada bloco                   */
   uint32 log_frag_size;         /* tamanho de cada fragmento               */
   uint32 blocks_per_group;      /* quant. de blocos por grupo              */
   uint32 frags_per_group;       /* quant. de fragmentos por grupo          */
   uint32 inodes_per_group;      /* quant. de nós i em cada grupo de blocos */
-  uint32 reserved2[3];          /* não utilizado neste TP                  */
+  uint32 mtime;
+  uint32 wtime;
+  uint16 mnt_count;
+  uint16 max_mnt_count;         
   uint16 magic;                 /* assinatura mágica do ext2               */
   uint16 state;                 /* estado atual do fs                      */
-  uint32 reserved3[7];          /* não utilizado neste TP                  */
+  uint16 errors;
+  uint16 minor_rev_level;
+  uint32 lastcheck;
+  uint32 checkinterval;
+  uint32 creator_os;
+  uint32 rev_level;
+  uint16 def_resuid;
+  uint16 def_resgid;
+  uint32 first_ino;
   uint16 inode_size;            /* tamanho da estrutura ext2_inode         */
   uint16 block_group_nr;        /* num. do grupo de blocos que hospeda este superbloco */
-  uint32 reserved4[233];        /* não utilizado neste TP                  */
+  uint32 feature_compat;
+	uint32 feature_incompat;
+  uint32 feature_ro_compat;
+  uint8 uuid[16];
+	uint8 volume_name[16];
+	uint8 last_mounted[64];
+	uint32 algorithm_usage_bitmap;
+  uint8	prealloc_blocks;
+	uint8	prealloc_dir_blocks;
+	uint16 padding1;
+	
+	uint8 journal_uuid[16];
+	uint32 journal_inum;
+	uint32 journal_dev;
+	uint32 last_orphan;
+	uint32 hash_seed[4];
+	uint8 def_hash_version;
+	uint8 reserved_char_pad;
+	uint16 reserved_word_pad;
+	uint32 default_mount_opts;
+ 	uint32 first_meta_bg;
+  uint32 reserved4[190];        /* reservado                  */
 } ext2_super_block;
 
 /* descritores do grupo de blocos
