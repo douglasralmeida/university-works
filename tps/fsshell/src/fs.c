@@ -144,6 +144,54 @@ int fs_getinode_byname(ext2_dir_entry* entry, void* data) {
   }  
 }
 
+void fs_finddir(ext2_inode* inode, char* path) {
+  unsigned int i;
+  int j;
+  ext2_dir_entry* dir_entry = NULL;
+  ext2_inode* newinode = NULL;
+  uint32 blocks;
+  uint32 maxlen;
+  uint32 curlen = 0;
+  char newpath[1024];
+  char temppath[1024];
+  char* itemname;
+
+  strncpy(newpath, path, sizeof(newpath));
+  strncat(newpath, "/", sizeof(newpath));
+  blocks = inode->blocks / (fs.block_size / 512);
+  maxlen = inode->size;
+  for (i = 0; i < blocks && i < 12; i++) {
+    curlen = 0;
+    dir_entry = ext2_getdirentries(inode, i);
+    while (dir_entry && dir_entry->name_len && curlen < maxlen) {
+      itemname = ext2_dirent_getname(dir_entry);
+      if (itemname[0] == '.' && dir_entry->name_len == 1) {
+        dir_entry = (void*)((char*)dir_entry + dir_entry->rec_len);
+        curlen += dir_entry->rec_len;
+        continue;
+      }
+      if (itemname[0] == '.' && itemname[1] == '.' && dir_entry->name_len == 2) {
+        dir_entry = (void*)((char*)dir_entry + dir_entry->rec_len);
+        curlen += dir_entry->rec_len;
+        continue;
+      }
+      temppath[0] = '\0';
+      strncat(temppath, newpath, sizeof(temppath));
+      j = strlen(temppath);      
+      strncat(temppath, itemname, sizeof(temppath));
+      temppath[j+dir_entry->name_len] = '\0';
+      fprintf(stdout, "%s\n", temppath);
+      newinode = ext2_getinode(dir_entry->inode);
+      if (newinode->mode & IFDIR) {
+        fs_finddir(newinode, temppath);
+      }
+ 	    curlen += dir_entry->rec_len;
+	    dir_entry = (void*)((char*)dir_entry + dir_entry->rec_len);
+    }
+  }
+  /* TODO: ainda falta ler os dados indiretos do bloco 13, 14 e 15 */
+}
+
 int fs_interatedir(direntry_func_t action, ext2_inode* inode, void* data) {
   unsigned int i;
   ext2_dir_entry* dir_entry = NULL;
@@ -155,7 +203,7 @@ int fs_interatedir(direntry_func_t action, ext2_inode* inode, void* data) {
   maxlen = inode->size;
   for (i = 0; i < blocks && i < 12; i++) {
     curlen = 0;
-    dir_entry = ext2_getdirentries(fs.curr_dir.data, i);
+    dir_entry = ext2_getdirentries(inode, i);
     while (dir_entry && dir_entry->name_len && curlen < maxlen) {
       if (action(dir_entry, data))
         return 1;
@@ -182,7 +230,7 @@ int fs_direntry_goto(ext2_dir_entry* entry, void* data) {
   dirname = ext2_dirent_getname(entry);
   inode = ext2_getinode(entry->inode);
   if (!strncmp(info->nextdir, dirname, entry->name_len) && info->nextdir[(int)entry->name_len] == '\0') {
-    if (!(inode->mode & S_IFDIR)) {
+    if (!(inode->mode & IFDIR)) {
       info->isnotdir = 1;
       fprintf(stderr, "%s não é um diretório.\n", info->nextdir);
       return 0;
@@ -191,15 +239,14 @@ int fs_direntry_goto(ext2_dir_entry* entry, void* data) {
     info->inode_data = inode;
     return 1;
   }
-  
   return 0;
 }
 
 int fs_direntry_show(ext2_dir_entry* entry, void* data) {
   char* dirname;
   
-  dirname = ext2_dirent_getname(entry);
-  printf("%s\n", dirname);
+  dirname = ext2_dirent_getname(entry);  
+  fprintf(stdout, "%.*s\n", (char)entry->name_len, dirname);
   
   return 0;
   if (data) {}
@@ -261,6 +308,15 @@ int img_open(char* nomearq) {
 /****    SHELL    ****/
 
 /****    funções dos comandos    ****/
+
+void do_find(ext2_inode* inode) {
+  char path[1024];
+  
+  path[0] = '.';
+  path[1] = '\0';
+  fprintf(stdout, "%s\n", path);
+  fs_finddir(inode, path);
+}
 
 void do_stat_mode(uint32 mode, char* mask) {
   int i;
@@ -419,7 +475,21 @@ void sh_cmd_exit(void) {
 }
 
 void sh_cmd_find(void) {
-  fputs("Comando 'find' ainda não implementado.", stdout);
+  ext2_inode* inode;
+  uint32 iinode;
+
+  if (usercmd.argc < 2) {
+    inode = fs.curr_dir.data;
+  } else {
+    iinode = sh_getinode(usercmd.argv[1]);
+    if (iinode) {
+      inode = ext2_getinode(iinode);
+    } else {
+      fprintf(stderr, "Arquivo ou diretório não encontrado.\n");
+      return;
+    }
+  }
+  do_find(inode);
 }
 
 void sh_cmd_ls(void) {
@@ -489,8 +559,6 @@ void sh_cmd_sb(void) {
     fprintf(stdout, "default_mount_opts = %u\n", fs.super_block->default_mount_opts);
     fprintf(stdout, "first_meta_bg = %u\n", fs.super_block->first_meta_bg);
   }
-	
-  
 }
 
 void sh_cmd_stat(void) {
@@ -571,7 +639,7 @@ uint32 sh_getinode(char* path) {
     subdirpos++;
     if (subdirpos < subdircount) {
       currentinode = ext2_getinode(data.inode);
-      if (!(currentinode->mode & S_IFDIR))
+      if (!(currentinode->mode & IFDIR))
         return 0;
       data.name = subdirs[subdirpos];      
     }

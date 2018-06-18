@@ -233,6 +233,9 @@ struct {
 /* estrutura para interação com as entradas de diretório */
 typedef int (*direntry_func_t)(ext2_dir_entry*, void*);
 
+/* exibe o nome da entrada de diretório na tela concatenado com o nome do diretório */
+int fs_direntry_find(ext2_dir_entry* entry, void* data);
+
 /* exibe o nome da entrada de diretório na tela */
 int fs_direntry_show(ext2_dir_entry* entry, void* data);
 
