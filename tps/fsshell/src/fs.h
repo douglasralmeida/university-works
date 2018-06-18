@@ -1,7 +1,7 @@
 /*
 **	TP3 de SO
-**	A1
-**  A2
+**	Douglas
+**  Saulo
 **
 **/
 
@@ -224,6 +224,7 @@ struct {
   int               imgdesc;      /* descritor (fd) do arquivo de imagem */
   dir_t             curr_dir;     /* diretório atual                     */
   char              pwd[MAX_PATH];/* caminho do diretório atual          */
+  char*             dirname;
   void*             ptr;          /* ponteiro para o arquivo img mapeado */
   off_t             size;         /* tamanho do arquivo de imagem        */
   ext2_super_block* super_block;  /* ponteiro para o primeiro superbloco */

@@ -1,7 +1,7 @@
 /*
 **	TP3 de SO
-**	A1
-**  A2
+**	Douglas
+**  Saulo
 **
 */
 
@@ -70,10 +70,15 @@ char* ext2_dirent_getname(ext2_dir_entry* entry) {
 
 /* checa o nome da entrada de diretório */
 int ext2_dirent_comparename(ext2_dir_entry* entry, char* name) { 
+  int size;
   char* entryname;
 
   entryname = ext2_dirent_getname(entry);
-  return (name[(int)entry->name_len] == '\0' && !strncmp(name, entryname, entry->name_len));
+  size = strlen(name);
+  if (size == entry->name_len)
+    return (!strncmp(name, entryname, entry->name_len));
+  else
+    return 0;
 }
 
 ext2_group_desc* ext2_getgroupdesc(const uint32 inode) {
@@ -201,6 +206,8 @@ int fs_interatedir(direntry_func_t action, ext2_inode* inode, void* data) {
   
   blocks = inode->blocks / (fs.block_size / 512);
   maxlen = inode->size;
+  
+  /* Blocos 1 a 12 */
   for (i = 0; i < blocks && i < 12; i++) {
     curlen = 0;
     dir_entry = ext2_getdirentries(inode, i);
@@ -210,7 +217,7 @@ int fs_interatedir(direntry_func_t action, ext2_inode* inode, void* data) {
  	    curlen += dir_entry->rec_len;
 	    dir_entry = (void*)((char*)dir_entry + dir_entry->rec_len);
     }
-  }
+  } 
   /* TODO: ainda falta ler os dados indiretos do bloco 13, 14 e 15 */
   
   return 0;
@@ -462,6 +469,7 @@ void sh_cmd_cd(void) {
   if (subdirpos == subdircount) {
     fs.curr_dir.data = info.inode_data;
     fs.curr_dir.inode = info.inode_index;
+    fs.dirname = path[subdircount-1];
   } else {
       fs.pwd[pwdcharzeropos] = '\0';
       if (!info.isnotdir)
@@ -674,6 +682,7 @@ void sh_run() {
   
   /* começa com o diretório atual no diretório raiz */
   fs_setcurrdir(EXT2_ROOT_INO);
+  fs.dirname = "/";
 
   /* espera por um comando da entrada */
   while (sh_getcmd(buf, sizeof(buf))) {
