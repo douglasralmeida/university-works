@@ -1,12 +1,9 @@
 
 public class Sistema {
-
-	public Sistema() {
-		// TODO Fazer algo :)
-	}
-
+	Central central = new Central();
+	
 	public static void main(String[] args) {
-		System.out.println("ola, mundo!");
+		System.out.println("Sistema de Monitoramento de Alarmes");
 	}
 
 }

@@ -1,12 +1,161 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_2doUMHTpEeiWnLPpnaKyuQ" name="dclasses">
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_2doUMHTpEeiWnLPpnaKyuQ" name="dclasses">
   <packageImport xmi:type="uml:PackageImport" xmi:id="_2mFsoHTpEeiWnLPpnaKyuQ">
     <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
   </packageImport>
-  <packagedElement xmi:type="uml:Class" xmi:id="_l0Z-gHdiEeiji_1wIdi9UQ" name="Classe">
-    <ownedAttribute xmi:type="uml:Property" xmi:id="_2v1k4HdiEeiji_1wIdi9UQ" name="campo" type="_a0cbkHdjEeiji_1wIdi9UQ"/>
-    <ownedOperation xmi:type="uml:Operation" xmi:id="_JRN1YHdjEeiji_1wIdi9UQ" name="funcao"/>
-    <nestedClassifier xmi:type="uml:DataType" xmi:id="_xA0zoHdiEeiji_1wIdi9UQ" name=""/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_l0Z-gHdiEeiji_1wIdi9UQ" name="Central">
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_2v1k4HdiEeiji_1wIdi9UQ" name="alarmes" visibility="private" type="_jOSIIHjTEeilMZ__WjwgXg">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_n701UHjTEeilMZ__WjwgXg" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_n77jAHjTEeilMZ__WjwgXg" value="*"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_vN_bYnjTEeilMZ__WjwgXg" name="alarme" type="_jOSIIHjTEeilMZ__WjwgXg" association="_vN-0UHjTEeilMZ__WjwgXg">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vOACcHjTEeilMZ__WjwgXg" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vOACcXjTEeilMZ__WjwgXg" value="*"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_mT34snjWEeilMZ__WjwgXg" name="servicoexterno" type="_ElNtEHjTEeilMZ__WjwgXg" association="_mT3RoHjWEeilMZ__WjwgXg">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_mT4fwHjWEeilMZ__WjwgXg"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_mT4fwXjWEeilMZ__WjwgXg" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_yab6gHjZEeilMZ__WjwgXg" name="edificio" visibility="private" type="__VVH0HjSEeilMZ__WjwgXg"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_UTt-kHjZEeilMZ__WjwgXg" name="adicionarAlarmeProtecao">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_vDcJgHjZEeilMZ__WjwgXg" name="areaEdificio" type="_BDeEoHjTEeilMZ__WjwgXg"/>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_Xm38IHj_EeilMZ__WjwgXg" name="adicionarAlarmeFogo">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_Xm38IXj_EeilMZ__WjwgXg" name="areaEdificio" type="_BDeEoHjTEeilMZ__WjwgXg"/>
+    </ownedOperation>
   </packagedElement>
   <packagedElement xmi:type="uml:DataType" xmi:id="_a0cbkHdjEeiji_1wIdi9UQ" name="int"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="__VVH0HjSEeilMZ__WjwgXg" name="Edificio">
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_Ph6EIHjTEeilMZ__WjwgXg" name="areas" visibility="private" type="_BDeEoHjTEeilMZ__WjwgXg">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_UzJUQHjTEeilMZ__WjwgXg" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_UzhuwHjTEeilMZ__WjwgXg" value="*"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_Zpdi8HjTEeilMZ__WjwgXg" name="areaedificio" type="_BDeEoHjTEeilMZ__WjwgXg" association="_Zo5iQHjTEeilMZ__WjwgXg">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_ZpgmQHjTEeilMZ__WjwgXg" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Zpk3sHjTEeilMZ__WjwgXg" value="*"/>
+    </ownedAttribute>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_yCDpAHjUEeilMZ__WjwgXg" name="adicionarAlarme">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_4mXqkHjUEeilMZ__WjwgXg" name="area" type="_BDeEoHjTEeilMZ__WjwgXg"/>
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_8FJsgHj-EeilMZ__WjwgXg" name="alarme" type="_jOSIIHjTEeilMZ__WjwgXg"/>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_aSiYgHj8EeilMZ__WjwgXg" name="getAreas"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_hVoLUHj9EeilMZ__WjwgXg" name="adicionarArea">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_QXFfMHkAEeilMZ__WjwgXg" name="zonaCritica" type="_3XwT0Hj_EeilMZ__WjwgXg"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_BDeEoHjTEeilMZ__WjwgXg" name="AreaEdificio">
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_UOJ7YHjUEeilMZ__WjwgXg" name="alarme" visibility="private" type="_jOSIIHjTEeilMZ__WjwgXg">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_ZuILEHjUEeilMZ__WjwgXg"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_ZuMcgHjUEeilMZ__WjwgXg" value="2"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_gUvSsnjUEeilMZ__WjwgXg" name="alarme" type="_jOSIIHjTEeilMZ__WjwgXg" association="_gUuroHjUEeilMZ__WjwgXg">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_gUv5wHjUEeilMZ__WjwgXg"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_gUv5wXjUEeilMZ__WjwgXg" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_RCTYgHjWEeilMZ__WjwgXg" name="equipamento" visibility="private" type="_C9L_UHjTEeilMZ__WjwgXg">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_WzrhQHjWEeilMZ__WjwgXg"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_WzwZwHjWEeilMZ__WjwgXg" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_VSgJ8Hj4EeilMZ__WjwgXg" name="portas" visibility="private" type="_F5OS0Hj4EeilMZ__WjwgXg">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_XBT1IHj4EeilMZ__WjwgXg" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_XBYtoHj4EeilMZ__WjwgXg" value="*"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_if4xQnj4EeilMZ__WjwgXg" name="equipamentocombate" type="_C9L_UHjTEeilMZ__WjwgXg" association="_if4KMHj4EeilMZ__WjwgXg">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_if8boHj4EeilMZ__WjwgXg"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_if-Q0Hj4EeilMZ__WjwgXg" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_oPuB4nj4EeilMZ__WjwgXg" name="porta" type="_F5OS0Hj4EeilMZ__WjwgXg" association="_oPta0Hj4EeilMZ__WjwgXg">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_oPuo8Hj4EeilMZ__WjwgXg"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_oPuo8Xj4EeilMZ__WjwgXg" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_u5xa4Hj_EeilMZ__WjwgXg" name="zonaCritica" type="_3XwT0Hj_EeilMZ__WjwgXg"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_tQzEAHjVEeilMZ__WjwgXg" name="adidionarAlarme">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_J3JSAHjZEeilMZ__WjwgXg" name="alarme" type="_jOSIIHjTEeilMZ__WjwgXg"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_C9L_UHjTEeilMZ__WjwgXg" name="EquipamentoCombate">
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_RRi18Hj4EeilMZ__WjwgXg" name="acionar"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_ElNtEHjTEeilMZ__WjwgXg" name="ServicoExterno" isAbstract="true">
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_Ln-IsHjUEeilMZ__WjwgXg" name="chamar"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_Zo5iQHjTEeilMZ__WjwgXg" memberEnd="_Zpdi8HjTEeilMZ__WjwgXg _ZpoiEHjTEeilMZ__WjwgXg">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_ZpXcUHjTEeilMZ__WjwgXg" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_ZpXcUXjTEeilMZ__WjwgXg" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_ZpoiEHjTEeilMZ__WjwgXg" name="edificio" type="__VVH0HjSEeilMZ__WjwgXg" association="_Zo5iQHjTEeilMZ__WjwgXg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_jOSIIHjTEeilMZ__WjwgXg" name="Alarme" isAbstract="true">
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_A9eNgHjXEeilMZ__WjwgXg" name="chamarServicoExterno"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_vN-0UHjTEeilMZ__WjwgXg" memberEnd="_vN_bYnjTEeilMZ__WjwgXg _vOACcnjTEeilMZ__WjwgXg">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_vN_bYHjTEeilMZ__WjwgXg" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_vN_bYXjTEeilMZ__WjwgXg" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_vOACcnjTEeilMZ__WjwgXg" name="central" type="_l0Z-gHdiEeiji_1wIdi9UQ" association="_vN-0UHjTEeilMZ__WjwgXg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_gUuroHjUEeilMZ__WjwgXg" memberEnd="_gUvSsnjUEeilMZ__WjwgXg _gUwg0HjUEeilMZ__WjwgXg">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_gUvSsHjUEeilMZ__WjwgXg" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_gUvSsXjUEeilMZ__WjwgXg" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_gUwg0HjUEeilMZ__WjwgXg" name="areaedificio" type="_BDeEoHjTEeilMZ__WjwgXg" association="_gUuroHjUEeilMZ__WjwgXg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_JqhIEHjVEeilMZ__WjwgXg" name="AlarmeFogo">
+    <generalization xmi:type="uml:Generalization" xmi:id="_Zf0M0HjVEeilMZ__WjwgXg" general="_jOSIIHjTEeilMZ__WjwgXg"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_RoL3UHjXEeilMZ__WjwgXg" name="servicoExterno" visibility="private" type="_ElNtEHjTEeilMZ__WjwgXg"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_Rd-6AXj5EeilMZ__WjwgXg" name="bombeiros" type="_bW08UHjWEeilMZ__WjwgXg" association="_Rd9r4Hj5EeilMZ__WjwgXg">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Rd-6Anj5EeilMZ__WjwgXg"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Rd_hEHj5EeilMZ__WjwgXg" value="1"/>
+    </ownedAttribute>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_S7ZysHjXEeilMZ__WjwgXg" name="chamarServicoExterno"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_PHJv4HjVEeilMZ__WjwgXg" name="AlarmeProtecao">
+    <generalization xmi:type="uml:Generalization" xmi:id="_bL57MHjVEeilMZ__WjwgXg" general="_jOSIIHjTEeilMZ__WjwgXg"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_SN-sAHjXEeilMZ__WjwgXg" name="servicoExterno" visibility="private" type="_ElNtEHjTEeilMZ__WjwgXg"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_I1I04nj5EeilMZ__WjwgXg" name="policia" type="_comtQHjWEeilMZ__WjwgXg" association="_I1IN0Hj5EeilMZ__WjwgXg">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_I1I043j5EeilMZ__WjwgXg"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_I1I05Hj5EeilMZ__WjwgXg" value="1"/>
+    </ownedAttribute>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_TI9GgHjXEeilMZ__WjwgXg" name="chamarServicoExterno"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_bW08UHjWEeilMZ__WjwgXg" name="Bombeiros">
+    <generalization xmi:type="uml:Generalization" xmi:id="_gPQD0HjWEeilMZ__WjwgXg" general="_ElNtEHjTEeilMZ__WjwgXg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_comtQHjWEeilMZ__WjwgXg" name="Policia">
+    <generalization xmi:type="uml:Generalization" xmi:id="_hCwkYHjWEeilMZ__WjwgXg" general="_ElNtEHjTEeilMZ__WjwgXg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_mT3RoHjWEeilMZ__WjwgXg" memberEnd="_mT34snjWEeilMZ__WjwgXg _mT4fwnjWEeilMZ__WjwgXg">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_mT34sHjWEeilMZ__WjwgXg" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_mT34sXjWEeilMZ__WjwgXg" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_mT4fwnjWEeilMZ__WjwgXg" name="central" type="_l0Z-gHdiEeiji_1wIdi9UQ" association="_mT3RoHjWEeilMZ__WjwgXg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_F5OS0Hj4EeilMZ__WjwgXg" name="Porta">
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_QGvPsHj4EeilMZ__WjwgXg" name="fechar"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_if4KMHj4EeilMZ__WjwgXg" memberEnd="_if4xQnj4EeilMZ__WjwgXg _igAtEHj4EeilMZ__WjwgXg">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_if4xQHj4EeilMZ__WjwgXg" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_if4xQXj4EeilMZ__WjwgXg" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_igAtEHj4EeilMZ__WjwgXg" name="areaedificio" type="_BDeEoHjTEeilMZ__WjwgXg" association="_if4KMHj4EeilMZ__WjwgXg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_oPta0Hj4EeilMZ__WjwgXg" memberEnd="_oPuB4nj4EeilMZ__WjwgXg _oPuo8nj4EeilMZ__WjwgXg">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_oPuB4Hj4EeilMZ__WjwgXg" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_oPuB4Xj4EeilMZ__WjwgXg" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_oPuo8nj4EeilMZ__WjwgXg" name="areaedificio" type="_BDeEoHjTEeilMZ__WjwgXg" association="_oPta0Hj4EeilMZ__WjwgXg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_I1IN0Hj5EeilMZ__WjwgXg" memberEnd="_I1I04nj5EeilMZ__WjwgXg _I1I05Xj5EeilMZ__WjwgXg">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_I1I04Hj5EeilMZ__WjwgXg" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_I1I04Xj5EeilMZ__WjwgXg" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_I1I05Xj5EeilMZ__WjwgXg" name="alarmeprotecao" type="_PHJv4HjVEeilMZ__WjwgXg" association="_I1IN0Hj5EeilMZ__WjwgXg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_Rd9r4Hj5EeilMZ__WjwgXg" memberEnd="_Rd-6AXj5EeilMZ__WjwgXg _Rd_hEXj5EeilMZ__WjwgXg">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_Rd-S8Hj5EeilMZ__WjwgXg" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_Rd-6AHj5EeilMZ__WjwgXg" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_Rd_hEXj5EeilMZ__WjwgXg" name="alarmefogo" type="_JqhIEHjVEeilMZ__WjwgXg" association="_Rd9r4Hj5EeilMZ__WjwgXg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_3XwT0Hj_EeilMZ__WjwgXg" name="bool"/>
 </uml:Model>

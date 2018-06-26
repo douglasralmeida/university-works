@@ -45,6 +45,15 @@ Escolha o modelo de representação e clique em Finish.
 
 Para editar, mude para a prespectiva Papyrus. A paleta de design fica escondida em uma seta no lado esquerdo superior do diagrama.
 
+## Exportando um diagrama para JPEG
+Para inserir o diagrama pronto no Docs, precisamos converter para imagem.
+
+No Projet Explorer, clique no diagrama com o botão direito e escolha Export All.
+
+Clique em OK.
+
+A imagem PNG do diagrama será criada na pasta modelling.
+
 ## Atalhos úteis
 [Documentos do Projeto no Google Drive](https://drive.google.com/open?id=1DQdbmIjsad0fb2MR4ULzpa1fVn4TUJfvn8lNxCa2NN4)
 

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_HgaZQHjbEei8PI3O4SXQHg" name="modelling">
+  <packagedElement xmi:type="uml:Actor" xmi:id="_uvwtoHjbEei8PI3O4SXQHg" name="Edifício"/>
+  <packagedElement xmi:type="uml:Actor" xmi:id="_454YQHjbEei8PI3O4SXQHg" name="Central"/>
+  <packagedElement xmi:type="uml:Actor" xmi:id="_DQ5PYHjcEei8PI3O4SXQHg" name="Serviço Emergência"/>
+  <packagedElement xmi:type="uml:UseCase" xmi:id="_LmTlsHjdEei8PI3O4SXQHg" name="Confirmar Incendio">
+    <generalization xmi:type="uml:Generalization" xmi:id="_xzHswHjiEei8PI3O4SXQHg" general="_4ioRsHjiEei8PI3O4SXQHg"/>
+    <extensionPoint xmi:type="uml:ExtensionPoint" xmi:id="_q86cMXjdEei8PI3O4SXQHg" name="ExtensionPoint1"/>
+    <extensionPoint xmi:type="uml:ExtensionPoint" xmi:id="_p9JL0HjeEei8PI3O4SXQHg" name="ExtensionPoint2"/>
+    <extensionPoint xmi:type="uml:ExtensionPoint" xmi:id="_4lswoXjeEei8PI3O4SXQHg" name="ExtensionPoint3"/>
+    <extensionPoint xmi:type="uml:ExtensionPoint" xmi:id="_De9cYXjjEei8PI3O4SXQHg" name="ExtensionPoint4"/>
+    <include xmi:type="uml:Include" xmi:id="_rjSNwHjfEei8PI3O4SXQHg" addition="_lIvMMHjfEei8PI3O4SXQHg"/>
+    <include xmi:type="uml:Include" xmi:id="_t0DZsHjjEei8PI3O4SXQHg" addition="_m946gHjgEei8PI3O4SXQHg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_uKaS8HjdEei8PI3O4SXQHg" memberEnd="_uKkD8XjdEei8PI3O4SXQHg _uKkD8njdEei8PI3O4SXQHg">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_uKaS8XjdEei8PI3O4SXQHg" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_uKkD8HjdEei8PI3O4SXQHg" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_uKkD8XjdEei8PI3O4SXQHg" name="detectar incendio" type="_sf_mQHjiEei8PI3O4SXQHg" association="_uKaS8HjdEei8PI3O4SXQHg"/>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_uKkD8njdEei8PI3O4SXQHg" name="edifício" type="_uvwtoHjbEei8PI3O4SXQHg" association="_uKaS8HjdEei8PI3O4SXQHg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_xQRQoHjdEei8PI3O4SXQHg" memberEnd="_xQaaknjdEei8PI3O4SXQHg _xQaak3jdEei8PI3O4SXQHg">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_xQaakHjdEei8PI3O4SXQHg" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_xQaakXjdEei8PI3O4SXQHg" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_xQaaknjdEei8PI3O4SXQHg" name="confirmar incendio" type="_29X9YHjdEei8PI3O4SXQHg" association="_xQRQoHjdEei8PI3O4SXQHg"/>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_xQaak3jdEei8PI3O4SXQHg" name="central" type="_454YQHjbEei8PI3O4SXQHg" association="_xQRQoHjdEei8PI3O4SXQHg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:UseCase" xmi:id="_29X9YHjdEei8PI3O4SXQHg" name="Comunicar Problema">
+    <extend xmi:type="uml:Extend" xmi:id="_De9cYHjjEei8PI3O4SXQHg" extendedCase="_LmTlsHjdEei8PI3O4SXQHg" extensionLocation="_De9cYXjjEei8PI3O4SXQHg"/>
+    <extend xmi:type="uml:Extend" xmi:id="_QWrVsHjjEei8PI3O4SXQHg" extendedCase="_L1SDkHjiEei8PI3O4SXQHg" extensionLocation="_QWrVsXjjEei8PI3O4SXQHg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:UseCase" xmi:id="_SJOqsHjeEei8PI3O4SXQHg" name="Chamar Emergência"/>
+  <packagedElement xmi:type="uml:Association" xmi:id="_eC-f4HjeEei8PI3O4SXQHg" memberEnd="_eC-f43jeEei8PI3O4SXQHg _eC-f5HjeEei8PI3O4SXQHg">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_eC-f4XjeEei8PI3O4SXQHg" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_eC-f4njeEei8PI3O4SXQHg" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_eC-f43jeEei8PI3O4SXQHg" name="chamar emergência" type="_SJOqsHjeEei8PI3O4SXQHg" association="_eC-f4HjeEei8PI3O4SXQHg"/>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_eC-f5HjeEei8PI3O4SXQHg" name="central" type="_454YQHjbEei8PI3O4SXQHg" association="_eC-f4HjeEei8PI3O4SXQHg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_hDzMkHjeEei8PI3O4SXQHg" memberEnd="_hDzMk3jeEei8PI3O4SXQHg _hDzMlHjeEei8PI3O4SXQHg">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_hDzMkXjeEei8PI3O4SXQHg" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_hDzMknjeEei8PI3O4SXQHg" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_hDzMk3jeEei8PI3O4SXQHg" name="serviço emergência" type="_DQ5PYHjcEei8PI3O4SXQHg" association="_hDzMkHjeEei8PI3O4SXQHg"/>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_hDzMlHjeEei8PI3O4SXQHg" name="chamar emergência" type="_SJOqsHjeEei8PI3O4SXQHg" association="_hDzMkHjeEei8PI3O4SXQHg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:UseCase" xmi:id="_oJgrAHjeEei8PI3O4SXQHg" name="Combater Incendio">
+    <extend xmi:type="uml:Extend" xmi:id="_p8_a0HjeEei8PI3O4SXQHg" extendedCase="_lIvMMHjfEei8PI3O4SXQHg" extensionLocation="_p9JL0HjeEei8PI3O4SXQHg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:UseCase" xmi:id="_0sts4HjeEei8PI3O4SXQHg" name="Desativar Equipamentos">
+    <extend xmi:type="uml:Extend" xmi:id="_4lswoHjeEei8PI3O4SXQHg" extendedCase="_lIvMMHjfEei8PI3O4SXQHg" extensionLocation="_4lswoXjeEei8PI3O4SXQHg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:UseCase" xmi:id="_lIvMMHjfEei8PI3O4SXQHg" name="Verificar Pessoas">
+    <extensionPoint xmi:type="uml:ExtensionPoint" xmi:id="_pOHQsXjgEei8PI3O4SXQHg" name="ExtensionPoint1"/>
+    <include xmi:type="uml:Include" xmi:id="_-E688HjfEei8PI3O4SXQHg" addition="_T1efMHjgEei8PI3O4SXQHg"/>
+    <include xmi:type="uml:Include" xmi:id="_hWUOAHjgEei8PI3O4SXQHg" addition="_78Vf0HjfEei8PI3O4SXQHg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:UseCase" xmi:id="_78Vf0HjfEei8PI3O4SXQHg" name="Acender Indicadores"/>
+  <packagedElement xmi:type="uml:UseCase" xmi:id="_T1efMHjgEei8PI3O4SXQHg" name="Emitir Sinal"/>
+  <packagedElement xmi:type="uml:UseCase" xmi:id="_m946gHjgEei8PI3O4SXQHg" name="Fechar Portas">
+    <extensionPoint xmi:type="uml:ExtensionPoint" xmi:id="_g9KRsXjhEei8PI3O4SXQHg" name="ExtensionPoint1"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:UseCase" xmi:id="_evzCQHjhEei8PI3O4SXQHg" name="Isolar Área">
+    <extend xmi:type="uml:Extend" xmi:id="_g9KRsHjhEei8PI3O4SXQHg" extendedCase="_m946gHjgEei8PI3O4SXQHg" extensionLocation="_g9KRsXjhEei8PI3O4SXQHg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:UseCase" xmi:id="_L1SDkHjiEei8PI3O4SXQHg" name="Confirmar Delito">
+    <generalization xmi:type="uml:Generalization" xmi:id="_xB8HcHjiEei8PI3O4SXQHg" general="_4ioRsHjiEei8PI3O4SXQHg"/>
+    <extensionPoint xmi:type="uml:ExtensionPoint" xmi:id="_QWrVsXjjEei8PI3O4SXQHg" name="ExtensionPoint1"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:UseCase" xmi:id="_sf_mQHjiEei8PI3O4SXQHg" name="Detectar Problema">
+    <include xmi:type="uml:Include" xmi:id="_6cq8gHjiEei8PI3O4SXQHg" addition="_4ioRsHjiEei8PI3O4SXQHg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:UseCase" xmi:id="_4ioRsHjiEei8PI3O4SXQHg" name="Confirmar Problema"/>
+</uml:Model>
