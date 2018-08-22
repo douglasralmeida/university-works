@@ -1,10 +1,14 @@
-This is the repository with skeleton source code for DCC605's simple
-shell programming assignment.  Please check the [Google Docs][1]
-with the full assignment.
+# TP1 de SO
+Nome: Shell e Sinais
 
- [1]: https://docs.google.com/document/d/14cl6I8xLJD6dnet3fEEFEqtpZkK7TYS4hoq9nBqoKVg/edit?usp=sharing
+Assunto: Shell
 
+Linguagem: C
 
-LEMBRETE: Antes de executar o arquivo grade.sh, adicionar o atributo a todos os arquivos sh do TP com o comando:
+Bibliotecas necessárias: (nenhuma)
 
-chmod +x arquivo.sh
+Compilador: GCC
+
+Ambiente: Linux
+
+Disciplina: SO

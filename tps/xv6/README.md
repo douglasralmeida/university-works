@@ -1,7 +1,7 @@
-# TP3 de SO
-Nome: File System Checker
+# TP2 de SO
+Nome: xv6
 
-Assunto: Sistema de Arquivos
+Assunto: Paginação de Memória
 
 Linguagem: C
 

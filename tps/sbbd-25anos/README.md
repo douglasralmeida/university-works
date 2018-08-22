@@ -7,7 +7,7 @@ Linguagem: SQL
 
 Bibliotecas necessárias: Nenhuma
 
-Ferramenta: MySQL Workbench
+Ferramentas: MySQL, MySQL Workbench
 
 Ambiente: Windows
 
