@@ -1,0 +1,7 @@
+Lista 5 de LP - Parte 2
+Douglas Rodrigues de Almeida
+
+Resposta Questão 3:
+É mais fácil adicionar uma nova operação em linguagem funcional como Haskell. É mais fácil adicionar uma nova alternativa em linguagens orientadas a objeto como Python.
+Quando adicionamos uma nova alternativa na linguagem Python, não modificamos o código existente. Em Haskell, tivemos que modificá-lo. Quando adicionamos uma nova operação em Python, modificamos o código existente. Em Haskell, o código não é modificado.
+
